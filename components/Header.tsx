@@ -4,7 +4,10 @@ export default function Header() {
   return (
     <header className="site-header">
       <div className="container nav-wrap">
-        <Link href="/" className="brand">DISAPPEAR IT</Link>
+        <Link href="/" className="brand-mark" aria-label="Disappear It home">
+          <span className="brand-name">DISAPPEAR IT</span>
+          <span className="brand-sub">JUNK &amp; TRASH REMOVAL</span>
+        </Link>
         <nav className="main-nav" aria-label="Primary navigation">
           <Link href="/">Home</Link>
           <Link href="/services">Services</Link>
