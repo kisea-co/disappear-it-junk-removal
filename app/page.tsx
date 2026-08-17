@@ -15,29 +15,35 @@ const serviceAreas = [
   'College Park, GA','Riverdale, GA','East Point, GA','Hapeville, GA',
 ];
 
+const pricing = [
+  ['Minimum Service', '$125', 'Ideal for smaller pickups. A washer + dryer is a typical minimum-load example.'],
+  ['Half Truck Load', '$420', 'For medium-size cleanouts and multi-item removal.'],
+  ['Full Truck Load', 'From $600', 'For larger cleanouts and high-volume junk removal.'],
+];
+
 export default function HomePage(){
   return <>
-    <section className="hero editorial-hero">
+    <section className="hero urban-hero">
       <div className="container hero-grid">
         <div className="hero-copy">
-          <div className="eyebrow">Atlanta, GA + Metro Area</div>
-          <h1>Junk removal,<br/><em>without the mess.</em></h1>
-          <p>Professional junk removal for homes, apartments and businesses throughout Metro Atlanta. You point it out. We load it up.</p>
-          <p className="signature-line">You&apos;ll never see it again.</p>
+          <div className="eyebrow">Atlanta Junk Removal</div>
+          <h1>WE MAKE JUNK<br/><span>DISAPPEAR.</span></h1>
+          <p>Residential + commercial junk removal across Metro Atlanta. Fast, professional, and straight to the point.</p>
+          <div className="brand-line">YOU&apos;LL NEVER SEE IT AGAIN.</div>
           <div className="hero-actions">
-            <Link className="btn" href="/contact">Get a Free Quote</Link>
-            <a className="text-link" href="tel:+14705402892">(470) 540-2892</a>
+            <Link className="btn" href="/contact">Get a Free Quote →</Link>
+            <a className="text-link" href="tel:+14705402892">Call (470) 540-2892</a>
           </div>
         </div>
         <div className="hero-media" aria-label="Reserved for real Disappear It loaded-truck photo">
-          <span>Loaded truck photo goes here</span>
+          <span>REAL LOADED-TRUCK PHOTO</span>
         </div>
       </div>
     </section>
 
     <section className="micro-strip">
       <div className="container micro-grid">
-        <span>Residential</span><span>Commercial</span><span>Single-item pickup</span><span>Full-load removal</span>
+        <span>Residential</span><span>Commercial</span><span>Single Items</span><span>Full Loads</span>
       </div>
     </section>
 
@@ -45,7 +51,7 @@ export default function HomePage(){
       <div className="container editorial-split">
         <div>
           <div className="eyebrow dark">What We Take</div>
-          <h2>What needs<br/>to go?</h2>
+          <h2>WHAT NEEDS<br/>TO GO?</h2>
         </div>
         <div className="service-list-editorial">
           {services.map(([title,copy],i)=><article key={title}>
@@ -56,9 +62,17 @@ export default function HomePage(){
       </div>
     </section>
 
+    <section className="section pricing-section">
+      <div className="container">
+        <div className="pricing-heading"><div><div className="eyebrow">Straightforward Pricing</div><h2>KNOW THE RANGE<br/>BEFORE WE PULL UP.</h2></div><p>Pricing is based on the volume of your items and the space they take up on the truck. Send photos for the most accurate quote.</p></div>
+        <div className="pricing-grid">{pricing.map(([label,price,copy])=><article key={label}><span>{label}</span><strong>{price}</strong><p>{copy}</p></article>)}</div>
+        <p className="pricing-note">Final pricing may vary based on volume, item type, access, disposal requirements, and job conditions.</p>
+      </div>
+    </section>
+
     <section className="section process-section">
       <div className="container">
-        <div className="process-intro"><div className="eyebrow">How It Works</div><h2>Three steps.<br/><em>That&apos;s it.</em></h2></div>
+        <div className="process-intro"><div className="eyebrow">How It Works</div><h2>THREE STEPS.<br/>THAT&apos;S IT.</h2></div>
         <div className="process-grid">
           <article><span>01</span><h3>Show us the junk.</h3><p>Send photos, your location and a quick description of what needs to go.</p></article>
           <article><span>02</span><h3>Get your quote.</h3><p>We review the job and confirm pricing and availability.</p></article>
@@ -70,8 +84,8 @@ export default function HomePage(){
     <section className="section work-section">
       <div className="container">
         <div className="editorial-split work-heading">
-          <div><div className="eyebrow">Real Work</div><h2>Before.<br/><em>After.</em></h2></div>
-          <div><p className="section-lead">Real Disappear It jobs from around Metro Atlanta. Once the photos are ready, this becomes the visual proof section.</p><Link className="editorial-link light" href="/our-work">See our work →</Link></div>
+          <div><div className="eyebrow">Real Work</div><h2>BEFORE.<br/>AFTER.</h2></div>
+          <div><p className="section-lead">Real Disappear It jobs from around Metro Atlanta. No stock-photo fairy tales.</p><Link className="editorial-link light" href="/our-work">See our work →</Link></div>
         </div>
         <div className="work-showcase editorial-gallery">
           <div className="work-large"><span>Residential before + after</span></div>
@@ -82,22 +96,22 @@ export default function HomePage(){
 
     <section className="commercial-section">
       <div className="container commercial-grid">
-        <div><div className="eyebrow dark">Commercial Junk Removal</div><h2>Reliable removal for properties that can&apos;t wait around.</h2></div>
-        <div><p>Apartment communities, property managers and businesses can call Disappear It for unwanted furniture, bulk items and junk removal without turning it into a whole production.</p><Link className="btn btn-dark" href="/commercial">Commercial Services</Link></div>
+        <div><div className="eyebrow dark">Commercial Junk Removal</div><h2>JUNK DOESN&apos;T WAIT.<br/>NEITHER DO WE.</h2></div>
+        <div><p>Apartment communities, property managers and businesses can call Disappear It for unwanted furniture, bulk items and junk removal without turning it into a whole production.</p><Link className="btn btn-dark" href="/commercial">Commercial Services →</Link></div>
       </div>
     </section>
 
     <section className="section area-section">
       <div className="container editorial-split">
-        <div><div className="eyebrow">Service Area</div><h2>Metro Atlanta,<br/><em>and beyond.</em></h2><p className="section-lead">These are some of the areas we serve most often. We are not limited to this list — send your location and we&apos;ll let you know if we can get you on the schedule.</p></div>
+        <div><div className="eyebrow">Service Area</div><h2>METRO ATLANTA<br/>AND BEYOND.</h2><p className="section-lead">These are some of the areas we serve most often. We are not limited to this list — send your location and we&apos;ll let you know if we can get you on the schedule.</p></div>
         <div className="area-list">{serviceAreas.map(area=><span key={area}>{area}</span>)}</div>
       </div>
     </section>
 
     <section className="final-cta">
       <div className="container cta-grid">
-        <div><div className="eyebrow dark">Disappear It</div><h2>What do you need gone?</h2><p>Send a photo. Get a quote. Get your space back.</p></div>
-        <div className="cta-actions"><Link className="btn btn-dark" href="/contact">Get a Free Quote</Link><a className="cta-phone" href="tel:+14705402892">(470) 540-2892</a></div>
+        <div><div className="eyebrow dark">Disappear It</div><h2>WHAT DO YOU NEED GONE?</h2><p>Send a photo. Get a quote. Get your space back.</p></div>
+        <div className="cta-actions"><Link className="btn btn-dark" href="/contact">Get a Free Quote →</Link><a className="cta-phone" href="tel:+14705402892">(470) 540-2892</a></div>
       </div>
     </section>
   </>;
