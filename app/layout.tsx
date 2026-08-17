@@ -1,24 +1,33 @@
 import type { Metadata } from 'next';
-import { Poppins } from 'next/font/google';
+import { Cormorant_Garamond, Manrope } from 'next/font/google';
 import './globals.css';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
-const poppins = Poppins({
+const display = Cormorant_Garamond({
   subsets: ['latin'],
-  weight: ['400', '500', '600', '700', '800'],
+  weight: ['400', '500', '600'],
+  style: ['normal', 'italic'],
+  variable: '--font-display',
+  display: 'swap',
+});
+
+const sans = Manrope({
+  subsets: ['latin'],
+  weight: ['300', '400', '500', '600', '700'],
+  variable: '--font-sans',
   display: 'swap',
 });
 
 export const metadata: Metadata = {
   title: 'Disappear It Junk & Trash Removal | Atlanta, GA',
-  description: 'Fast, reliable junk removal for homes and businesses throughout Atlanta and surrounding metro areas. Request a quote from Disappear It Junk & Trash Removal.',
+  description: 'Professional junk removal for homes and businesses throughout Atlanta and surrounding metro areas. Request a quote from Disappear It Junk & Trash Removal.',
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en">
-      <body className={poppins.className}>
+    <html lang="en" className={`${display.variable} ${sans.variable}`}>
+      <body>
         <Header />
         <main>{children}</main>
         <Footer />
