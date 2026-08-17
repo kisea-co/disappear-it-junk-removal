@@ -1,21 +1,20 @@
 import type { Metadata } from 'next';
-import { Cormorant_Garamond, Manrope } from 'next/font/google';
+import { Montserrat, Barlow_Condensed } from 'next/font/google';
 import './globals.css';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
-const display = Cormorant_Garamond({
+const sans = Montserrat({
   subsets: ['latin'],
   weight: ['400', '500', '600'],
-  style: ['normal', 'italic'],
-  variable: '--font-display',
+  variable: '--font-sans',
   display: 'swap',
 });
 
-const sans = Manrope({
+const display = Barlow_Condensed({
   subsets: ['latin'],
-  weight: ['300', '400', '500', '600', '700'],
-  variable: '--font-sans',
+  weight: ['500', '600', '700'],
+  variable: '--font-display',
   display: 'swap',
 });
 
