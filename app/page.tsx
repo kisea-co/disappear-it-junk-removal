@@ -17,87 +17,86 @@ const serviceAreas = [
 
 export default function HomePage(){
   return <>
-    <section className="hero hero-premium">
+    <section className="hero editorial-hero">
       <div className="container hero-grid">
         <div className="hero-copy">
           <div className="eyebrow">Atlanta, GA + Metro Area</div>
-          <h1>GOT JUNK?<br/><span>MAKE IT DISAPPEAR.</span></h1>
-          <p>Fast, professional junk removal with no unnecessary runaround. You point it out. We load it up. <strong>You&apos;ll never see it again.</strong></p>
+          <h1>Junk removal,<br/><em>without the mess.</em></h1>
+          <p>Professional junk removal for homes, apartments and businesses throughout Metro Atlanta. You point it out. We load it up.</p>
+          <p className="signature-line">You&apos;ll never see it again.</p>
           <div className="hero-actions">
             <Link className="btn" href="/contact">Get a Free Quote</Link>
-            <a className="btn btn-ghost" href="tel:+14705402892">Call (470) 540-2892</a>
+            <a className="text-link" href="tel:+14705402892">(470) 540-2892</a>
           </div>
         </div>
         <div className="hero-media" aria-label="Reserved for real Disappear It loaded-truck photo">
-          <div className="media-label">REAL DISAPPEAR IT JOB PHOTO</div>
+          <span>Loaded truck photo goes here</span>
         </div>
       </div>
     </section>
 
-    <section className="trust-strip">
-      <div className="container trust-grid">
-        <span>Residential</span><span>Commercial</span><span>Single Items</span><span>Full Loads</span>
+    <section className="micro-strip">
+      <div className="container micro-grid">
+        <span>Residential</span><span>Commercial</span><span>Single-item pickup</span><span>Full-load removal</span>
       </div>
     </section>
 
-    <section className="section section-light">
-      <div className="container">
-        <div className="section-heading split-heading">
-          <div><div className="eyebrow">What We Take</div><h2>Junk removal.<br/>That&apos;s the lane.</h2></div>
-          <p className="section-lead">From one bulky item to a serious cleanout, Disappear It handles the hauling so you can get your space back.</p>
+    <section className="section section-cream">
+      <div className="container editorial-split">
+        <div>
+          <div className="eyebrow dark">What We Take</div>
+          <h2>What needs<br/>to go?</h2>
         </div>
-        <div className="service-bento">
-          {services.map(([title,copy],i)=><article className={`service-card service-card-${i+1}`} key={title}><span className="service-num">0{i+1}</span><h3>{title}</h3><p>{copy}</p></article>)}
+        <div className="service-list-editorial">
+          {services.map(([title,copy],i)=><article key={title}>
+            <span>0{i+1}</span><div><h3>{title}</h3><p>{copy}</p></div>
+          </article>)}
+          <Link className="editorial-link" href="/services">View all services →</Link>
         </div>
-        <div className="inline-link"><Link href="/services">View all junk removal services →</Link></div>
       </div>
     </section>
 
     <section className="section process-section">
       <div className="container">
-        <div className="eyebrow">How It Works</div>
-        <h2>Simple in. Gone out.</h2>
+        <div className="process-intro"><div className="eyebrow">How It Works</div><h2>Three steps.<br/><em>That&apos;s it.</em></h2></div>
         <div className="process-grid">
           <article><span>01</span><h3>Show us the junk.</h3><p>Send photos, your location and a quick description of what needs to go.</p></article>
           <article><span>02</span><h3>Get your quote.</h3><p>We review the job and confirm pricing and availability.</p></article>
-          <article><span>03</span><h3>We make it disappear.</h3><p>We show up, load it and haul it away. That&apos;s it.</p></article>
+          <article><span>03</span><h3>We make it disappear.</h3><p>We show up, load it and haul it away.</p></article>
         </div>
       </div>
     </section>
 
-    <section className="section section-dark-alt">
+    <section className="section work-section">
       <div className="container">
-        <div className="section-heading split-heading">
-          <div><div className="eyebrow">Real Work</div><h2>You&apos;ll never<br/>see it again.</h2></div>
-          <div><p className="section-lead">Real before-and-after work from jobs across Metro Atlanta. No stock-photo fairy tales over here.</p><Link className="btn btn-outline" href="/our-work">See Our Work</Link></div>
+        <div className="editorial-split work-heading">
+          <div><div className="eyebrow">Real Work</div><h2>Before.<br/><em>After.</em></h2></div>
+          <div><p className="section-lead">Real Disappear It jobs from around Metro Atlanta. Once the photos are ready, this becomes the visual proof section.</p><Link className="editorial-link light" href="/our-work">See our work →</Link></div>
         </div>
-        <div className="work-showcase">
-          <div className="work-large"><span>Residential Before + After</span></div>
-          <div className="work-stack"><div><span>Loaded Truck</span></div><div><span>Commercial Removal</span></div></div>
+        <div className="work-showcase editorial-gallery">
+          <div className="work-large"><span>Residential before + after</span></div>
+          <div className="work-stack"><div><span>Loaded truck</span></div><div><span>Commercial removal</span></div></div>
         </div>
       </div>
     </section>
 
-    <section className="commercial-band">
+    <section className="commercial-section">
       <div className="container commercial-grid">
-        <div><div className="eyebrow eyebrow-dark">Commercial Junk Removal</div><h2>Property managers have junk too.</h2></div>
-        <div><p>Apartment communities, property managers and businesses can call Disappear It for bulk-item and unwanted-junk removal without turning it into a whole production.</p><Link className="btn btn-dark" href="/commercial">Commercial Services</Link></div>
+        <div><div className="eyebrow dark">Commercial Junk Removal</div><h2>Reliable removal for properties that can&apos;t wait around.</h2></div>
+        <div><p>Apartment communities, property managers and businesses can call Disappear It for unwanted furniture, bulk items and junk removal without turning it into a whole production.</p><Link className="btn btn-dark" href="/commercial">Commercial Services</Link></div>
       </div>
     </section>
 
-    <section className="section service-area-section">
-      <div className="container">
-        <div className="section-heading split-heading">
-          <div><div className="eyebrow">Service Area</div><h2>All around the<br/>Atlanta metro.</h2></div>
-          <p className="section-lead">We frequently serve the areas below, but we&apos;re not limited to this list. If you&apos;re in or around Metro Atlanta, send us your location and let&apos;s see if we can get you on the schedule.</p>
-        </div>
-        <div className="area-grid">{serviceAreas.map(area=><span key={area}>{area}</span>)}</div>
+    <section className="section area-section">
+      <div className="container editorial-split">
+        <div><div className="eyebrow">Service Area</div><h2>Metro Atlanta,<br/><em>and beyond.</em></h2><p className="section-lead">These are some of the areas we serve most often. We are not limited to this list — send your location and we&apos;ll let you know if we can get you on the schedule.</p></div>
+        <div className="area-list">{serviceAreas.map(area=><span key={area}>{area}</span>)}</div>
       </div>
     </section>
 
-    <section className="cta-band cta-premium">
+    <section className="final-cta">
       <div className="container cta-grid">
-        <div><div className="eyebrow eyebrow-dark">Ready When You Are</div><h2>What do you need gone?</h2><p>Send a photo. Get a quote. Get your space back.</p></div>
+        <div><div className="eyebrow dark">Disappear It</div><h2>What do you need gone?</h2><p>Send a photo. Get a quote. Get your space back.</p></div>
         <div className="cta-actions"><Link className="btn btn-dark" href="/contact">Get a Free Quote</Link><a className="cta-phone" href="tel:+14705402892">(470) 540-2892</a></div>
       </div>
     </section>
