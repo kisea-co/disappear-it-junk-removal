@@ -32,11 +32,11 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <Footer />
         <style>{`
           :root {
-            --gold: #bf9000;
-            --gold-soft: #bf9000;
+            --gold: #c89a3a;
+            --gold-soft: #c89a3a;
           }
           .eyebrow.dark {
-            color: #bf9000 !important;
+            color: #c89a3a !important;
           }
           .section {
             padding-top: 64px !important;
