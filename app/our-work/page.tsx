@@ -1,6 +1,16 @@
 import Link from 'next/link';
 
+const projects = [
+  {title:'Residential Cleanout', before:'/images/residential-cleanout-before.jpg', after:'/images/residential-cleanout-after.jpg'},
+  {title:'Junk Pile Cleanout', before:'/images/junk-pile-cleanout-before.jpg', after:'/images/junk-pile-cleanout-after.jpg'},
+  {title:'Dunwoody Cleanout', before:'/images/dunwoody-cleanout-before.PNG', after:'/images/dunwoody-cleanout-after.PNG'},
+  {title:'Move-Out Cleanout', before:'/images/move-out-before.png', after:'/images/move-out-after.png'},
+  {title:'Driveway Cleanout', before:'/images/driveway-cleanout-before.PNG', after:'/images/driveway-cleanout-after.PNG'},
+  {title:'Driveway Cleanout II', before:'/images/driveway-cleanout-before-02.PNG', after:'/images/driveway-cleanout-after-02.PNG'},
+  {title:'Deck Junk Removal', before:'/images/deck-junk-removal-before.PNG', after:'/images/deck-junk-removal-after.PNG'},
+];
+
 export default function OurWorkPage(){return <>
 <section className="page-hero"><div className="container"><div className="eyebrow">Our Work</div><h1>THE JUNK WAS THERE.<br/><span>NOW IT&apos;S NOT.</span></h1><p>Real before-and-after work from completed Disappear It jobs around Metro Atlanta.</p></div></section>
-<section className="section work-section"><div className="container"><div className="work-showcase"><div className="work-large"><span>Residential cleanout — before + after</span></div><div className="work-stack"><div><span>Driveway junk removal</span></div><div><span>Commercial junk removal</span></div></div></div><div className="work-showcase" style={{marginTop:14}}><div className="work-large"><span>Outdoor / backyard junk removal</span></div><div className="work-stack"><div><span>Garage cleanout</span></div><div><span>Loaded truck</span></div></div></div><p className="section-lead" style={{marginTop:28}}>These gallery spaces are ready for the real job photos once they&apos;re uploaded to the repo.</p><div className="hero-actions"><Link href="/contact" className="btn">Get a Quote →</Link></div></div></section>
+<section className="section work-section"><div className="container"><div className="project-gallery">{projects.map(project=><article className="project" key={project.title}><div className="project-title"><span>Completed Job</span><h2>{project.title}</h2></div><div className="before-after"><figure><div className="project-photo"><img src={project.before} alt={`${project.title} before junk removal`}/><span>Before</span></div></figure><figure><div className="project-photo"><img src={project.after} alt={`${project.title} after junk removal`}/><span>After</span></div></figure></div></article>)}</div><div className="single-work-feature"><div className="photo-card"><img src="/images/loaded-truck.png" alt="Loaded Disappear It junk removal truck"/><span>Loaded up. Hauled out.</span></div></div><div className="hero-actions"><Link href="/contact" className="btn">Get a Quote →</Link></div></div></section>
 </>}
