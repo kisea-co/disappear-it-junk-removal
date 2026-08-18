@@ -38,7 +38,35 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           .eyebrow.dark {
             color: #bf9000 !important;
           }
+          .section {
+            padding-top: 64px !important;
+            padding-bottom: 86px !important;
+          }
+          .page-hero {
+            padding-top: 58px !important;
+            padding-bottom: 54px !important;
+          }
+          .commercial-section {
+            padding-top: 62px !important;
+            padding-bottom: 82px !important;
+          }
+          .final-cta {
+            padding-top: 56px !important;
+            padding-bottom: 66px !important;
+          }
           @media (max-width: 720px) {
+            .section {
+              padding-top: 52px !important;
+              padding-bottom: 66px !important;
+            }
+            .page-hero {
+              padding-top: 48px !important;
+              padding-bottom: 44px !important;
+            }
+            .commercial-section {
+              padding-top: 50px !important;
+              padding-bottom: 64px !important;
+            }
             .hero-media {
               min-height: 0 !important;
               aspect-ratio: auto !important;
