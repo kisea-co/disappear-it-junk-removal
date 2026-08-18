@@ -31,6 +31,13 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <main>{children}</main>
         <Footer />
         <style>{`
+          :root {
+            --gold: #bf9000;
+            --gold-soft: #bf9000;
+          }
+          .eyebrow.dark {
+            color: #bf9000 !important;
+          }
           @media (max-width: 720px) {
             .hero-media {
               min-height: 0 !important;
