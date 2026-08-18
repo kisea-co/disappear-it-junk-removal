@@ -30,6 +30,46 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <Header />
         <main>{children}</main>
         <Footer />
+        <style>{`
+          @media (max-width: 720px) {
+            .hero-media {
+              min-height: 0 !important;
+              aspect-ratio: auto !important;
+              overflow: visible !important;
+              background: transparent !important;
+              border: 0 !important;
+            }
+            .hero-media img,
+            .photo-card img,
+            .project-photo img {
+              position: static !important;
+              display: block !important;
+              width: 100% !important;
+              height: auto !important;
+              max-width: 100% !important;
+              object-fit: unset !important;
+              opacity: 1 !important;
+              visibility: visible !important;
+            }
+            .photo-card,
+            .work-large,
+            .work-stack > div,
+            .project-photo {
+              display: block !important;
+              width: 100% !important;
+              min-height: 0 !important;
+              height: auto !important;
+              overflow: visible !important;
+            }
+            .work-showcase,
+            .work-stack,
+            .before-after {
+              display: grid !important;
+              grid-template-columns: 1fr !important;
+              height: auto !important;
+            }
+          }
+        `}</style>
       </body>
     </html>
   );
