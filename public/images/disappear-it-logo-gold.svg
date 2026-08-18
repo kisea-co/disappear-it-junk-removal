@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1014 768" role="img" aria-label="Disappear It Junk & Trash Removal">
+  <defs>
+    <filter id="siteGold" color-interpolation-filters="sRGB">
+      <feFlood flood-color="#bf9000" result="gold"/>
+      <feComposite in="gold" in2="SourceAlpha" operator="in"/>
+    </filter>
+  </defs>
+  <image href="/images/disappear-it-logo.png" x="0" y="0" width="1014" height="768" preserveAspectRatio="xMidYMid meet" filter="url(#siteGold)"/>
+</svg>
