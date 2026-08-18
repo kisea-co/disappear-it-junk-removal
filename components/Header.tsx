@@ -5,8 +5,7 @@ export default function Header() {
     <header className="site-header">
       <div className="container nav-wrap">
         <Link href="/" className="brand-mark" aria-label="Disappear It home">
-          <span className="brand-name">DISAPPEAR IT</span>
-          <span className="brand-sub">JUNK &amp; TRASH REMOVAL</span>
+          <img src="/images/disappear-it-logo.png" alt="Disappear It Junk & Trash Removal" className="header-logo" />
         </Link>
         <nav className="main-nav" aria-label="Primary navigation">
           <Link href="/">Home</Link>
