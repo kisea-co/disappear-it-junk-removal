@@ -1,12 +1,12 @@
 import Link from 'next/link';
 
 const projects = [
-  {title:'Closet Cleanout', before:'/images/closet-cleanout-before.PNG', after:'/images/closet-cleanout-after.PNG'},
-  {title:'Junk Pile Cleanout', before:'/images/junk-pile-cleanout-before.jpg', after:'/images/junk-pile-cleanout-after.jpg'},
-  {title:'Dunwoody Cleanout', before:'/images/dunwoody-cleanout-before.PNG', after:'/images/dunwoody-cleanout-after.PNG'},
-  {title:'Move-Out Cleanout', before:'/images/move-out-before.png', after:'/images/move-out-after.png'},
-  {title:'Driveway Cleanout', before:'/images/driveway-cleanout-before.PNG', after:'/images/driveway-cleanout-after.PNG'},
-  {title:'Driveway Cleanout II', before:'/images/driveway-cleanout-before-02.PNG', after:'/images/driveway-cleanout-after-02.PNG'},
+  {title:'Closet Clean-out', before:'/images/closet-cleanout-before.PNG', after:'/images/closet-cleanout-after.PNG'},
+  {title:'Junk Pile Clean-out', before:'/images/junk-pile-cleanout-before.jpg', after:'/images/junk-pile-cleanout-after.jpg'},
+  {title:'Commercial Clean-out', before:'/images/dunwoody-cleanout-before.PNG', after:'/images/dunwoody-cleanout-after.PNG'},
+  {title:'Move-Out Clean-out', before:'/images/move-out-before.png', after:'/images/move-out-after.png'},
+  {title:'Driveway Clean-out', before:'/images/driveway-cleanout-before.PNG', after:'/images/driveway-cleanout-after.PNG'},
+  {title:'Driveway Clean-out II', before:'/images/driveway-cleanout-before-02.PNG', after:'/images/driveway-cleanout-after-02.PNG'},
   {title:'Deck Junk Removal', before:'/images/deck-junk-removal-before.PNG', after:'/images/deck-junk-removal-after.PNG'},
 ];
 
