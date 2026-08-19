@@ -12,8 +12,8 @@ export default function Footer() {
           <p className="footer-tagline">You&apos;ll never see it again.</p>
         </div>
         <div className="footer-contact">
-          <a href="tel:+14705402892">(470) 540-2892</a>
-          <a href="mailto:junkdisappears@gmail.com">junkdisappears@gmail.com</a>
+          <a href="tel:+14705402892">Call Us</a>
+          <a href="mailto:junkdisappears@gmail.com">Email Us</a>
           <span>Atlanta, GA + surrounding metro areas</span>
         </div>
         <div className="footer-action">
