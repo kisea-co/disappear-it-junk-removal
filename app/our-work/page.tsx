@@ -2,10 +2,11 @@ import Link from 'next/link';
 
 const projects = [
   {
-    title: 'Dunwoody Property Cleanout',
+    title: 'Dunwoody Crossing Cleanout',
     location: 'Dunwoody, GA',
     before: '/images/dunwoody-cleanout-before.png',
     after: '/images/dunwoody-cleanout-after.png',
+    extra: '/images/dunwoody-crossing.PNG',
   },
   {
     title: 'Residential Junk Removal',
@@ -39,6 +40,7 @@ export default function OurWorkPage(){return <>
     <figure className="project-photo"><img src={project.before} alt={`${project.title} before junk removal`}/><span>Before</span></figure>
     <figure className="project-photo"><img src={project.after} alt={`${project.title} after junk removal`}/><span>After</span></figure>
   </div>
+  {project.extra && <figure className="project-photo" style={{margin:'18px 0 0'}}><img src={project.extra} alt="Disappear It on site at Dunwoody Crossing"/><span>On Site</span></figure>}
 </article>)}
 </div>
 
