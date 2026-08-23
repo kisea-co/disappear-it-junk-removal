@@ -2,10 +2,10 @@ import Link from 'next/link';
 import styles from './ServicesStrip.module.css';
 
 const services = [
-  { title: 'Junk Removal', icon: 'truck' },
-  { title: 'Cleanouts', icon: 'cleanout' },
-  { title: 'Furniture Removal', icon: 'chair' },
-  { title: 'Light Demolition', icon: 'demo' },
+  { title: 'Junk Removal', copy: 'Furniture, appliances, bulk junk + more', icon: 'truck' },
+  { title: 'Property Cleanouts', copy: 'Homes, apartments, garages + move-outs', icon: 'cleanout' },
+  { title: 'Furniture Removal', copy: 'Couches, mattresses, tables + oversized items', icon: 'chair' },
+  { title: 'Light Demolition', copy: 'Sheds, fixtures + small tear-down projects', icon: 'demo' },
 ] as const;
 
 function ServiceIcon({ type }: { type: (typeof services)[number]['icon'] }) {
@@ -65,6 +65,8 @@ export default function ServicesStrip() {
           <Link className={styles.card} href="/services" key={service.title}>
             <ServiceIcon type={service.icon} />
             <h3>{service.title}</h3>
+            <p>{service.copy}</p>
+            <span className={styles.learnMore}>Learn More →</span>
           </Link>
         ))}
       </div>
