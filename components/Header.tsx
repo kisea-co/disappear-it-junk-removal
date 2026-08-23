@@ -39,7 +39,6 @@ export default function Header() {
           <Link href="/our-work" onClick={closeMenu} style={navLinkStyle}>Our Work</Link>
           <Link href="/commercial" onClick={closeMenu} style={navLinkStyle}>Commercial</Link>
           <Link href="/contact" className="desktop-quote btn btn-small" onClick={closeMenu}>Get a Quote</Link>
-          <Link href="/contact" className="mobile-contact-link" onClick={closeMenu} style={navLinkStyle}>Get a Quote</Link>
         </nav>
       </div>
 
@@ -63,7 +62,6 @@ export default function Header() {
           background: #f4f0e8;
           transition: transform .2s ease, opacity .2s ease;
         }
-        .mobile-contact-link { display: none !important; }
 
         @media (max-width: 720px) {
           .nav-wrap {
@@ -93,8 +91,7 @@ export default function Header() {
             align-items: stretch;
             gap: 0;
           }
-          .main-nav.mobile-open > a:not(.btn),
-          .main-nav.mobile-open > .mobile-contact-link {
+          .main-nav.mobile-open > a:not(.btn) {
             display: block !important;
             padding: 15px 4px;
             border-bottom: 1px solid rgba(255,255,255,.1);
@@ -103,7 +100,7 @@ export default function Header() {
             letter-spacing: .12em;
             text-transform: uppercase;
           }
-          .main-nav.mobile-open > .mobile-contact-link { border-bottom: 0; }
+          .main-nav.mobile-open > a:not(.btn):last-of-type { border-bottom: 0; }
           .desktop-quote { display: none !important; }
         }
       `}</style>
