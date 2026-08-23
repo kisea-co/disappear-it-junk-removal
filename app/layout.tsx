@@ -54,6 +54,64 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             padding-top: 56px !important;
             padding-bottom: 66px !important;
           }
+
+          /* Trust strip: substantial 4-across strip on desktop + tablet */
+          .trust-grid {
+            grid-template-columns: repeat(4, 1fr) !important;
+            min-height: 104px !important;
+          }
+          .trust-item {
+            min-height: 104px !important;
+            padding: 18px 22px !important;
+            justify-content: center !important;
+            gap: 14px !important;
+            border-right: 1px solid var(--line) !important;
+            border-bottom: 0 !important;
+          }
+          .trust-item:last-child {
+            border-right: 0 !important;
+          }
+          .trust-item svg {
+            width: 32px !important;
+            height: 32px !important;
+            flex: 0 0 32px !important;
+          }
+          .trust-item strong {
+            font-size: .7rem !important;
+            letter-spacing: .12em !important;
+          }
+          .trust-item span {
+            font-size: .73rem !important;
+            line-height: 1.4 !important;
+          }
+
+          @media (min-width: 721px) and (max-width: 920px) {
+            .trust-grid {
+              grid-template-columns: repeat(4, 1fr) !important;
+            }
+            .trust-item {
+              min-height: 102px !important;
+              padding: 16px 14px !important;
+              gap: 10px !important;
+              border-bottom: 0 !important;
+            }
+            .trust-item:nth-child(2) {
+              border-right: 1px solid var(--line) !important;
+            }
+            .trust-item svg {
+              width: 29px !important;
+              height: 29px !important;
+              flex-basis: 29px !important;
+            }
+            .trust-item strong {
+              font-size: .64rem !important;
+              letter-spacing: .09em !important;
+            }
+            .trust-item span {
+              font-size: .67rem !important;
+            }
+          }
+
           @media (max-width: 720px) {
             .section {
               padding-top: 52px !important;
@@ -102,6 +160,38 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
               display: grid !important;
               grid-template-columns: 1fr !important;
               height: auto !important;
+            }
+
+            /* Mobile only: larger 2x2 trust cards */
+            .trust-grid {
+              grid-template-columns: repeat(2, 1fr) !important;
+              min-height: 0 !important;
+            }
+            .trust-item {
+              min-height: 128px !important;
+              padding: 22px 16px !important;
+              justify-content: flex-start !important;
+              gap: 14px !important;
+              border-bottom: 1px solid var(--line) !important;
+            }
+            .trust-item:nth-child(2n) {
+              border-right: 0 !important;
+            }
+            .trust-item:nth-last-child(-n + 2) {
+              border-bottom: 0 !important;
+            }
+            .trust-item svg {
+              width: 35px !important;
+              height: 35px !important;
+              flex-basis: 35px !important;
+            }
+            .trust-item strong {
+              font-size: .72rem !important;
+              letter-spacing: .1em !important;
+            }
+            .trust-item span {
+              font-size: .75rem !important;
+              line-height: 1.45 !important;
             }
           }
         `}</style>
