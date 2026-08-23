@@ -44,7 +44,7 @@ export default function OurWorkPage(){return <>
 </article>)}
 </div>
 
-<div className="single-work-feature"><div className="project-title"><div><span>On the Job</span><h2>Loaded + ready to haul.</h2></div></div><div className="photo-card"><img src="/images/loaded-truck-haul.png" alt="Loaded Disappear It junk removal truck ready for haul away"/></div></div>
+<div className="single-work-feature"><div className="project-title"><div><span>On the Job</span><h2>Loaded. Hauled. Gone.</h2></div></div><div className="before-after"><figure className="project-photo"><img src="/images/loaded-truck-haul.png" alt="Loaded Disappear It junk removal truck ready for haul away"/><span>Loaded</span></figure><figure className="project-photo"><img src="/images/unloaded-truck.PNG" alt="Disappear It truck unloaded after haul away"/><span>Unloaded</span></figure></div></div>
 
 <div className="hero-actions" style={{marginTop:'54px'}}><Link href="/contact" className="btn">Get a Quote →</Link></div></div></section>
 </>}
