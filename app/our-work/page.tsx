@@ -3,26 +3,22 @@ import Link from 'next/link';
 const projects = [
   {
     title: 'Dunwoody Crossing Cleanout',
-    location: 'Dunwoody, GA',
     before: '/images/dunwoody-cleanout-before.png',
     after: '/images/dunwoody-cleanout-after.png',
     extra: '/images/dunwoody-crossing.PNG',
   },
   {
     title: 'Residential Junk Removal',
-    location: 'Hapeville, GA',
     before: '/images/hapeville-junk-removal-before.png',
     after: '/images/hapeville-junk-removal-after.png',
   },
   {
     title: 'Residential Moving Cleanout',
-    location: 'Metro Atlanta',
     before: '/images/residential-moving-cleanout-before.png',
     after: '/images/residential-moving-cleanout-after.png',
   },
   {
     title: 'Shed Cleanout',
-    location: 'Metro Atlanta',
     before: '/images/shed-cleanout-before.png',
     after: '/images/shed-cleanout-after.png',
   },
@@ -35,16 +31,15 @@ export default function OurWorkPage(){return <>
 
 <div className="project-gallery">
 {projects.map((project)=><article className="project" key={project.title}>
-  <div className="project-title"><div><h2>{project.title}</h2></div><span>{project.location}</span></div>
-  {project.extra && <figure className="project-photo" style={{margin:'0 0 18px'}}><img src={project.extra} alt="Disappear It on site at Dunwoody Crossing"/></figure>}
+  {project.extra && <figure className="project-photo" style={{margin:'0 0 18px'}}><img src={project.extra} alt="Disappear It junk removal job"/></figure>}
   <div className="before-after">
-    <figure className="project-photo"><img src={project.before} alt={`${project.title} before junk removal`}/></figure>
-    <figure className="project-photo"><img src={project.after} alt={`${project.title} after junk removal`}/></figure>
+    <figure className="project-photo"><img src={project.before} alt="Disappear It junk removal job"/></figure>
+    <figure className="project-photo"><img src={project.after} alt="Disappear It completed junk removal job"/></figure>
   </div>
 </article>)}
 </div>
 
-<div className="single-work-feature"><div className="project-title"><div><span>On the Job</span><h2>Loaded. Hauled. Gone.</h2></div></div><div className="before-after"><figure className="project-photo"><img src="/images/loaded-truck-haul.png" alt="Loaded Disappear It junk removal truck ready for haul away"/></figure><figure className="project-photo"><img src="/images/unloaded-truck.PNG" alt="Disappear It truck unloaded after haul away"/></figure></div></div>
+<div className="single-work-feature"><div className="before-after"><figure className="project-photo"><img src="/images/loaded-truck-haul.png" alt="Disappear It junk removal truck"/></figure><figure className="project-photo"><img src="/images/unloaded-truck.PNG" alt="Disappear It junk removal truck after haul away"/></figure></div></div>
 
 <div className="hero-actions" style={{marginTop:'54px'}}><Link href="/contact" className="btn">Get a Quote →</Link></div></div></section>
 </>}
