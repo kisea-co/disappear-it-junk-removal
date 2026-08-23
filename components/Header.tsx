@@ -6,6 +6,7 @@ import { useState } from 'react';
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const closeMenu = () => setMenuOpen(false);
+  const navLinkStyle = { display: 'block' } as const;
 
   return (
     <header className="site-header">
@@ -33,10 +34,10 @@ export default function Header() {
           className={`main-nav${menuOpen ? ' mobile-open' : ''}`}
           aria-label="Primary navigation"
         >
-          <Link href="/" onClick={closeMenu}>Home</Link>
-          <Link href="/services" onClick={closeMenu}>Services</Link>
-          <Link href="/our-work" onClick={closeMenu}>Our Work</Link>
-          <Link href="/commercial" onClick={closeMenu}>Commercial</Link>
+          <Link href="/" onClick={closeMenu} style={navLinkStyle}>Home</Link>
+          <Link href="/services" onClick={closeMenu} style={navLinkStyle}>Services</Link>
+          <Link href="/our-work" onClick={closeMenu} style={navLinkStyle}>Our Work</Link>
+          <Link href="/commercial" onClick={closeMenu} style={navLinkStyle}>Commercial</Link>
           <Link href="/contact" className="btn btn-small" onClick={closeMenu}>Get a Quote</Link>
         </nav>
       </div>
