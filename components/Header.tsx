@@ -38,13 +38,8 @@ export default function Header() {
           <Link href="/services" onClick={closeMenu} style={navLinkStyle}>Services</Link>
           <Link href="/our-work" onClick={closeMenu} style={navLinkStyle}>Our Work</Link>
           <Link href="/commercial" onClick={closeMenu} style={navLinkStyle}>Commercial</Link>
-          <Link href="/contact" className="btn btn-small desktop-quote" onClick={closeMenu}>Get a Quote</Link>
-
-          <div className="mobile-nav-actions">
-            <Link href="/contact" className="btn mobile-quote" onClick={closeMenu}>Get a Quote</Link>
-            <a href="tel:+14705402892" className="mobile-secondary-cta" onClick={closeMenu}>Call Us</a>
-            <a href="mailto:junkdisappears@gmail.com" className="mobile-secondary-cta" onClick={closeMenu}>Email Us</a>
-          </div>
+          <Link href="/contact" className="desktop-quote btn btn-small" onClick={closeMenu}>Get a Quote</Link>
+          <Link href="/contact" className="mobile-contact-link" onClick={closeMenu} style={navLinkStyle}>Get a Quote</Link>
         </nav>
       </div>
 
@@ -68,9 +63,7 @@ export default function Header() {
           background: #f4f0e8;
           transition: transform .2s ease, opacity .2s ease;
         }
-        .mobile-nav-actions {
-          display: none;
-        }
+        .mobile-contact-link { display: none !important; }
 
         @media (max-width: 720px) {
           .nav-wrap {
@@ -79,17 +72,9 @@ export default function Header() {
             padding-top: 10px;
             padding-bottom: 10px;
           }
-          .brand-name {
-            font-size: .8rem;
-            letter-spacing: .14em;
-          }
-          .brand-sub {
-            font-size: .44rem;
-            letter-spacing: .19em;
-          }
-          .mobile-menu-toggle {
-            display: block;
-          }
+          .brand-name { font-size: .8rem; letter-spacing: .14em; }
+          .brand-sub { font-size: .44rem; letter-spacing: .19em; }
+          .mobile-menu-toggle { display: block; }
           .main-nav {
             display: none;
             position: absolute;
@@ -97,7 +82,7 @@ export default function Header() {
             left: -13px;
             right: -13px;
             z-index: 60;
-            padding: 10px 20px 22px;
+            padding: 10px 20px 18px;
             background: #090909;
             border-bottom: 1px solid rgba(209,174,71,.45);
             box-shadow: 0 18px 30px rgba(0,0,0,.32);
@@ -108,41 +93,18 @@ export default function Header() {
             align-items: stretch;
             gap: 0;
           }
-          .main-nav.mobile-open > a:not(.btn) {
+          .main-nav.mobile-open > a:not(.btn),
+          .main-nav.mobile-open > .mobile-contact-link {
             display: block !important;
-            padding: 17px 4px;
+            padding: 15px 4px;
             border-bottom: 1px solid rgba(255,255,255,.1);
+            color: #f4f0e8;
             font-size: .78rem;
             letter-spacing: .12em;
             text-transform: uppercase;
           }
-          .desktop-quote {
-            display: none !important;
-          }
-          .mobile-nav-actions {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-top: 18px;
-          }
-          .mobile-quote {
-            grid-column: 1 / -1;
-            min-height: 52px;
-            width: 100%;
-          }
-          .mobile-secondary-cta {
-            display: flex !important;
-            align-items: center;
-            justify-content: center;
-            min-height: 48px;
-            padding: 11px 10px;
-            border: 1px solid rgba(209,174,71,.52);
-            color: #f4f0e8;
-            font-size: .7rem;
-            font-weight: 600;
-            letter-spacing: .09em;
-            text-transform: uppercase;
-          }
+          .main-nav.mobile-open > .mobile-contact-link { border-bottom: 0; }
+          .desktop-quote { display: none !important; }
         }
       `}</style>
     </header>
