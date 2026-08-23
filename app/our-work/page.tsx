@@ -34,8 +34,8 @@ export default function OurWorkPage(){return <>
 <section className="section work-section" style={{paddingTop:'78px'}}><div className="container"><div style={{maxWidth:'720px',marginBottom:'56px'}}><div className="eyebrow">Completed Jobs</div><h2>CLEAN WORK.<br/>CLEAR RESULTS.</h2><p className="section-lead">Real results from residential cleanouts, property cleanups and junk removal jobs across Metro Atlanta.</p></div>
 
 <div className="project-gallery">
-{projects.map((project,index)=><article className="project" key={project.title}>
-  <div className="project-title"><div><span>Project 0{index+1}</span><h2>{project.title}</h2></div><span>{project.location}</span></div>
+{projects.map((project)=><article className="project" key={project.title}>
+  <div className="project-title"><div><h2>{project.title}</h2></div><span>{project.location}</span></div>
   {project.extra && <figure className="project-photo" style={{margin:'0 0 18px'}}><img src={project.extra} alt="Disappear It on site at Dunwoody Crossing"/></figure>}
   <div className="before-after">
     <figure className="project-photo"><img src={project.before} alt={`${project.title} before junk removal`}/></figure>
