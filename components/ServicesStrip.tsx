@@ -66,7 +66,6 @@ export default function ServicesStrip() {
             <ServiceIcon type={service.icon} />
             <h3>{service.title}</h3>
             <p>{service.copy}</p>
-            <span className={styles.learnMore}>Learn More →</span>
           </Link>
         ))}
       </div>
