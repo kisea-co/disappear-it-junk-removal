@@ -26,8 +26,28 @@ const script = Great_Vibes({
 });
 
 export const metadata: Metadata = {
-  title: 'Disappear It Junk & Trash Removal | Atlanta, GA',
-  description: 'Professional junk removal for homes and businesses throughout Atlanta and surrounding metro areas. Request a quote from Disappear It Junk & Trash Removal.',
+  metadataBase: new URL('https://disappearitjunkremoval.com'),
+  title: 'Disappear It Junk Removal',
+  description: 'Fast, reliable junk removal and clean-out services throughout Metro Atlanta. Request a quote from Disappear It Junk Removal.',
+  openGraph: {
+    title: 'Disappear It Junk Removal',
+    description: 'Fast, reliable junk removal and clean-out services throughout Metro Atlanta.',
+    url: 'https://disappearitjunkremoval.com',
+    siteName: 'Disappear It Junk Removal',
+    images: [
+      {
+        url: '/images/disappear-it-logo.png',
+        alt: 'Disappear It Junk Removal logo',
+      },
+    ],
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Disappear It Junk Removal',
+    description: 'Fast, reliable junk removal and clean-out services throughout Metro Atlanta.',
+    images: ['/images/disappear-it-logo.png'],
+  },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
