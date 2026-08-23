@@ -241,6 +241,55 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
               font-size: .75rem !important;
               line-height: 1.45 !important;
             }
+
+            /* Mobile final CTA: tighter, intentional stack */
+            .final-cta {
+              padding-top: 44px !important;
+              padding-bottom: 46px !important;
+            }
+            .final-cta .cta-grid {
+              display: grid !important;
+              grid-template-columns: 1fr !important;
+              gap: 26px !important;
+              align-items: start !important;
+            }
+            .final-cta h2 {
+              font-size: clamp(3rem, 14vw, 4rem) !important;
+              line-height: .88 !important;
+              margin: 0 !important;
+              max-width: 100% !important;
+            }
+            .final-cta p {
+              font-size: .92rem !important;
+              line-height: 1.55 !important;
+              margin-top: 14px !important;
+              max-width: 30rem !important;
+            }
+            .final-cta .cta-actions {
+              display: grid !important;
+              grid-template-columns: 1fr 1fr !important;
+              gap: 12px !important;
+              width: 100% !important;
+              justify-content: stretch !important;
+              align-items: stretch !important;
+            }
+            .final-cta .cta-actions .btn {
+              grid-column: 1 / -1 !important;
+              width: 100% !important;
+              min-height: 54px !important;
+              padding: 15px 18px !important;
+            }
+            .final-cta .cta-phone {
+              display: flex !important;
+              align-items: center !important;
+              justify-content: center !important;
+              min-height: 48px !important;
+              padding: 12px 10px !important;
+              border: 1px solid rgba(0,0,0,.24) !important;
+              font-size: .78rem !important;
+              text-transform: uppercase !important;
+              letter-spacing: .08em !important;
+            }
           }
         `}</style>
       </body>
