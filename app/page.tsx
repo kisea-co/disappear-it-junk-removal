@@ -27,7 +27,6 @@ export default function HomePage(){return <>
   <div className="container" style={{position:'relative',zIndex:1,width:'100%',paddingLeft:'clamp(48px,6vw,104px)',paddingRight:'clamp(28px,4vw,72px)'}}>
     <div style={{width:'min(100%,600px)',padding:'28px 0 54px',textShadow:'0 2px 18px rgba(0,0,0,.42)'}}>
       <div style={{marginBottom:'28px'}}><img src="/images/disappear-it-logo.png" alt="Disappear It Junk & Trash Removal" style={{display:'block',width:'clamp(180px,16vw,220px)',height:'auto',filter:'drop-shadow(0 3px 12px rgba(0,0,0,.35))'}}/></div>
-      <div className="eyebrow">Metro Atlanta Junk Removal</div>
       <h1 style={{maxWidth:'600px'}}>WE HANDLE THE<br/><span>HEAVY STUFF.</span></h1>
       <p style={{maxWidth:'520px',color:'#eee8df'}}>Fast, reliable junk removal and clean-out services throughout Metro Atlanta — so you don&apos;t have to do the heavy lifting.</p>
       <div className="hero-actions"><Link className="btn" href="/contact">Get a Free Quote →</Link><a className="text-link" href="tel:+14705402892">Call Us</a><a className="text-link" href="mailto:junkdisappears@gmail.com">Email Us</a></div>
