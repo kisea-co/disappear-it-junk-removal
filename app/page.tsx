@@ -24,9 +24,9 @@ export default function HomePage(){return <>
 <section className="hero" style={{position:'relative',minHeight:'clamp(600px,74vh,760px)',display:'flex',alignItems:'center',overflow:'hidden',borderBottom:'1px solid var(--line)',backgroundImage:"url('/images/loaded-truck-haul.png')",backgroundRepeat:'no-repeat',backgroundPosition:'center center',backgroundSize:'cover',backgroundColor:'#080808'}}>
   <div aria-hidden="true" style={{position:'absolute',inset:0,zIndex:0,background:'linear-gradient(90deg,rgba(8,8,8,.72) 0%,rgba(8,8,8,.64) 30%,rgba(8,8,8,.46) 50%,rgba(8,8,8,.22) 72%,rgba(8,8,8,.08) 100%)'}}/>
   <div aria-hidden="true" style={{position:'absolute',inset:0,zIndex:0,background:'linear-gradient(0deg,rgba(8,8,8,.22) 0%,transparent 42%,rgba(8,8,8,.04) 100%)'}}/>
+  <div style={{position:'absolute',top:'clamp(24px,3.2vw,44px)',left:'clamp(48px,6vw,104px)',zIndex:2}}><img src="/images/disappear-it-logo.png" alt="Disappear It Junk & Trash Removal" style={{display:'block',width:'clamp(180px,16vw,220px)',height:'auto',filter:'drop-shadow(0 3px 12px rgba(0,0,0,.35))'}}/></div>
   <div className="container" style={{position:'relative',zIndex:1,width:'100%',paddingLeft:'clamp(48px,6vw,104px)',paddingRight:'clamp(28px,4vw,72px)'}}>
-    <div style={{width:'min(100%,600px)',padding:'28px 0 54px',textShadow:'0 2px 18px rgba(0,0,0,.42)'}}>
-      <div style={{marginBottom:'28px'}}><img src="/images/disappear-it-logo.png" alt="Disappear It Junk & Trash Removal" style={{display:'block',width:'clamp(180px,16vw,220px)',height:'auto',filter:'drop-shadow(0 3px 12px rgba(0,0,0,.35))'}}/></div>
+    <div style={{width:'min(100%,600px)',padding:'72px 0 30px',textShadow:'0 2px 18px rgba(0,0,0,.42)'}}>
       <h1 style={{maxWidth:'600px'}}>WE HANDLE THE<br/><span>HEAVY STUFF.</span></h1>
       <p style={{maxWidth:'520px',color:'#eee8df'}}>Fast, reliable junk removal and clean-out services throughout Metro Atlanta — so you don&apos;t have to do the heavy lifting.</p>
       <div className="hero-actions"><Link className="btn" href="/contact">Get a Free Quote →</Link><a className="text-link" href="tel:+14705402892">Call Us</a><a className="text-link" href="mailto:junkdisappears@gmail.com">Email Us</a></div>
