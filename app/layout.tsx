@@ -55,6 +55,17 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             padding-bottom: 66px !important;
           }
 
+          /* Homepage work grid: equal image heights */
+          .work-showcase .photo-card {
+            height: clamp(280px, 30vw, 360px) !important;
+            overflow: hidden !important;
+          }
+          .work-showcase .photo-card img {
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: cover !important;
+          }
+
           /* Trust strip: substantial 4-across strip on desktop + tablet */
           .trust-grid {
             grid-template-columns: repeat(4, 1fr) !important;
@@ -160,6 +171,14 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
               display: grid !important;
               grid-template-columns: 1fr !important;
               height: auto !important;
+            }
+            .work-showcase .photo-card {
+              height: auto !important;
+              overflow: visible !important;
+            }
+            .work-showcase .photo-card img {
+              height: auto !important;
+              object-fit: contain !important;
             }
 
             /* Mobile only: larger 2x2 trust cards */
