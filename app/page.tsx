@@ -21,7 +21,23 @@ const TrustIcon = ({type}:{type:'shield'|'home'|'building'|'pin'}) => {
 };
 
 export default function HomePage(){return <>
-<section className="hero urban-hero" style={{paddingTop:'12px',position:'relative',overflow:'hidden',minHeight:'clamp(620px,78vh,820px)',backgroundColor:'#080808',backgroundImage:"linear-gradient(90deg, rgba(7,7,7,.94) 0%, rgba(7,7,7,.82) 42%, rgba(7,7,7,.36) 72%, rgba(7,7,7,.18) 100%), linear-gradient(0deg, rgba(7,7,7,.55) 0%, rgba(7,7,7,0) 48%), url('/images/loaded-truck-haul.png')",backgroundSize:'auto, auto, min(1180px, 92vw) auto',backgroundRepeat:'no-repeat',backgroundPosition:'center, center, right center'}}><div className="container" style={{maxWidth:'1180px',width:'100%',position:'relative',zIndex:1}}><div className="hero-copy" style={{paddingTop:'18px',paddingBottom:'54px',maxWidth:'700px'}}><div style={{marginBottom:'28px'}}><img src="/images/disappear-it-logo.png" alt="Disappear It Junk & Trash Removal" style={{display:'block',width:'clamp(180px,16vw,220px)',height:'auto'}}/></div><div className="eyebrow">Metro Atlanta Junk Removal</div><h1>WE HANDLE THE<br/><span>HEAVY STUFF.</span></h1><p style={{maxWidth:'620px'}}>Fast, reliable junk removal and clean-out services throughout Metro Atlanta — so you don&apos;t have to do the heavy lifting.</p><div className="hero-actions"><Link className="btn" href="/contact">Get a Free Quote →</Link><a className="text-link" href="tel:+14705402892">Call Us</a><a className="text-link" href="mailto:junkdisappears@gmail.com">Email Us</a></div></div></div></section>
+<section className="hero split-hero" style={{background:'#080808',borderBottom:'1px solid var(--line)'}}>
+  <div className="split-hero-grid" style={{display:'grid',gridTemplateColumns:'42% 58%',minHeight:'clamp(620px,78vh,820px)'}}>
+    <div className="split-hero-copy" style={{display:'flex',alignItems:'flex-start',justifyContent:'flex-end',background:'#080808'}}>
+      <div style={{width:'min(100%,560px)',padding:'18px 44px 54px 28px'}}>
+        <div style={{marginBottom:'28px'}}><img src="/images/disappear-it-logo.png" alt="Disappear It Junk & Trash Removal" style={{display:'block',width:'clamp(180px,16vw,220px)',height:'auto'}}/></div>
+        <div className="eyebrow">Metro Atlanta Junk Removal</div>
+        <h1>WE HANDLE THE<br/><span>HEAVY STUFF.</span></h1>
+        <p style={{maxWidth:'520px'}}>Fast, reliable junk removal and clean-out services throughout Metro Atlanta — so you don&apos;t have to do the heavy lifting.</p>
+        <div className="hero-actions"><Link className="btn" href="/contact">Get a Free Quote →</Link><a className="text-link" href="tel:+14705402892">Call Us</a><a className="text-link" href="mailto:junkdisappears@gmail.com">Email Us</a></div>
+      </div>
+    </div>
+    <div className="split-hero-image" style={{position:'relative',overflow:'hidden',background:'#111'}}>
+      <img src="/images/loaded-truck-haul.png" alt="Loaded Disappear It junk removal truck" style={{position:'absolute',inset:0,width:'100%',height:'100%',objectFit:'cover',objectPosition:'center'}}/>
+      <div aria-hidden="true" style={{position:'absolute',inset:0,background:'linear-gradient(90deg,rgba(8,8,8,.18),transparent 26%)'}}/>
+    </div>
+  </div>
+</section>
 <section className="micro-strip trust-strip"><div className="container micro-grid trust-grid"><div className="trust-item"><TrustIcon type="shield"/><div><strong>Licensed + Insured</strong><span>Professional. Reliable. Ready.</span></div></div><div className="trust-item"><TrustIcon type="home"/><div><strong>Residential</strong><span>Homeowners + Renters</span></div></div><div className="trust-item"><TrustIcon type="building"/><div><strong>Commercial</strong><span>Businesses + Property Teams</span></div></div><div className="trust-item"><TrustIcon type="pin"/><div><strong>Metro Atlanta</strong><span>Local + Surrounding Areas</span></div></div></div></section>
 <ServicesStrip />
 <section className="section section-cream" style={{paddingTop:'82px',paddingBottom:'82px',position:'relative',overflow:'hidden'}}><span aria-hidden="true" style={{position:'absolute',right:'4%',top:'28px',fontSize:'120px',lineHeight:1,color:'var(--gold)',opacity:.055}}>✦</span><div className="container editorial-split"><div><div style={{display:'flex',alignItems:'center',gap:'12px'}}><div className="eyebrow dark">Services</div><span aria-hidden="true" style={{height:'1px',width:'46px',background:'var(--gold)',opacity:.55}}/></div><h2>JUNK, TRASH,<br/>CLEAN-OUTS + MORE.</h2></div><div className="service-list-editorial">{services.map(([title,copy],i)=><article key={title}><span>0{i+1}</span><div><h3>{title}</h3><p>{copy}</p></div></article>)}<Link className="editorial-link" href="/services">View all services →</Link></div></div></section>
