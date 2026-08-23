@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Montserrat, Barlow_Condensed } from 'next/font/google';
+import { Montserrat, Barlow_Condensed, Great_Vibes } from 'next/font/google';
 import './globals.css';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -18,6 +18,13 @@ const display = Barlow_Condensed({
   display: 'swap',
 });
 
+const script = Great_Vibes({
+  subsets: ['latin'],
+  weight: ['400'],
+  variable: '--font-script',
+  display: 'swap',
+});
+
 export const metadata: Metadata = {
   title: 'Disappear It Junk & Trash Removal | Atlanta, GA',
   description: 'Professional junk removal for homes and businesses throughout Atlanta and surrounding metro areas. Request a quote from Disappear It Junk & Trash Removal.',
@@ -25,7 +32,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${display.variable} ${sans.variable}`}>
+    <html lang="en" className={`${display.variable} ${sans.variable} ${script.variable}`}>
       <body>
         <Header />
         <main>{children}</main>
