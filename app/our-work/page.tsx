@@ -8,11 +8,6 @@ const projects = [
     extra: '/images/dunwoody-crossing.PNG',
   },
   {
-    title: 'Residential Junk Removal',
-    before: '/images/hapeville-junk-removal-before.png',
-    after: '/images/hapeville-junk-removal-after.png',
-  },
-  {
     title: 'Residential Moving Cleanout',
     before: '/images/residential-moving-cleanout-before.png',
     after: '/images/residential-moving-cleanout-after.png',
