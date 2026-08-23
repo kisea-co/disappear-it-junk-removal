@@ -36,8 +36,10 @@ export const metadata: Metadata = {
     siteName: 'Disappear It Junk Removal',
     images: [
       {
-        url: '/images/disappear-it-logo.png',
-        alt: 'Disappear It Junk Removal logo',
+        url: '/images/disappear-it-logo-black.png',
+        width: 1536,
+        height: 1024,
+        alt: 'Disappear It Junk & Trash Removal logo on black background',
       },
     ],
     type: 'website',
@@ -46,7 +48,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Disappear It Junk Removal',
     description: 'Fast, reliable junk removal and clean-out services throughout Metro Atlanta.',
-    images: ['/images/disappear-it-logo.png'],
+    images: ['/images/disappear-it-logo-black.png'],
   },
 };
 
