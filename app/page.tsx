@@ -22,14 +22,14 @@ const TrustIcon = ({type}:{type:'shield'|'home'|'building'|'pin'}) => {
 
 export default function HomePage(){return <>
 <section className="hero" style={{position:'relative',minHeight:'clamp(620px,78vh,820px)',display:'flex',alignItems:'center',overflow:'hidden',background:'#080808',borderBottom:'1px solid var(--line)'}}>
-  <img src="/images/loaded-truck-haul.png" alt="Loaded Disappear It junk removal truck" style={{position:'absolute',inset:0,width:'100%',height:'100%',objectFit:'cover',objectPosition:'center',zIndex:0}}/>
-  <div aria-hidden="true" style={{position:'absolute',inset:0,zIndex:1,background:'linear-gradient(90deg,rgba(8,8,8,.97) 0%,rgba(8,8,8,.9) 30%,rgba(8,8,8,.62) 52%,rgba(8,8,8,.22) 78%,rgba(8,8,8,.12) 100%)'}}/>
-  <div aria-hidden="true" style={{position:'absolute',inset:0,zIndex:1,background:'linear-gradient(0deg,rgba(8,8,8,.38) 0%,transparent 38%,rgba(8,8,8,.12) 100%)'}}/>
-  <div className="container" style={{position:'relative',zIndex:2,width:'100%'}}>
-    <div style={{width:'min(100%,600px)',padding:'18px 0 54px'}}>
+  <img src="/images/loaded-truck-haul.png" alt="Loaded Disappear It junk removal truck" style={{position:'absolute',inset:0,width:'100%',height:'100%',objectFit:'contain',objectPosition:'center right',zIndex:0,background:'#080808'}}/>
+  <div aria-hidden="true" style={{position:'absolute',inset:0,zIndex:1,background:'linear-gradient(90deg,rgba(8,8,8,.98) 0%,rgba(8,8,8,.93) 34%,rgba(8,8,8,.66) 54%,rgba(8,8,8,.22) 78%,rgba(8,8,8,.08) 100%)'}}/>
+  <div aria-hidden="true" style={{position:'absolute',inset:0,zIndex:1,background:'linear-gradient(0deg,rgba(8,8,8,.32) 0%,transparent 36%,rgba(8,8,8,.08) 100%)'}}/>
+  <div className="container" style={{position:'relative',zIndex:2,width:'100%',paddingLeft:'clamp(34px,5vw,86px)',paddingRight:'clamp(24px,4vw,64px)'}}>
+    <div style={{width:'min(100%,620px)',padding:'18px 0 54px'}}>
       <div style={{marginBottom:'28px'}}><img src="/images/disappear-it-logo.png" alt="Disappear It Junk & Trash Removal" style={{display:'block',width:'clamp(180px,16vw,220px)',height:'auto'}}/></div>
       <div className="eyebrow">Metro Atlanta Junk Removal</div>
-      <h1>WE HANDLE THE<br/><span>HEAVY STUFF.</span></h1>
+      <h1 style={{maxWidth:'620px'}}>WE HANDLE THE<br/><span>HEAVY STUFF.</span></h1>
       <p style={{maxWidth:'520px'}}>Fast, reliable junk removal and clean-out services throughout Metro Atlanta — so you don&apos;t have to do the heavy lifting.</p>
       <div className="hero-actions"><Link className="btn" href="/contact">Get a Free Quote →</Link><a className="text-link" href="tel:+14705402892">Call Us</a><a className="text-link" href="mailto:junkdisappears@gmail.com">Email Us</a></div>
     </div>
