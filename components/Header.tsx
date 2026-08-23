@@ -38,7 +38,13 @@ export default function Header() {
           <Link href="/services" onClick={closeMenu} style={navLinkStyle}>Services</Link>
           <Link href="/our-work" onClick={closeMenu} style={navLinkStyle}>Our Work</Link>
           <Link href="/commercial" onClick={closeMenu} style={navLinkStyle}>Commercial</Link>
-          <Link href="/contact" className="btn btn-small" onClick={closeMenu}>Get a Quote</Link>
+          <Link href="/contact" className="btn btn-small desktop-quote" onClick={closeMenu}>Get a Quote</Link>
+
+          <div className="mobile-nav-actions">
+            <Link href="/contact" className="btn mobile-quote" onClick={closeMenu}>Get a Quote</Link>
+            <a href="tel:+14705402892" className="mobile-secondary-cta" onClick={closeMenu}>Call Us</a>
+            <a href="mailto:junkdisappears@gmail.com" className="mobile-secondary-cta" onClick={closeMenu}>Email Us</a>
+          </div>
         </nav>
       </div>
 
@@ -61,6 +67,9 @@ export default function Header() {
           margin: 6px 0;
           background: #f4f0e8;
           transition: transform .2s ease, opacity .2s ease;
+        }
+        .mobile-nav-actions {
+          display: none;
         }
 
         @media (max-width: 720px) {
@@ -99,7 +108,7 @@ export default function Header() {
             align-items: stretch;
             gap: 0;
           }
-          .main-nav.mobile-open a:not(.btn) {
+          .main-nav.mobile-open > a:not(.btn) {
             display: block !important;
             padding: 17px 4px;
             border-bottom: 1px solid rgba(255,255,255,.1);
@@ -107,11 +116,32 @@ export default function Header() {
             letter-spacing: .12em;
             text-transform: uppercase;
           }
-          .main-nav.mobile-open .btn {
-            display: inline-flex !important;
+          .desktop-quote {
+            display: none !important;
+          }
+          .mobile-nav-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
             margin-top: 18px;
-            width: 100%;
+          }
+          .mobile-quote {
+            grid-column: 1 / -1;
             min-height: 52px;
+            width: 100%;
+          }
+          .mobile-secondary-cta {
+            display: flex !important;
+            align-items: center;
+            justify-content: center;
+            min-height: 48px;
+            padding: 11px 10px;
+            border: 1px solid rgba(209,174,71,.52);
+            color: #f4f0e8;
+            font-size: .7rem;
+            font-weight: 600;
+            letter-spacing: .09em;
+            text-transform: uppercase;
           }
         }
       `}</style>
