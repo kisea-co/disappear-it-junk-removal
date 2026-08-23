@@ -8,6 +8,11 @@ const projects = [
     extra: '/images/dunwoody-crossing.PNG',
   },
   {
+    title: 'Backyard Cleanout',
+    before: '/images/backyard-cleanout-before.png',
+    after: '/images/backyard-cleanout-after.png',
+  },
+  {
     title: 'Residential Moving Cleanout',
     before: '/images/residential-moving-cleanout-before.png',
     after: '/images/residential-moving-cleanout-after.png',
@@ -16,6 +21,11 @@ const projects = [
     title: 'Shed Cleanout',
     before: '/images/shed-cleanout-before.png',
     after: '/images/shed-cleanout-after.png',
+  },
+  {
+    title: 'Shed Demolition',
+    before: '/images/shed-demolition-before.png',
+    after: '/images/shed-demoliton-after.png',
   },
 ];
 
@@ -29,8 +39,8 @@ export default function OurWorkPage(){return <>
   <div className="project-title"><h2>{project.title}</h2></div>
   {project.extra && <figure className="project-photo" style={{margin:'0 0 18px'}}><img src={project.extra} alt="Disappear It junk removal job"/></figure>}
   <div className="before-after">
-    <figure className="project-photo"><img src={project.before} alt="Disappear It junk removal job"/></figure>
-    <figure className="project-photo"><img src={project.after} alt="Disappear It completed junk removal job"/></figure>
+    <figure className="project-photo"><img src={project.before} alt={`${project.title} job photo`}/></figure>
+    <figure className="project-photo"><img src={project.after} alt={`${project.title} completed job photo`}/></figure>
   </div>
 </article>)}
 </div>
