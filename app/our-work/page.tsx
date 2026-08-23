@@ -31,6 +31,7 @@ export default function OurWorkPage(){return <>
 
 <div className="project-gallery">
 {projects.map((project)=><article className="project" key={project.title}>
+  <div className="project-title"><h2>{project.title}</h2></div>
   {project.extra && <figure className="project-photo" style={{margin:'0 0 18px'}}><img src={project.extra} alt="Disappear It junk removal job"/></figure>}
   <div className="before-after">
     <figure className="project-photo"><img src={project.before} alt="Disappear It junk removal job"/></figure>
