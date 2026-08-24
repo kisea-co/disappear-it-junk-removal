@@ -25,13 +25,14 @@ export default function Header() {
           <Link href="/services" onClick={closeMenu} style={navLinkStyle}>Services</Link>
           <Link href="/our-work" onClick={closeMenu} style={navLinkStyle}>Our Work</Link>
           <Link href="/commercial" onClick={closeMenu} style={navLinkStyle}>Commercial</Link>
-          <Link href="/contact" className="desktop-quote btn btn-small" onClick={closeMenu}>Get a Quote</Link>
+          <span className="desktop-quote-wrap"><Link href="/contact" className="btn btn-small" onClick={closeMenu}>Get a Quote</Link></span>
         </nav>
       </div>
 
       <style jsx>{`
         .mobile-menu-toggle{display:none;width:42px;height:42px;padding:8px;border:0;background:transparent;color:inherit;cursor:pointer;flex:0 0 auto}
         .mobile-menu-toggle span{display:block;width:100%;height:2px;margin:6px 0;background:#f4f0e8;transition:transform .2s ease,opacity .2s ease}
+        .desktop-quote-wrap{display:inline-flex}
         @media(max-width:720px){
           .nav-wrap{position:relative;min-height:92px;padding-top:10px;padding-bottom:10px}
           .brand-name{font-size:.8rem;letter-spacing:.14em}.brand-sub{font-size:.44rem;letter-spacing:.19em}
@@ -40,7 +41,7 @@ export default function Header() {
           .main-nav.mobile-open{display:flex;flex-direction:column;align-items:stretch;gap:8px}
           .main-nav.mobile-open>a:not(.btn){display:block!important;padding:18px 4px;border-bottom:1px solid rgba(255,255,255,.1);color:#f4f0e8;font-size:.78rem;letter-spacing:.12em;text-transform:uppercase}
           .main-nav.mobile-open>a:not(.btn):nth-of-type(4){border-bottom:0}
-          .main-nav.mobile-open>.desktop-quote,.main-nav>.desktop-quote,a.desktop-quote{display:none!important;visibility:hidden!important;position:absolute!important;pointer-events:none!important;width:0!important;height:0!important;padding:0!important;margin:0!important;border:0!important;overflow:hidden!important}
+          .desktop-quote-wrap{display:none!important}
         }
       `}</style>
     </header>
