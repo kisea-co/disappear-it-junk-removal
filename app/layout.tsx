@@ -10,10 +10,10 @@ const script = Great_Vibes({ subsets: ['latin'], weight: ['400'], variable: '--f
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://disappearitjunkremoval.com'),
-  title: 'Disappear It Junk Removal',
-  description: 'Fast, reliable junk removal and clean-out services throughout Metro Atlanta. Request a quote from Disappear It Junk Removal.',
-  openGraph: { title: 'Disappear It Junk Removal', description: 'Fast, reliable junk removal and clean-out services throughout Metro Atlanta.', url: 'https://disappearitjunkremoval.com', siteName: 'Disappear It Junk Removal', images: [{ url: '/images/disappear-it-logo-black.png', width: 1536, height: 1024, alt: 'Disappear It Junk & Trash Removal logo on black background' }], type: 'website' },
-  twitter: { card: 'summary_large_image', title: 'Disappear It Junk Removal', description: 'Fast, reliable junk removal and clean-out services throughout Metro Atlanta.', images: ['/images/disappear-it-logo-black.png'] },
+  title: 'Disappear It Junk & Trash Removal LLC',
+  description: 'Fast, reliable junk removal and clean-out services throughout Metro Atlanta. Request a quote from Disappear It Junk & Trash Removal LLC.',
+  openGraph: { title: 'Disappear It Junk & Trash Removal LLC', description: 'Fast, reliable junk removal and clean-out services throughout Metro Atlanta.', url: 'https://disappearitjunkremoval.com', siteName: 'Disappear It Junk & Trash Removal LLC', images: [{ url: '/images/disappear-it-logo-black.png', width: 1536, height: 1024, alt: 'Disappear It Junk & Trash Removal LLC logo on black background' }], type: 'website' },
+  twitter: { card: 'summary_large_image', title: 'Disappear It Junk & Trash Removal LLC', description: 'Fast, reliable junk removal and clean-out services throughout Metro Atlanta.', images: ['/images/disappear-it-logo-black.png'] },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
