@@ -7,7 +7,7 @@ export default function Footer() {
         <div>
           <div className="brand-mark footer-brand">
             <span className="brand-name">DISAPPEAR IT</span>
-            <span className="brand-sub">JUNK &amp; TRASH REMOVAL</span>
+            <span className="brand-sub">JUNK &amp; TRASH REMOVAL LLC</span>
           </div>
           <p className="footer-tagline">You&apos;ll never see it again.</p>
         </div>
@@ -20,7 +20,7 @@ export default function Footer() {
           <Link href="/contact" className="btn btn-small">Get a Quote</Link>
         </div>
       </div>
-      <div className="container footer-bottom">© 2026 Disappear It Junk &amp; Trash Removal</div>
+      <div className="container footer-bottom">© 2026 Disappear It Junk &amp; Trash Removal LLC</div>
     </footer>
   );
 }
