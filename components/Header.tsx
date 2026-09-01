@@ -13,7 +13,7 @@ export default function Header() {
       <div className="container nav-wrap">
         <Link href="/" className="brand-mark" aria-label="Disappear It home" onClick={closeMenu}>
           <span className="brand-name">DISAPPEAR IT</span>
-          <span className="brand-sub">JUNK &amp; TRASH REMOVAL</span>
+          <span className="brand-sub">JUNK &amp; TRASH REMOVAL LLC</span>
         </Link>
 
         <button className="mobile-menu-toggle" type="button" aria-label={menuOpen ? 'Close navigation menu' : 'Open navigation menu'} aria-expanded={menuOpen} aria-controls="primary-navigation" onClick={() => setMenuOpen((open) => !open)}>
