@@ -11,7 +11,7 @@ export default function Header() {
   return (
     <header className="site-header">
       <div className="container nav-wrap">
-        <Link href="/" className="brand-mark" aria-label="Disappear It home" onClick={closeMenu}>
+        <Link href="/" className="brand-mark" aria-label="Disappear It Junk & Trash Removal LLC home" onClick={closeMenu}>
           <span className="brand-name">DISAPPEAR IT</span>
           <span className="brand-sub">JUNK &amp; TRASH REMOVAL LLC</span>
         </Link>
