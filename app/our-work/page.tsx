@@ -2,19 +2,9 @@ import Link from 'next/link';
 
 const projects = [
   {
-    title: 'Storage Unit Cleanout',
-    before: '/images/storage-unit-cleanout-before.png',
-    after: '/images/storage-unit-cleanout-after.png',
-  },
-  {
-    title: 'Basement Storage Cleanout',
-    before: '/images/basement-storage-cleanout-before.png',
-    after: '/images/basement-storage-cleanout-after.png',
-  },
-  {
-    title: 'Patio + Deck Cleanout',
-    before: '/images/patio-deck-cleanout-before.png',
-    after: '/images/patio-deck-cleanout-after.png',
+    title: 'Shed Demolition',
+    before: '/images/shed-demolition-before.png',
+    after: '/images/shed-demoliton-after.png',
   },
   {
     title: 'Wood + Construction Debris Removal',
@@ -22,19 +12,24 @@ const projects = [
     after: '/images/wood-construction-debris-after.png',
   },
   {
-    title: 'Residential Moving Cleanout',
-    before: '/images/residential-moving-cleanout-before.png',
-    after: '/images/residential-moving-cleanout-after.png',
-  },
-  {
     title: 'Shed Cleanout',
     before: '/images/shed-cleanout-before.png',
     after: '/images/shed-cleanout-after.png',
   },
   {
-    title: 'Shed Demolition',
-    before: '/images/shed-demolition-before.png',
-    after: '/images/shed-demoliton-after.png',
+    title: 'Basement Storage Cleanout',
+    before: '/images/basement-storage-cleanout-before.png',
+    after: '/images/basement-storage-cleanout-after.png',
+  },
+  {
+    title: 'Residential Moving Cleanout',
+    before: '/images/residential-moving-cleanout-before.png',
+    after: '/images/residential-moving-cleanout-after.png',
+  },
+  {
+    title: 'Storage Unit Cleanout',
+    before: '/images/storage-unit-cleanout-before.png',
+    after: '/images/storage-unit-cleanout-after.png',
   },
 ];
 
