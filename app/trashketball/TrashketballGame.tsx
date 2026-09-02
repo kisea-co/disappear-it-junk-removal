@@ -60,6 +60,28 @@ export default function TrashketballGame() {
     oscillator.stop(start + duration);
   };
 
+  const noise = (duration:number, volume = .025, filterFrequency = 1800, delay = 0) => {
+    if (!soundOnRef.current) return;
+    const context = audioContext();
+    const buffer = context.createBuffer(1,Math.ceil(context.sampleRate * duration),context.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < data.length; i += 1) data[i] = Math.random() * 2 - 1;
+    const source = context.createBufferSource();
+    const filter = context.createBiquadFilter();
+    const gain = context.createGain();
+    const start = context.currentTime + delay;
+    source.buffer = buffer;
+    filter.type = 'bandpass';
+    filter.frequency.value = filterFrequency;
+    filter.Q.value = .8;
+    gain.gain.setValueAtTime(volume,start);
+    gain.gain.exponentialRampToValueAtTime(.001,start + duration);
+    source.connect(filter);
+    filter.connect(gain);
+    gain.connect(context.destination);
+    source.start(start);
+  };
+
   const chaChing = () => {
     if (!soundOnRef.current) return;
     tone(1320,.08,'square',.035);
@@ -78,15 +100,17 @@ export default function TrashketballGame() {
     window.speechSynthesis.speak(callout);
   };
 
-  const sound = (name:'start'|'launch'|'board'|'rim'|'swish'|'fire'|'miss'|'buzzer'|'crush') => {
-    if (name === 'start') { tone(440,.12,'square',.035); tone(660,.18,'square',.035,.13); }
-    if (name === 'launch') { tone(180,.11,'sine',.045); tone(290,.12,'sine',.035,.05); }
+  const sound = (name:'start'|'pickup'|'launch'|'board'|'rim'|'swish'|'fire'|'miss'|'countdown'|'buzzer'|'crush') => {
+    if (name === 'start') { tone(1180,.28,'sine',.045); tone(1480,.34,'sine',.035,.06); }
+    if (name === 'pickup') { tone(128,.07,'sine',.055); tone(82,.11,'sine',.045,.05); }
+    if (name === 'launch') { noise(.09,.022,2800); tone(210,.09,'sine',.035); tone(340,.11,'sine',.03,.04); }
     if (name === 'board') { tone(155,.12,'square',.055); tone(105,.16,'triangle',.05,.04); }
     if (name === 'rim') { tone(230,.08,'square',.05); tone(165,.13,'square',.04,.07); }
-    if (name === 'swish') chaChing();
-    if (name === 'fire') { chaChing(); tone(880,.12,'triangle',.04,.25); tone(1100,.22,'triangle',.04,.34); announceFire(); }
+    if (name === 'swish') { noise(.22,.035,2400); chaChing(); }
+    if (name === 'fire') { noise(.45,.045,1100); chaChing(); tone(880,.12,'triangle',.04,.25); tone(1100,.22,'triangle',.04,.34); announceFire(); }
     if (name === 'miss') tone(92,.2,'triangle',.045);
-    if (name === 'buzzer') { tone(145,.5,'sawtooth',.055); tone(118,.5,'square',.035,.48); }
+    if (name === 'countdown') tone(880,.09,'square',.045);
+    if (name === 'buzzer') { tone(165,.72,'sawtooth',.065); tone(138,.72,'square',.035,.04); noise(.8,.025,450); }
     if (name === 'crush') { tone(105,.22,'sawtooth',.06,.08); tone(72,.28,'square',.045,.16); }
   };
 
@@ -119,6 +143,10 @@ export default function TrashketballGame() {
     if (time === 0 && playing) endRound();
   }, [time, playing, endRound]);
 
+  useEffect(() => {
+    if (playing && time > 0 && time <= 5) sound('countdown');
+  }, [time,playing]);
+
   const startGame = () => {
     audioContext();
     sound('start');
@@ -148,6 +176,7 @@ export default function TrashketballGame() {
     const point = courtPoint(event);
     trail.current = [point];
     setDragging(true);
+    sound('pickup');
   };
 
   const onPointerMove = (event: PointerEvent<HTMLButtonElement>) => {
