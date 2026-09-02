@@ -7,6 +7,21 @@ const projects = [
     after: '/images/storage-unit-cleanout-after.png',
   },
   {
+    title: 'Basement Storage Cleanout',
+    before: '/images/basement-storage-cleanout-before.png',
+    after: '/images/basement-storage-cleanout-after.png',
+  },
+  {
+    title: 'Patio + Deck Cleanout',
+    before: '/images/patio-deck-cleanout-before.png',
+    after: '/images/patio-deck-cleanout-after.png',
+  },
+  {
+    title: 'Wood + Construction Debris Removal',
+    before: '/images/wood-construction-debris-before.png',
+    after: '/images/wood-construction-debris-after.png',
+  },
+  {
     title: 'Residential Moving Cleanout',
     before: '/images/residential-moving-cleanout-before.png',
     after: '/images/residential-moving-cleanout-after.png',
@@ -26,7 +41,7 @@ const projects = [
 export default function OurWorkPage(){return <>
 <section className="page-hero" style={{paddingTop:'72px',paddingBottom:'72px'}}><div className="container"><div style={{maxWidth:'760px'}}><div className="eyebrow">Our Work</div><h1>THE JUNK WAS THERE.<br/><span>NOW IT&apos;S NOT.</span></h1><p>Real completed jobs by Disappear It Junk & Trash Removal LLC from around Metro Atlanta.</p></div></div></section>
 
-<section className="section work-section" style={{paddingTop:'78px'}}><div className="container"><div style={{maxWidth:'720px',marginBottom:'56px'}}><div className="eyebrow">Completed Jobs</div><h2>CLEAN WORK.<br/>CLEAR RESULTS.</h2><p className="section-lead">Real results from residential cleanouts, property cleanups and junk removal jobs across Metro Atlanta.</p></div>
+<section className="section work-section" style={{paddingTop:'78px'}}><div className="container"><div style={{maxWidth:'720px',marginBottom:'56px'}}><div className="eyebrow">Completed Jobs</div><h2>CLEAN WORK.<br/>CLEAR RESULTS.</h2><p className="section-lead">A fuller look at residential cleanouts, property cleanups, debris removal and demolition work across Metro Atlanta.</p></div>
 
 <div className="project-gallery">
 {projects.map((project)=><article className="project" key={project.title}>
