@@ -60,7 +60,7 @@ export default function TrashketballGame() {
     oscillator.stop(start + duration);
   };
 
-  const sound = (name:'start'|'launch'|'board'|'rim'|'swish'|'fire'|'miss'|'buzzer') => {
+  const sound = (name:'start'|'launch'|'board'|'rim'|'swish'|'fire'|'miss'|'buzzer'|'crush') => {
     if (name === 'start') { tone(440,.12,'square',.035); tone(660,.18,'square',.035,.13); }
     if (name === 'launch') { tone(180,.11,'sine',.045); tone(290,.12,'sine',.035,.05); }
     if (name === 'board') { tone(155,.12,'square',.055); tone(105,.16,'triangle',.05,.04); }
@@ -69,6 +69,7 @@ export default function TrashketballGame() {
     if (name === 'fire') { tone(660,.1,'triangle',.05); tone(880,.12,'triangle',.05,.09); tone(1100,.24,'triangle',.05,.18); }
     if (name === 'miss') tone(92,.2,'triangle',.045);
     if (name === 'buzzer') { tone(145,.5,'sawtooth',.055); tone(118,.5,'square',.035,.48); }
+    if (name === 'crush') { tone(105,.22,'sawtooth',.06,.08); tone(72,.28,'square',.045,.16); }
   };
 
   const moveJunk = (next: {x:number; y:number}) => {
@@ -201,6 +202,7 @@ export default function TrashketballGame() {
           const nextStreak = oldStreak + 1;
           setMessage(nextStreak >= 3 ? `ON FIRE! ${nextStreak} IN A ROW · +${earned}` : `SWISH! +${earned}`);
           sound(nextStreak >= 3 ? 'fire' : 'swish');
+          sound('crush');
           if (navigator.vibrate) navigator.vibrate(nextStreak >= 3 ? [35,25,55] : 35);
           return nextStreak;
         });
@@ -214,7 +216,7 @@ export default function TrashketballGame() {
           return nextScore;
         });
         moveJunk({x: 50,y: 31});
-        resetJunk(190);
+        resetJunk(430);
         return;
       }
 
@@ -260,9 +262,11 @@ export default function TrashketballGame() {
         <div ref={courtRef} className={styles.court} aria-label="Trashketball game court">
           <div className={styles.skyline} aria-hidden="true" />
           <div className={styles.backboard} aria-hidden="true"><span>DISAPPEAR IT</span></div>
-          <div className={styles.dumpster} aria-label="Dumpster target">
+          <div className={`${styles.dumpster} ${madeShot ? styles.compacting : ''}`} aria-label="Dumpster compactor target">
             <div className={styles.dumpsterLid} />
-            <div className={styles.dumpsterBody}><span>YOU&apos;LL NEVER<br/>SEE IT AGAIN</span></div>
+            <div className={styles.compactorPlate} aria-hidden="true"><i/><i/><i/><i/><i/></div>
+            <div className={styles.dumpsterBody}><span>YOU&apos;LL NEVER<br/>SEE IT AGAIN</span><b aria-hidden="true">CRUSH!</b></div>
+            <div className={styles.crushSparks} aria-hidden="true">{Array.from({length:8},(_,i)=><i key={i}/>)}</div>
           </div>
           <div className={styles.targetGlow} aria-hidden="true" />
           <div className={styles.courtLine} aria-hidden="true" />
