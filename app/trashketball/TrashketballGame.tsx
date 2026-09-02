@@ -44,6 +44,16 @@ export default function TrashketballGame() {
     return audioRef.current;
   };
 
+  const unlockMobileAudio = () => {
+    const context = audioContext();
+    const silentBuffer = context.createBuffer(1,1,context.sampleRate);
+    const source = context.createBufferSource();
+    source.buffer = silentBuffer;
+    source.connect(context.destination);
+    source.start(0);
+    return context.state === 'suspended' ? context.resume() : Promise.resolve();
+  };
+
   const tone = (frequency:number, duration:number, type:OscillatorType = 'sine', volume = .07, delay = 0) => {
     if (!soundOnRef.current) return;
     const context = audioContext();
@@ -148,8 +158,7 @@ export default function TrashketballGame() {
   }, [time,playing]);
 
   const startGame = () => {
-    audioContext();
-    sound('start');
+    void unlockMobileAudio().then(() => sound('start'));
     if (timerRef.current) clearInterval(timerRef.current);
     setScore(0);
     setStreak(0);
