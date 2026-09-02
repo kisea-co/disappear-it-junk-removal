@@ -341,7 +341,7 @@ export default function TrashketballGame() {
         <div ref={courtRef} className={styles.court} aria-label="Trashketball game court">
           <div className={styles.skyline} aria-hidden="true" />
           <div className={styles.backboard} style={{left:`${goalX}%`}} aria-hidden="true"><span>DISAPPEAR IT</span></div>
-          <div className={`${styles.hoop} ${streak >= 6 ? styles.goalOnFire : ''}`} style={{left:`${goalX}%`}} aria-label={`Moving Trashketball hoop${streak >= 6 ? ', on fire' : ''}`}>
+          <div className={`${styles.hoop} ${streak >= 6 ? styles.goalOnFire : ''} ${madeShot ? styles.netHit : ''}`} style={{left:`${goalX}%`}} aria-label={`Moving Trashketball hoop${streak >= 6 ? ', on fire' : ''}`}>
             {streak >= 6 && <div className={styles.goalFire} aria-hidden="true">{Array.from({length:9},(_,i)=><span key={i}>🔥</span>)}</div>}
             <div className={styles.rim}/><div className={styles.net}><i/><i/><i/><i/><i/></div>
           </div>
