@@ -20,6 +20,8 @@ export default function TrashketballGame() {
   const junkRef = useRef<HTMLButtonElement>(null);
   const trail = useRef<Point[]>([]);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const frameRef = useRef<number | null>(null);
+  const positionRef = useRef({ x: 50, y: 78 });
   const [playing, setPlaying] = useState(false);
   const [time, setTime] = useState(ROUND_SECONDS);
   const [score, setScore] = useState(0);
@@ -29,18 +31,31 @@ export default function TrashketballGame() {
   const [dragging, setDragging] = useState(false);
   const [message, setMessage] = useState('Drag it. Flick it. Make it disappear.');
   const [madeShot, setMadeShot] = useState(false);
+  const [shotInFlight, setShotInFlight] = useState(false);
+  const [rotation, setRotation] = useState(0);
+  const [streak, setStreak] = useState(0);
+
+  const moveJunk = (next: {x:number; y:number}) => {
+    positionRef.current = next;
+    setPosition(next);
+  };
 
   useEffect(() => {
     const saved = Number(window.localStorage.getItem('trashketball-best') || 0);
     setBest(saved);
-    return () => { if (timerRef.current) clearInterval(timerRef.current); };
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+      if (frameRef.current) cancelAnimationFrame(frameRef.current);
+    };
   }, []);
 
   const endRound = useCallback(() => {
     setPlaying(false);
     setDragging(false);
+    setShotInFlight(false);
     setMessage('Time! You cleared the court.');
     if (timerRef.current) clearInterval(timerRef.current);
+    if (frameRef.current) cancelAnimationFrame(frameRef.current);
     timerRef.current = null;
   }, []);
 
@@ -51,10 +66,11 @@ export default function TrashketballGame() {
   const startGame = () => {
     if (timerRef.current) clearInterval(timerRef.current);
     setScore(0);
+    setStreak(0);
     setTime(ROUND_SECONDS);
     setPlaying(true);
     setItemIndex(Math.floor(Math.random() * ITEMS.length));
-    setPosition({ x: 50, y: 78 });
+    moveJunk({ x: 50, y: 78 });
     setMessage('Flick the junk into the dumpster!');
     timerRef.current = setInterval(() => setTime((value) => Math.max(0, value - 1)), 1000);
   };
@@ -69,7 +85,7 @@ export default function TrashketballGame() {
   };
 
   const onPointerDown = (event: PointerEvent<HTMLButtonElement>) => {
-    if (!playing) return;
+    if (!playing || shotInFlight) return;
     event.currentTarget.setPointerCapture(event.pointerId);
     const point = courtPoint(event);
     trail.current = [point];
@@ -80,49 +96,105 @@ export default function TrashketballGame() {
     if (!dragging || !playing) return;
     const point = courtPoint(event);
     trail.current = [...trail.current.slice(-4), point];
-    setPosition({ x: point.x, y: point.y });
+    moveJunk({ x: point.x, y: point.y });
   };
 
-  const resetJunk = () => {
+  const resetJunk = (delay = 260) => {
     setTimeout(() => {
-      setPosition({ x: 50, y: 78 });
+      moveJunk({ x: 28 + Math.random() * 44, y: 78 });
       setItemIndex(Math.floor(Math.random() * ITEMS.length));
       setMadeShot(false);
-    }, 240);
+      setShotInFlight(false);
+      setRotation(0);
+    }, delay);
   };
 
   const onPointerUp = (event: PointerEvent<HTMLButtonElement>) => {
     if (!dragging || !playing) return;
     setDragging(false);
     const current = courtPoint(event);
-    const box = courtRef.current!.getBoundingClientRect();
-    const targetX = 50;
-    const targetY = 27;
-    const inDumpster = current.x > 33 && current.x < 67 && current.y > 15 && current.y < 42;
     const history = trail.current;
     const first = history[0] || current;
     const last = history[history.length - 1] || current;
     const elapsed = Math.max(1, last.time - first.time);
-    const upwardSpeed = ((first.y - last.y) / elapsed) * 1000;
-    const projectedX = current.x + ((last.x - first.x) / elapsed) * 90;
-    const flickHit = upwardSpeed > 35 && Math.abs(projectedX - targetX) < 25 && current.y < 72;
+    let velocityX = Math.max(-.16, Math.min(.16, ((last.x - first.x) / elapsed) * .82));
+    let velocityY = Math.max(-.29, Math.min(-.055, ((last.y - first.y) / elapsed) * .9));
 
-    if (inDumpster || flickHit) {
-      const earned = ITEMS[itemIndex].points;
-      const nextScore = score + earned;
-      setPosition({ x: targetX, y: targetY });
-      setMadeShot(true);
-      setScore(nextScore);
-      setMessage(`+${earned} — disappeared!`);
-      if (nextScore > best) {
-        setBest(nextScore);
-        window.localStorage.setItem('trashketball-best', String(nextScore));
-      }
-    } else {
-      setMessage('So close—grab it and shoot again!');
-      setPosition({ x: Math.max(10, Math.min(90, current.x)), y: Math.max(55, current.y) });
+    if (((first.y - last.y) / elapsed) * 1000 < 24) {
+      setMessage('Swipe up to shoot!');
+      moveJunk({x: current.x, y: Math.max(58,current.y)});
+      resetJunk(420);
+      return;
     }
-    resetJunk();
+
+    setShotInFlight(true);
+    setMessage('It\'s up!');
+    moveJunk({x: current.x, y: current.y});
+    let previous = performance.now();
+    const launched = previous;
+    let rimBounce = false;
+
+    const fly = (now: number) => {
+      const delta = Math.min(28, now - previous);
+      previous = now;
+      velocityY += .00042 * delta;
+      let nextX = positionRef.current.x + velocityX * delta;
+      let nextY = positionRef.current.y + velocityY * delta;
+
+      if (nextX < 5 || nextX > 95) {
+        velocityX *= -.68;
+        nextX = Math.max(5, Math.min(95, nextX));
+      }
+
+      if (velocityY < 0 && nextY < 20 && nextX > 38 && nextX < 62) {
+        velocityY = Math.abs(velocityY) * .62;
+        velocityX += nextX < 50 ? -.025 : .025;
+        setMessage('Off the backboard!');
+      }
+
+      const descendingIntoBin = velocityY > 0 && nextY >= 24 && nextY <= 35 && nextX > 38 && nextX < 62;
+      if (descendingIntoBin) {
+        const earned = ITEMS[itemIndex].points;
+        setMadeShot(true);
+        setStreak((oldStreak) => {
+          const nextStreak = oldStreak + 1;
+          setMessage(nextStreak >= 3 ? `ON FIRE! ${nextStreak} IN A ROW · +${earned}` : `SWISH! +${earned}`);
+          return nextStreak;
+        });
+        setScore((oldScore) => {
+          const nextScore = oldScore + earned;
+          setBest((oldBest) => {
+            const nextBest = Math.max(oldBest,nextScore);
+            window.localStorage.setItem('trashketball-best',String(nextBest));
+            return nextBest;
+          });
+          return nextScore;
+        });
+        moveJunk({x: 50,y: 31});
+        resetJunk(190);
+        return;
+      }
+
+      const hitRim = velocityY > 0 && nextY > 22 && nextY < 37 && ((nextX > 32 && nextX <= 38) || (nextX >= 62 && nextX < 68));
+      if (hitRim && !rimBounce) {
+        rimBounce = true;
+        velocityY *= -.54;
+        velocityX *= -.72;
+        setMessage('CLANG! Off the edge.');
+      }
+
+      moveJunk({x: nextX,y: nextY});
+      setRotation((value) => value + delta * .42);
+
+      if (nextY > 96 || now - launched > 2400) {
+        setStreak(0);
+        setMessage('Missed it—shoot again!');
+        resetJunk(240);
+        return;
+      }
+      frameRef.current = requestAnimationFrame(fly);
+    };
+    frameRef.current = requestAnimationFrame(fly);
   };
 
   const item = ITEMS[itemIndex];
@@ -154,13 +226,13 @@ export default function TrashketballGame() {
             <button
               ref={junkRef}
               type="button"
-              className={`${styles.junk} ${dragging ? styles.dragging : ''} ${madeShot ? styles.made : ''}`}
-              style={{ left: `${position.x}%`, top: `${position.y}%` }}
+              className={`${styles.junk} ${dragging ? styles.dragging : ''} ${shotInFlight ? styles.flying : ''} ${madeShot ? styles.made : ''}`}
+              style={{ left: `${position.x}%`, top: `${position.y}%`, rotate: `${rotation}deg` }}
               onPointerDown={onPointerDown}
               onPointerMove={onPointerMove}
               onPointerUp={onPointerUp}
               onPointerCancel={onPointerUp}
-              aria-label={`${item.name}, worth ${item.points} points. Drag or flick it into the dumpster.`}
+              aria-label={`${item.name}, worth ${item.points} points. Swipe it toward the dumpster.`}
             >
               <span aria-hidden="true">{item.emoji}</span>
               <small>+{item.points}</small>
@@ -179,7 +251,7 @@ export default function TrashketballGame() {
 
         <div className={styles.gameFooter}>
           <p role="status" aria-live="polite">{message}</p>
-          <span>{item.name}: {item.points} pts</span>
+          <span>{streak > 1 ? `${streak} shot streak · ` : ''}{item.name}: {item.points} pts</span>
         </div>
 
         {!playing && time === 0 && (
