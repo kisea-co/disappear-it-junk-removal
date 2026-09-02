@@ -45,7 +45,6 @@ export default function OurWorkPage(){return <>
 </article>)}
 </div>
 
-<div className="single-work-feature"><div className="before-after"><figure className="project-photo"><img src="/images/loaded-truck-haul.png" alt="Disappear It Junk & Trash Removal LLC junk removal truck"/></figure><figure className="project-photo"><img src="/images/unloaded-truck.PNG" alt="Disappear It Junk & Trash Removal LLC junk removal truck after haul away"/></figure></div></div>
 
 <div className="hero-actions" style={{marginTop:'54px'}}><Link href="/contact" className="btn">Get a Quote →</Link></div></div></section>
 </>}
