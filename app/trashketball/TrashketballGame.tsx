@@ -294,7 +294,7 @@ export default function TrashketballGame() {
           });
           return nextScore;
         });
-        moveJunk({x: targetX,y: 31});
+        moveJunk({x: targetX,y: 24.5});
         resetJunk(430);
         return;
       }
