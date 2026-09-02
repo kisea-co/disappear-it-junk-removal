@@ -25,6 +25,7 @@ export default function Header() {
           <Link href="/services" onClick={closeMenu} style={navLinkStyle}>Services</Link>
           <Link href="/our-work" onClick={closeMenu} style={navLinkStyle}>Our Work</Link>
           <Link href="/commercial" onClick={closeMenu} style={navLinkStyle}>Commercial</Link>
+          <Link href="/trashketball" onClick={closeMenu} style={navLinkStyle}>Trashketball</Link>
           <span className="desktop-quote-wrap"><Link href="/contact" className="btn btn-small" onClick={closeMenu}>Get a Quote</Link></span>
         </nav>
       </div>
@@ -40,7 +41,7 @@ export default function Header() {
           .main-nav{display:none;position:absolute;top:calc(100% + 1px);left:-13px;right:-13px;z-index:60;padding:20px 20px 24px;background:#090909;border-bottom:1px solid rgba(209,174,71,.45);box-shadow:0 18px 30px rgba(0,0,0,.32)}
           .main-nav.mobile-open{display:flex;flex-direction:column;align-items:stretch;gap:8px}
           .main-nav.mobile-open>a:not(.btn){display:block!important;padding:18px 4px;border-bottom:1px solid rgba(255,255,255,.1);color:#f4f0e8;font-size:.78rem;letter-spacing:.12em;text-transform:uppercase}
-          .main-nav.mobile-open>a:not(.btn):nth-of-type(4){border-bottom:0}
+          .main-nav.mobile-open>a:not(.btn):nth-of-type(5){border-bottom:0}
           .desktop-quote-wrap{display:none!important}
         }
       `}</style>
