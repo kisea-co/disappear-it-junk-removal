@@ -402,26 +402,20 @@ export default function TrashketballGame() {
             {streak >= 6 && <div className={styles.goalFire} aria-hidden="true">{Array.from({length:9},(_,i)=><span key={i}>🔥</span>)}</div>}
             <div className={styles.rim}/>
             <div className={styles.net}>
-              <svg className={styles.chainNet} viewBox="0 0 100 76" role="presentation" aria-hidden="true">
+              <svg className={styles.chainNet} viewBox="0 0 120 112" role="presentation" aria-hidden="true">
                 <defs>
-                  <linearGradient id="rust-chain" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#38261b"/><stop offset=".42" stopColor="#b87542"/><stop offset=".68" stopColor="#d3a06b"/><stop offset="1" stopColor="#4a3020"/></linearGradient>
-                  <filter id="chain-depth" x="-30%" y="-30%" width="160%" height="170%"><feDropShadow dx="1.6" dy="2.2" stdDeviation="1.1" floodColor="#080503" floodOpacity=".9"/></filter>
+                  <linearGradient id="rust-chain" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#161411"/><stop offset=".35" stopColor="#3f3429"/><stop offset=".58" stopColor="#8b5a36"/><stop offset=".76" stopColor="#27221c"/><stop offset="1" stopColor="#0d0c0a"/></linearGradient>
+                  <filter id="chain-depth" x="-30%" y="-20%" width="170%" height="160%"><feDropShadow dx="1.8" dy="2.5" stdDeviation="1.2" floodColor="#020201" floodOpacity=".95"/></filter>
                 </defs>
-                {Array.from({length:6},(_,row) => {
-                  const width = 82 - row * 7;
-                  const start = (100 - width) / 2;
-                  return <g key={row} className={styles.chainRow} style={{animationDelay:`${row * 35}ms`}}>
-                    {Array.from({length:5},(_,column) => {
-                      const x = start + column * (width / 4);
-                      const y = 8 + row * 11.5;
-                      const angle = (row + column) % 2 === 0 ? -34 : 34;
-                      return <g key={column} transform={`rotate(${angle} ${x} ${y})`}>
-                        <ellipse cx={x} cy={y} rx="4.2" ry="7.1" fill="none" stroke="url(#rust-chain)" strokeWidth="3.2" filter="url(#chain-depth)"/>
-                        <ellipse cx={x-.8} cy={y-1} rx="3.25" ry="6.15" fill="none" stroke="#e0ad78" strokeWidth=".7" opacity=".58"/>
-                      </g>;
-                    })}
-                  </g>;
-                })}
+                {[
+                  '4,4 20,30 36,57 48,83 51,109','20,3 34,29 50,56 57,82 57,110','39,3 50,29 64,56 64,83 63,110','60,3 68,29 76,56 71,83 69,110','81,3 86,29 88,56 79,83 75,109','100,3 102,29 99,56 87,83 81,108','116,4 106,30 100,57 93,84 88,108',
+                  '4,4 34,29 64,56 79,83 88,108','20,3 50,29 76,56 87,83 81,108','39,3 68,29 88,56 93,84 75,109','60,3 86,29 99,56 79,83 69,110','81,3 102,29 100,57 71,83 63,110','100,3 106,30 88,56 64,83 57,110','116,4 86,29 64,56 57,82 51,109'
+                ].map((points,index)=><g key={points} className={styles.chainStrand} style={{animationDelay:`${index * 22}ms`}}>
+                  <polyline points={points} fill="none" stroke="#090806" strokeWidth="6.4" strokeLinecap="round" strokeLinejoin="round" filter="url(#chain-depth)"/>
+                  <polyline points={points} fill="none" stroke="url(#rust-chain)" strokeWidth="4.1" strokeLinecap="round" strokeLinejoin="round" strokeDasharray="2.4 3.2"/>
+                  <polyline points={points} fill="none" stroke="#b48863" strokeWidth=".65" strokeLinecap="round" strokeDasharray="1.2 4.4" opacity=".62"/>
+                </g>)}
+                {[4,20,39,60,81,100,116].map((x,index)=><g key={x} transform={`rotate(${index % 2 ? 24 : -24} ${x} 4)`}><ellipse cx={x} cy="4" rx="3.8" ry="6.2" fill="none" stroke="#171511" strokeWidth="3.4"/><ellipse cx={x-.6} cy="3.3" rx="2.7" ry="5.1" fill="none" stroke="#8c6547" strokeWidth=".75"/></g>)}
               </svg>
             </div>
           </div>
