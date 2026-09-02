@@ -343,7 +343,30 @@ export default function TrashketballGame() {
           <div className={styles.backboard} style={{left:`${goalX}%`}} aria-hidden="true"><span>DISAPPEAR IT</span></div>
           <div className={`${styles.hoop} ${streak >= 6 ? styles.goalOnFire : ''} ${madeShot ? styles.netHit : ''}`} style={{left:`${goalX}%`}} aria-label={`Moving Trashketball hoop${streak >= 6 ? ', on fire' : ''}`}>
             {streak >= 6 && <div className={styles.goalFire} aria-hidden="true">{Array.from({length:9},(_,i)=><span key={i}>🔥</span>)}</div>}
-            <div className={styles.rim}/><div className={styles.net}><i/><i/><i/><i/><i/></div>
+            <div className={styles.rim}/>
+            <div className={styles.net}>
+              <svg className={styles.chainNet} viewBox="0 0 100 76" role="presentation" aria-hidden="true">
+                <defs>
+                  <linearGradient id="rust-chain" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#38261b"/><stop offset=".42" stopColor="#b87542"/><stop offset=".68" stopColor="#d3a06b"/><stop offset="1" stopColor="#4a3020"/></linearGradient>
+                  <filter id="chain-depth" x="-30%" y="-30%" width="160%" height="170%"><feDropShadow dx="1.6" dy="2.2" stdDeviation="1.1" floodColor="#080503" floodOpacity=".9"/></filter>
+                </defs>
+                {Array.from({length:6},(_,row) => {
+                  const width = 82 - row * 7;
+                  const start = (100 - width) / 2;
+                  return <g key={row} className={styles.chainRow} style={{animationDelay:`${row * 35}ms`}}>
+                    {Array.from({length:5},(_,column) => {
+                      const x = start + column * (width / 4);
+                      const y = 8 + row * 11.5;
+                      const angle = (row + column) % 2 === 0 ? -34 : 34;
+                      return <g key={column} transform={`rotate(${angle} ${x} ${y})`}>
+                        <ellipse cx={x} cy={y} rx="4.2" ry="7.1" fill="none" stroke="url(#rust-chain)" strokeWidth="3.2" filter="url(#chain-depth)"/>
+                        <ellipse cx={x-.8} cy={y-1} rx="3.25" ry="6.15" fill="none" stroke="#e0ad78" strokeWidth=".7" opacity=".58"/>
+                      </g>;
+                    })}
+                  </g>;
+                })}
+              </svg>
+            </div>
           </div>
           <div className={`${styles.dumpster} ${madeShot ? styles.compacting : ''}`} style={{left:`${goalX}%`}} aria-label="Moving dumpster compactor beneath the hoop">
             <div className={styles.dumpsterLid} />
