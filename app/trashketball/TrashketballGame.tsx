@@ -130,10 +130,14 @@ export default function TrashketballGame() {
   return (
     <section className={styles.gameSection}>
       <div className={styles.gameShell}>
-        <div className={styles.scorebar}>
-          <div><span>Score</span><strong>{score}</strong></div>
-          <div className={styles.timer}><span>Time</span><strong>{time}</strong></div>
-          <div><span>Best</span><strong>{best}</strong></div>
+        <div className={`${styles.arenaBoard} ${playing ? styles.boardLive : ''}`}>
+          <div className={styles.boardLights} aria-hidden="true">{Array.from({length:22},(_,i)=><i key={i}/>)}</div>
+          <div className={styles.boardTitle}>TRASHKETBALL</div>
+          <div className={styles.scorebar}>
+            <div><span>Score</span><strong>{String(score).padStart(3,'0')}</strong></div>
+            <div className={`${styles.timer} ${time <= 10 && playing ? styles.clockWarning : ''}`}><span>Time</span><strong>{String(time).padStart(2,'0')}</strong></div>
+            <div><span>Best</span><strong>{String(best).padStart(3,'0')}</strong></div>
+          </div>
         </div>
 
         <div ref={courtRef} className={styles.court} aria-label="Trashketball game court">
