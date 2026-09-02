@@ -341,7 +341,10 @@ export default function TrashketballGame() {
         <div ref={courtRef} className={styles.court} aria-label="Trashketball game court">
           <div className={styles.skyline} aria-hidden="true" />
           <div className={styles.backboard} style={{left:`${goalX}%`}} aria-hidden="true"><span>DISAPPEAR IT</span></div>
-          <div className={styles.hoop} style={{left:`${goalX}%`}} aria-label="Moving Trashketball hoop"><div className={styles.rim}/><div className={styles.net}><i/><i/><i/><i/><i/></div></div>
+          <div className={`${styles.hoop} ${streak >= 6 ? styles.goalOnFire : ''}`} style={{left:`${goalX}%`}} aria-label={`Moving Trashketball hoop${streak >= 6 ? ', on fire' : ''}`}>
+            {streak >= 6 && <div className={styles.goalFire} aria-hidden="true">{Array.from({length:9},(_,i)=><span key={i}>🔥</span>)}</div>}
+            <div className={styles.rim}/><div className={styles.net}><i/><i/><i/><i/><i/></div>
+          </div>
           <div className={`${styles.dumpster} ${madeShot ? styles.compacting : ''}`} style={{left:`${goalX}%`}} aria-label="Moving dumpster compactor beneath the hoop">
             <div className={styles.dumpsterLid} />
             <div className={styles.compactorPlate} aria-hidden="true"><i/><i/><i/><i/><i/></div>
@@ -355,7 +358,7 @@ export default function TrashketballGame() {
             <button
               ref={junkRef}
               type="button"
-              className={`${styles.junk} ${dragging ? styles.dragging : ''} ${shotInFlight ? styles.flying : ''} ${madeShot ? styles.made : ''} ${streak >= 6 ? styles.onFire : ''}`}
+              className={`${styles.junk} ${dragging ? styles.dragging : ''} ${shotInFlight ? styles.flying : ''} ${madeShot ? styles.made : ''}`}
               style={{ left: `${position.x}%`, top: `${position.y}%`, rotate: `${rotation}deg` }}
               onPointerDown={onPointerDown}
               onPointerMove={onPointerMove}
@@ -363,7 +366,6 @@ export default function TrashketballGame() {
               onPointerCancel={onPointerUp}
               aria-label={`${item.name}, worth ${item.points} points. Swipe it through the hoop.`}
             >
-              {streak >= 6 && <div className={styles.flames} aria-hidden="true"><i/><i/><i/><i/><i/><i/></div>}
               <span aria-hidden="true">{item.emoji}</span>
               <small>+{item.points}</small>
             </button>
