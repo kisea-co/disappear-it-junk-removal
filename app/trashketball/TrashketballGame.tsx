@@ -14,6 +14,20 @@ const ITEMS = [
 ];
 
 type Point = { x: number; y: number; time: number };
+type SoundName = 'start'|'pickup'|'launch'|'board'|'rim'|'swish'|'fire'|'miss'|'countdown'|'buzzer'|'crush';
+
+const SOUND_FILES: Record<Exclude<SoundName,'fire'>,string> = {
+  start:'/sounds/start-whistle.mp3',
+  pickup:'/sounds/pickup-dribble.mp3',
+  launch:'/sounds/shot-launch.mp3',
+  board:'/sounds/backboard-hit.mp3',
+  rim:'/sounds/rim-clang.mp3',
+  swish:'/sounds/cha-ching.mp3',
+  miss:'/sounds/miss-thud.mp3',
+  countdown:'/sounds/countdown-beep.mp3',
+  buzzer:'/sounds/final-buzzer.mp3',
+  crush:'/sounds/compactor-crush.mp3',
+};
 
 export default function TrashketballGame() {
   const courtRef = useRef<HTMLDivElement>(null);
@@ -26,6 +40,7 @@ export default function TrashketballGame() {
   const goalXRef = useRef(50);
   const audioRef = useRef<AudioContext | null>(null);
   const soundOnRef = useRef(true);
+  const mediaRef = useRef<Partial<Record<Exclude<SoundName,'fire'>,HTMLAudioElement>>>({});
   const [playing, setPlaying] = useState(false);
   const [time, setTime] = useState(ROUND_SECONDS);
   const [score, setScore] = useState(0);
@@ -113,7 +128,7 @@ export default function TrashketballGame() {
     window.speechSynthesis.speak(callout);
   };
 
-  const sound = (name:'start'|'pickup'|'launch'|'board'|'rim'|'swish'|'fire'|'miss'|'countdown'|'buzzer'|'crush') => {
+  const syntheticSound = (name:SoundName) => {
     if (name === 'start') { tone(1180,.28,'sine',.045); tone(1480,.34,'sine',.035,.06); }
     if (name === 'pickup') { tone(128,.07,'sine',.055); tone(82,.11,'sine',.045,.05); }
     if (name === 'launch') { noise(.09,.022,2800); tone(210,.09,'sine',.035); tone(340,.11,'sine',.03,.04); }
@@ -127,6 +142,29 @@ export default function TrashketballGame() {
     if (name === 'crush') { tone(105,.22,'sawtooth',.06,.08); tone(72,.28,'square',.045,.16); }
   };
 
+  const playFile = (name:Exclude<SoundName,'fire'>) => {
+    if (!soundOnRef.current) return;
+    let audio = mediaRef.current[name];
+    if (!audio) {
+      audio = new Audio(SOUND_FILES[name]);
+      audio.preload = 'auto';
+      mediaRef.current[name] = audio;
+    }
+    audio.currentTime = 0;
+    audio.volume = name === 'buzzer' ? .9 : .72;
+    void audio.play().catch(() => syntheticSound(name));
+  };
+
+  const sound = (name:SoundName) => {
+    if (!soundOnRef.current) return;
+    if (name === 'fire') {
+      playFile('swish');
+      announceFire();
+      return;
+    }
+    playFile(name);
+  };
+
   const moveJunk = (next: {x:number; y:number}) => {
     positionRef.current = next;
     setPosition(next);
@@ -135,6 +173,12 @@ export default function TrashketballGame() {
   useEffect(() => {
     const saved = Number(window.localStorage.getItem('trashketball-best') || 0);
     setBest(saved);
+    (Object.entries(SOUND_FILES) as [Exclude<SoundName,'fire'>,string][]).forEach(([name,src]) => {
+      const audio = new Audio(src);
+      audio.preload = 'auto';
+      audio.load();
+      mediaRef.current[name] = audio;
+    });
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
       if (frameRef.current) cancelAnimationFrame(frameRef.current);
@@ -179,7 +223,8 @@ export default function TrashketballGame() {
   }, [playing]);
 
   const startGame = () => {
-    void unlockMobileAudio().then(() => sound('start'));
+    void unlockMobileAudio();
+    sound('start');
     if (timerRef.current) clearInterval(timerRef.current);
     setScore(0);
     setStreak(0);
