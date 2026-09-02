@@ -2,36 +2,6 @@ import Link from 'next/link';
 
 const projects = [
   {
-    title: 'Backyard Debris Cleanup',
-    before: '/images/backyard-debris-before.png',
-    after: '/images/backyard-debris-after.png',
-  },
-  {
-    title: 'Basement Storage Cleanout',
-    before: '/images/basement-storage-cleanout-before.png',
-    after: '/images/basement-storage-cleanout-after.png',
-  },
-  {
-    title: 'Patio + Deck Cleanout',
-    before: '/images/patio-deck-cleanout-before.png',
-    after: '/images/patio-deck-cleanout-after.png',
-  },
-  {
-    title: 'Storage Unit Cleanout',
-    before: '/images/storage-unit-cleanout-before.png',
-    after: '/images/storage-unit-cleanout-after.png',
-  },
-  {
-    title: 'Storage Cleanout',
-    before: '/images/storage-box-cleanout-before.png',
-    after: '/images/storage-box-cleanout-after.png',
-  },
-  {
-    title: 'Wood + Construction Debris Removal',
-    before: '/images/wood-construction-debris-before.png',
-    after: '/images/wood-construction-debris-after.png',
-  },
-  {
     title: 'Commercial Cleanout',
     before: '/images/backyard-cleanout-before.png',
     after: '/images/backyard-cleanout-after.png',
