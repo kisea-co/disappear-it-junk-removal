@@ -141,7 +141,7 @@ export default function TrashketballGame() {
           <div className={styles.backboard} aria-hidden="true"><span>DISAPPEAR IT</span></div>
           <div className={styles.dumpster} aria-label="Dumpster target">
             <div className={styles.dumpsterLid} />
-            <div className={styles.dumpsterBody}><span>MAKE IT<br/>DISAPPEAR</span></div>
+            <div className={styles.dumpsterBody}><span>YOU&apos;LL NEVER<br/>SEE IT AGAIN</span></div>
           </div>
           <div className={styles.targetGlow} aria-hidden="true" />
           <div className={styles.courtLine} aria-hidden="true" />
