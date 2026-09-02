@@ -55,6 +55,7 @@ export default function TrashketballGame() {
   const [streak, setStreak] = useState(0);
   const [soundOn, setSoundOn] = useState(true);
   const [goalX, setGoalX] = useState(50);
+  const [reward, setReward] = useState<0|25|50>(0);
 
   const audioContext = () => {
     if (!audioRef.current) audioRef.current = new AudioContext();
@@ -173,6 +174,8 @@ export default function TrashketballGame() {
   useEffect(() => {
     const saved = Number(window.localStorage.getItem('trashketball-best') || 0);
     setBest(saved);
+    const savedReward = Number(window.localStorage.getItem('trashketball-reward'));
+    if (savedReward === 25 || savedReward === 50) setReward(savedReward);
     (Object.entries(SOUND_FILES) as [Exclude<SoundName,'fire'>,string][]).forEach(([name,src]) => {
       const audio = new Audio(src);
       audio.preload = 'auto';
@@ -227,6 +230,11 @@ export default function TrashketballGame() {
     sound('start');
     if (timerRef.current) clearInterval(timerRef.current);
     setScore(0);
+    setReward((current) => {
+      const next = current || 25;
+      window.localStorage.setItem('trashketball-reward',String(next));
+      return next;
+    });
     setStreak(0);
     setTime(ROUND_SECONDS);
     setPlaying(true);
@@ -332,6 +340,10 @@ export default function TrashketballGame() {
         });
         setScore((oldScore) => {
           const nextScore = oldScore + earned;
+          if (nextScore >= 500) {
+            setReward(50);
+            window.localStorage.setItem('trashketball-reward','50');
+          }
           setBest((oldBest) => {
             const nextBest = Math.max(oldBest,nextScore);
             window.localStorage.setItem('trashketball-best',String(nextBest));
@@ -443,8 +455,9 @@ export default function TrashketballGame() {
             <div className={styles.overlay}>
               <span className={styles.spark}>✦</span>
               <h2>{time === 0 ? 'NICE SHOT.' : 'READY TO SHOOT?'}</h2>
-              {time === 0 && <p className={styles.finalScore}>You scored <strong>{score}</strong> points.</p>}
+              {time === 0 ? <><p className={styles.finalScore}>You scored <strong>{score}</strong> points.</p><div className={styles.rewardUnlocked}><small>REWARD UNLOCKED</small><strong>${reward || 25} OFF</strong><span>ANY LOAD SIZE</span></div></> : <p className={styles.offerPrompt}>Play this round to unlock <strong>$25 off</strong>. Score 500+ to unlock <strong>$50 off</strong>.</p>}
               <button className="btn" type="button" onClick={startGame}>{time === 0 ? 'Play Again' : 'Start Game'} →</button>
+              {time === 0 && <Link className={styles.claimLink} href={`/contact?trashketball=${reward || 25}`}>Claim ${reward || 25} off your load →</Link>}
             </div>
           )}
         </div>
@@ -456,8 +469,8 @@ export default function TrashketballGame() {
 
         {!playing && time === 0 && (
           <div className={styles.realJunk}>
-            <div><span>THE GAME WAS EASY.</span><h2>LET US HANDLE<br/>THE HEAVY STUFF.</h2></div>
-            <Link className="btn" href="/contact">Get a Free Quote →</Link>
+            <div><span>YOU UNLOCKED ${reward || 25} OFF ANY LOAD SIZE.</span><h2>LET US HANDLE<br/>THE HEAVY STUFF.</h2></div>
+            <Link className="btn" href={`/contact?trashketball=${reward || 25}`}>Claim Your Discount →</Link>
           </div>
         )}
       </div>

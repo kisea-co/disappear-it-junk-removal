@@ -13,8 +13,8 @@ export default function TrashketballPage() {
       <div className="container">
         <div className="eyebrow">The Disappear It Challenge</div>
         <h1>TRASH<span>KETBALL.</span></h1>
-        <p>Think you&apos;ve got aim? Swipe up to send as much junk as you can through the hoop and into the compactor before the clock hits zero.</p>
-        <div className={styles.rules}><span>30 seconds</span><span>5 junk types</span><span>One mission: make it disappear</span></div>
+        <p>Think you&apos;ve got aim? Swipe up to send as much junk as you can through the hoop before the clock hits zero.</p>
+        <div className={styles.rules}><span>Play: $25 off any load</span><span>Score 500+: $50 off any load</span><span>30 seconds</span></div>
       </div>
     </section>
     <TrashketballGame />
