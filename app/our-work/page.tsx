@@ -2,6 +2,36 @@ import Link from 'next/link';
 
 const projects = [
   {
+    title: 'Backyard Debris Cleanup',
+    before: '/images/backyard-debris-before.png',
+    after: '/images/backyard-debris-after.png',
+  },
+  {
+    title: 'Basement Storage Cleanout',
+    before: '/images/basement-storage-cleanout-before.png',
+    after: '/images/basement-storage-cleanout-after.png',
+  },
+  {
+    title: 'Patio + Deck Cleanout',
+    before: '/images/patio-deck-cleanout-before.png',
+    after: '/images/patio-deck-cleanout-after.png',
+  },
+  {
+    title: 'Storage Unit Cleanout',
+    before: '/images/storage-unit-cleanout-before.png',
+    after: '/images/storage-unit-cleanout-after.png',
+  },
+  {
+    title: 'Storage Cleanout',
+    before: '/images/storage-box-cleanout-before.png',
+    after: '/images/storage-box-cleanout-after.png',
+  },
+  {
+    title: 'Wood + Construction Debris Removal',
+    before: '/images/wood-construction-debris-before.png',
+    after: '/images/wood-construction-debris-after.png',
+  },
+  {
     title: 'Commercial Cleanout',
     before: '/images/backyard-cleanout-before.png',
     after: '/images/backyard-cleanout-after.png',
@@ -32,12 +62,11 @@ export default function OurWorkPage(){return <>
 {projects.map((project)=><article className="project" key={project.title}>
   <div className="project-title"><h2>{project.title}</h2></div>
   <div className="before-after">
-    <figure className="project-photo"><img src={project.before} alt={`${project.title} job photo`}/></figure>
-    <figure className="project-photo"><img src={project.after} alt={`${project.title} completed job photo`}/></figure>
+    <figure className="project-photo"><img src={project.before} alt={`${project.title} before`}/></figure>
+    <figure className="project-photo"><img src={project.after} alt={`${project.title} after`}/></figure>
   </div>
 </article>)}
 </div>
-
 
 <div className="hero-actions" style={{marginTop:'54px'}}><Link href="/contact" className="btn">Get a Quote →</Link></div></div></section>
 </>}
