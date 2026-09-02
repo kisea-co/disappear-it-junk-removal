@@ -129,7 +129,7 @@ export default function TrashketballGame() {
     setPlaying(true);
     setItemIndex(Math.floor(Math.random() * ITEMS.length));
     moveJunk({ x: 50, y: 78 });
-    setMessage('Flick the junk into the dumpster!');
+    setMessage('Swipe the junk through the hoop!');
     timerRef.current = setInterval(() => setTime((value) => Math.max(0, value - 1)), 1000);
   };
 
@@ -212,8 +212,8 @@ export default function TrashketballGame() {
         sound('board');
       }
 
-      const descendingIntoBin = velocityY > 0 && nextY >= 24 && nextY <= 35 && nextX > 38 && nextX < 62;
-      if (descendingIntoBin) {
+      const throughHoop = velocityY > 0 && nextY >= 21 && nextY <= 29 && nextX > 43 && nextX < 57;
+      if (throughHoop) {
         const earned = ITEMS[itemIndex].points;
         setMadeShot(true);
         setStreak((oldStreak) => {
@@ -238,7 +238,7 @@ export default function TrashketballGame() {
         return;
       }
 
-      const hitRim = velocityY > 0 && nextY > 22 && nextY < 37 && ((nextX > 32 && nextX <= 38) || (nextX >= 62 && nextX < 68));
+      const hitRim = velocityY > 0 && nextY > 20 && nextY < 30 && ((nextX > 38 && nextX <= 43) || (nextX >= 57 && nextX < 62));
       if (hitRim && !rimBounce) {
         rimBounce = true;
         velocityY *= -.54;
@@ -280,7 +280,8 @@ export default function TrashketballGame() {
         <div ref={courtRef} className={styles.court} aria-label="Trashketball game court">
           <div className={styles.skyline} aria-hidden="true" />
           <div className={styles.backboard} aria-hidden="true"><span>DISAPPEAR IT</span></div>
-          <div className={`${styles.dumpster} ${madeShot ? styles.compacting : ''}`} aria-label="Dumpster compactor target">
+          <div className={styles.hoop} aria-label="Trashketball hoop"><div className={styles.rim}/><div className={styles.net}><i/><i/><i/><i/><i/></div></div>
+          <div className={`${styles.dumpster} ${madeShot ? styles.compacting : ''}`} aria-label="Dumpster compactor beneath the hoop">
             <div className={styles.dumpsterLid} />
             <div className={styles.compactorPlate} aria-hidden="true"><i/><i/><i/><i/><i/></div>
             <div className={styles.dumpsterBody}><span>YOU&apos;LL NEVER<br/>SEE IT AGAIN</span><b aria-hidden="true">CRUSH!</b></div>
@@ -299,7 +300,7 @@ export default function TrashketballGame() {
               onPointerMove={onPointerMove}
               onPointerUp={onPointerUp}
               onPointerCancel={onPointerUp}
-              aria-label={`${item.name}, worth ${item.points} points. Swipe it toward the dumpster.`}
+              aria-label={`${item.name}, worth ${item.points} points. Swipe it through the hoop.`}
             >
               <span aria-hidden="true">{item.emoji}</span>
               <small>+{item.points}</small>
