@@ -46,7 +46,7 @@ export default function OurWorkPage(){return <>
 <div className="project-gallery">
 {projects.map((project)=><article className="project" key={project.title}>
   <div className="project-title"><h2>{project.title}</h2></div>
-  <div className="before-after">
+  <div className={`before-after${project.title === 'Storage Unit Cleanout' ? ' storage-unit-before-after' : ''}`}>
     <figure className="project-photo"><img src={project.before} alt={`${project.title} before`}/></figure>
     <figure className="project-photo"><img src={project.after} alt={`${project.title} after`}/></figure>
   </div>
@@ -54,4 +54,5 @@ export default function OurWorkPage(){return <>
 </div>
 
 <div className="hero-actions" style={{marginTop:'54px'}}><Link href="/contact" className="btn">Get a Quote →</Link></div></div></section>
+<style>{`.storage-unit-before-after .project-photo{height:clamp(360px,42vw,560px);overflow:hidden}.storage-unit-before-after .project-photo img{width:100%;height:100%;object-fit:cover;object-position:center}@media(max-width:720px){.storage-unit-before-after{grid-template-columns:1fr!important}.storage-unit-before-after .project-photo{height:clamp(320px,88vw,500px)}}`}</style>
 </>}
