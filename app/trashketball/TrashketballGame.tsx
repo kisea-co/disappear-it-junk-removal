@@ -22,6 +22,8 @@ export default function TrashketballGame() {
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const frameRef = useRef<number | null>(null);
   const positionRef = useRef({ x: 50, y: 78 });
+  const audioRef = useRef<AudioContext | null>(null);
+  const soundOnRef = useRef(true);
   const [playing, setPlaying] = useState(false);
   const [time, setTime] = useState(ROUND_SECONDS);
   const [score, setScore] = useState(0);
@@ -34,6 +36,40 @@ export default function TrashketballGame() {
   const [shotInFlight, setShotInFlight] = useState(false);
   const [rotation, setRotation] = useState(0);
   const [streak, setStreak] = useState(0);
+  const [soundOn, setSoundOn] = useState(true);
+
+  const audioContext = () => {
+    if (!audioRef.current) audioRef.current = new AudioContext();
+    if (audioRef.current.state === 'suspended') void audioRef.current.resume();
+    return audioRef.current;
+  };
+
+  const tone = (frequency:number, duration:number, type:OscillatorType = 'sine', volume = .07, delay = 0) => {
+    if (!soundOnRef.current) return;
+    const context = audioContext();
+    const start = context.currentTime + delay;
+    const oscillator = context.createOscillator();
+    const gain = context.createGain();
+    oscillator.type = type;
+    oscillator.frequency.setValueAtTime(frequency,start);
+    gain.gain.setValueAtTime(volume,start);
+    gain.gain.exponentialRampToValueAtTime(.001,start + duration);
+    oscillator.connect(gain);
+    gain.connect(context.destination);
+    oscillator.start(start);
+    oscillator.stop(start + duration);
+  };
+
+  const sound = (name:'start'|'launch'|'board'|'rim'|'swish'|'fire'|'miss'|'buzzer') => {
+    if (name === 'start') { tone(440,.12,'square',.035); tone(660,.18,'square',.035,.13); }
+    if (name === 'launch') { tone(180,.11,'sine',.045); tone(290,.12,'sine',.035,.05); }
+    if (name === 'board') { tone(155,.12,'square',.055); tone(105,.16,'triangle',.05,.04); }
+    if (name === 'rim') { tone(230,.08,'square',.05); tone(165,.13,'square',.04,.07); }
+    if (name === 'swish') { tone(520,.11,'sine',.05); tone(720,.13,'sine',.05,.08); tone(940,.2,'sine',.045,.16); }
+    if (name === 'fire') { tone(660,.1,'triangle',.05); tone(880,.12,'triangle',.05,.09); tone(1100,.24,'triangle',.05,.18); }
+    if (name === 'miss') tone(92,.2,'triangle',.045);
+    if (name === 'buzzer') { tone(145,.5,'sawtooth',.055); tone(118,.5,'square',.035,.48); }
+  };
 
   const moveJunk = (next: {x:number; y:number}) => {
     positionRef.current = next;
@@ -54,6 +90,7 @@ export default function TrashketballGame() {
     setDragging(false);
     setShotInFlight(false);
     setMessage('Time! You cleared the court.');
+    sound('buzzer');
     if (timerRef.current) clearInterval(timerRef.current);
     if (frameRef.current) cancelAnimationFrame(frameRef.current);
     timerRef.current = null;
@@ -64,6 +101,8 @@ export default function TrashketballGame() {
   }, [time, playing, endRound]);
 
   const startGame = () => {
+    audioContext();
+    sound('start');
     if (timerRef.current) clearInterval(timerRef.current);
     setScore(0);
     setStreak(0);
@@ -129,6 +168,7 @@ export default function TrashketballGame() {
 
     setShotInFlight(true);
     setMessage('It\'s up!');
+    sound('launch');
     moveJunk({x: current.x, y: current.y});
     let previous = performance.now();
     const launched = previous;
@@ -150,6 +190,7 @@ export default function TrashketballGame() {
         velocityY = Math.abs(velocityY) * .62;
         velocityX += nextX < 50 ? -.025 : .025;
         setMessage('Off the backboard!');
+        sound('board');
       }
 
       const descendingIntoBin = velocityY > 0 && nextY >= 24 && nextY <= 35 && nextX > 38 && nextX < 62;
@@ -159,6 +200,8 @@ export default function TrashketballGame() {
         setStreak((oldStreak) => {
           const nextStreak = oldStreak + 1;
           setMessage(nextStreak >= 3 ? `ON FIRE! ${nextStreak} IN A ROW · +${earned}` : `SWISH! +${earned}`);
+          sound(nextStreak >= 3 ? 'fire' : 'swish');
+          if (navigator.vibrate) navigator.vibrate(nextStreak >= 3 ? [35,25,55] : 35);
           return nextStreak;
         });
         setScore((oldScore) => {
@@ -181,6 +224,7 @@ export default function TrashketballGame() {
         velocityY *= -.54;
         velocityX *= -.72;
         setMessage('CLANG! Off the edge.');
+        sound('rim');
       }
 
       moveJunk({x: nextX,y: nextY});
@@ -189,6 +233,7 @@ export default function TrashketballGame() {
       if (nextY > 96 || now - launched > 2400) {
         setStreak(0);
         setMessage('Missed it—shoot again!');
+        sound('miss');
         resetJunk(240);
         return;
       }
@@ -251,7 +296,7 @@ export default function TrashketballGame() {
 
         <div className={styles.gameFooter}>
           <p role="status" aria-live="polite">{message}</p>
-          <span>{streak > 1 ? `${streak} shot streak · ` : ''}{item.name}: {item.points} pts</span>
+          <div className={styles.gameMeta}><span>{streak > 1 ? `${streak} shot streak · ` : ''}{item.name}: {item.points} pts</span><button type="button" onClick={() => { const next = !soundOnRef.current; soundOnRef.current = next; if (next) audioContext(); setSoundOn(next); }} aria-pressed={soundOn}>{soundOn ? 'Sound on 🔊' : 'Sound off 🔇'}</button></div>
         </div>
 
         {!playing && time === 0 && (
