@@ -2,6 +2,11 @@ import Link from 'next/link';
 
 const projects = [
   {
+    title: 'Storage Unit Cleanout',
+    before: '/images/storage-unit-cleanout-before.png',
+    after: '/images/storage-unit-cleanout-after.png',
+  },
+  {
     title: 'Residential Moving Cleanout',
     before: '/images/residential-moving-cleanout-before.png',
     after: '/images/residential-moving-cleanout-after.png',
