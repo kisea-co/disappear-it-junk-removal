@@ -21,7 +21,9 @@ export default function TrashketballGame() {
   const trail = useRef<Point[]>([]);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const frameRef = useRef<number | null>(null);
+  const goalFrameRef = useRef<number | null>(null);
   const positionRef = useRef({ x: 50, y: 78 });
+  const goalXRef = useRef(50);
   const audioRef = useRef<AudioContext | null>(null);
   const soundOnRef = useRef(true);
   const [playing, setPlaying] = useState(false);
@@ -37,6 +39,7 @@ export default function TrashketballGame() {
   const [rotation, setRotation] = useState(0);
   const [streak, setStreak] = useState(0);
   const [soundOn, setSoundOn] = useState(true);
+  const [goalX, setGoalX] = useState(50);
 
   const audioContext = () => {
     if (!audioRef.current) audioRef.current = new AudioContext();
@@ -135,6 +138,7 @@ export default function TrashketballGame() {
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
       if (frameRef.current) cancelAnimationFrame(frameRef.current);
+      if (goalFrameRef.current) cancelAnimationFrame(goalFrameRef.current);
     };
   }, []);
 
@@ -146,6 +150,7 @@ export default function TrashketballGame() {
     sound('buzzer');
     if (timerRef.current) clearInterval(timerRef.current);
     if (frameRef.current) cancelAnimationFrame(frameRef.current);
+    if (goalFrameRef.current) cancelAnimationFrame(goalFrameRef.current);
     timerRef.current = null;
   }, []);
 
@@ -156,6 +161,22 @@ export default function TrashketballGame() {
   useEffect(() => {
     if (playing && time > 0 && time <= 5) sound('countdown');
   }, [time,playing]);
+
+  useEffect(() => {
+    if (!playing) {
+      goalXRef.current = 50;
+      setGoalX(50);
+      return;
+    }
+    const moveGoal = (now:number) => {
+      const next = 50 + Math.sin(now / 1250) * 17;
+      goalXRef.current = next;
+      setGoalX(next);
+      goalFrameRef.current = requestAnimationFrame(moveGoal);
+    };
+    goalFrameRef.current = requestAnimationFrame(moveGoal);
+    return () => { if (goalFrameRef.current) cancelAnimationFrame(goalFrameRef.current); };
+  }, [playing]);
 
   const startGame = () => {
     void unlockMobileAudio().then(() => sound('start'));
@@ -243,14 +264,16 @@ export default function TrashketballGame() {
         nextX = Math.max(5, Math.min(95, nextX));
       }
 
-      if (velocityY < 0 && nextY < 20 && nextX > 38 && nextX < 62) {
+      const targetX = goalXRef.current;
+
+      if (velocityY < 0 && nextY < 20 && nextX > targetX - 12 && nextX < targetX + 12) {
         velocityY = Math.abs(velocityY) * .62;
-        velocityX += nextX < 50 ? -.025 : .025;
+        velocityX += nextX < targetX ? -.025 : .025;
         setMessage('Off the backboard!');
         sound('board');
       }
 
-      const throughHoop = velocityY > 0 && nextY >= 21 && nextY <= 29 && nextX > 43 && nextX < 57;
+      const throughHoop = velocityY > 0 && nextY >= 21 && nextY <= 29 && nextX > targetX - 7 && nextX < targetX + 7;
       if (throughHoop) {
         const earned = ITEMS[itemIndex].points;
         setMadeShot(true);
@@ -271,12 +294,12 @@ export default function TrashketballGame() {
           });
           return nextScore;
         });
-        moveJunk({x: 50,y: 31});
+        moveJunk({x: targetX,y: 31});
         resetJunk(430);
         return;
       }
 
-      const hitRim = velocityY > 0 && nextY > 20 && nextY < 30 && ((nextX > 38 && nextX <= 43) || (nextX >= 57 && nextX < 62));
+      const hitRim = velocityY > 0 && nextY > 20 && nextY < 30 && ((nextX > targetX - 12 && nextX <= targetX - 7) || (nextX >= targetX + 7 && nextX < targetX + 12));
       if (hitRim && !rimBounce) {
         rimBounce = true;
         velocityY *= -.54;
@@ -317,22 +340,22 @@ export default function TrashketballGame() {
 
         <div ref={courtRef} className={styles.court} aria-label="Trashketball game court">
           <div className={styles.skyline} aria-hidden="true" />
-          <div className={styles.backboard} aria-hidden="true"><span>DISAPPEAR IT</span></div>
-          <div className={styles.hoop} aria-label="Trashketball hoop"><div className={styles.rim}/><div className={styles.net}><i/><i/><i/><i/><i/></div></div>
-          <div className={`${styles.dumpster} ${madeShot ? styles.compacting : ''}`} aria-label="Dumpster compactor beneath the hoop">
+          <div className={styles.backboard} style={{left:`${goalX}%`}} aria-hidden="true"><span>DISAPPEAR IT</span></div>
+          <div className={styles.hoop} style={{left:`${goalX}%`}} aria-label="Moving Trashketball hoop"><div className={styles.rim}/><div className={styles.net}><i/><i/><i/><i/><i/></div></div>
+          <div className={`${styles.dumpster} ${madeShot ? styles.compacting : ''}`} style={{left:`${goalX}%`}} aria-label="Moving dumpster compactor beneath the hoop">
             <div className={styles.dumpsterLid} />
             <div className={styles.compactorPlate} aria-hidden="true"><i/><i/><i/><i/><i/></div>
             <div className={styles.dumpsterBody}><span>YOU&apos;LL NEVER<br/>SEE IT AGAIN</span><b aria-hidden="true">CRUSH!</b></div>
             <div className={styles.crushSparks} aria-hidden="true">{Array.from({length:8},(_,i)=><i key={i}/>)}</div>
           </div>
-          <div className={styles.targetGlow} aria-hidden="true" />
+          <div className={styles.targetGlow} style={{left:`${goalX}%`}} aria-hidden="true" />
           <div className={styles.courtLine} aria-hidden="true" />
 
           {playing && (
             <button
               ref={junkRef}
               type="button"
-              className={`${styles.junk} ${dragging ? styles.dragging : ''} ${shotInFlight ? styles.flying : ''} ${madeShot ? styles.made : ''}`}
+              className={`${styles.junk} ${dragging ? styles.dragging : ''} ${shotInFlight ? styles.flying : ''} ${madeShot ? styles.made : ''} ${streak >= 6 ? styles.onFire : ''}`}
               style={{ left: `${position.x}%`, top: `${position.y}%`, rotate: `${rotation}deg` }}
               onPointerDown={onPointerDown}
               onPointerMove={onPointerMove}
@@ -340,6 +363,7 @@ export default function TrashketballGame() {
               onPointerCancel={onPointerUp}
               aria-label={`${item.name}, worth ${item.points} points. Swipe it through the hoop.`}
             >
+              {streak >= 6 && <div className={styles.flames} aria-hidden="true"><i/><i/><i/><i/><i/><i/></div>}
               <span aria-hidden="true">{item.emoji}</span>
               <small>+{item.points}</small>
             </button>
