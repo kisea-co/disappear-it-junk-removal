@@ -11,6 +11,13 @@ const ITEMS = [
   { emoji: '🪑', name: 'Old chair', points: 25 },
   { emoji: '🛞', name: 'Tire', points: 30 },
   { emoji: '🛋️', name: 'Couch', points: 50 },
+  { emoji: '🤖', name: 'Old robot', points: 20 },
+  { emoji: '🏀', name: 'Basketball', points: 10 },
+  { emoji: '🏈', name: 'Football', points: 15 },
+  { emoji: '🚲', name: 'Bicycle', points: 40 },
+  { emoji: '🎸', name: 'Guitar', points: 30 },
+  { emoji: '🚽', name: 'Old toilet', points: 50 },
+  { emoji: '🛹', name: 'Skateboard', points: 25 },
 ];
 
 type Point = { x: number; y: number; time: number };
