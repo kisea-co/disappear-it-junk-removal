@@ -18,6 +18,10 @@ const ITEMS = [
   { emoji: '🎸', name: 'Guitar', points: 30 },
   { emoji: '🚽', name: 'Old toilet', points: 50 },
   { emoji: '🛹', name: 'Skateboard', points: 25 },
+  { emoji: '🖨️', name: 'Printer', points: 30 },
+  { emoji: '🖥️', name: 'Desktop computer', points: 40 },
+  { emoji: '📺', name: 'Television', points: 40 },
+  { emoji: '💻', name: 'Laptop', points: 25 },
 ];
 
 type Point = { x: number; y: number; time: number };
