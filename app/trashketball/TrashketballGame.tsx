@@ -183,6 +183,19 @@ export default function TrashketballGame() {
     playFile(name);
   };
 
+  const stopSound = (name:SoundName) => {
+    const audio = mediaRef.current[name];
+    if (audio) {
+      audio.pause();
+      audio.currentTime = 0;
+    }
+    if (name === 'fire' && 'speechSynthesis' in window) window.speechSynthesis.cancel();
+  };
+
+  const stopAllSounds = () => {
+    (Object.keys(mediaRef.current) as SoundName[]).forEach(stopSound);
+  };
+
   const moveJunk = (next: {x:number; y:number}) => {
     positionRef.current = next;
     setPosition(next);
@@ -263,6 +276,7 @@ export default function TrashketballGame() {
   };
 
   const endRound = useCallback(() => {
+    stopSound('fire');
     setPlaying(false);
     setDragging(false);
     setShotInFlight(false);
@@ -304,6 +318,7 @@ export default function TrashketballGame() {
     const cleanName = playerName.trim().replace(/\s+/g, ' ');
     if (cleanName.length >= 2 && !editingName) playerNameRef.current = cleanName;
     void unlockMobileAudio();
+    stopSound('fire');
     sound('start');
     if (timerRef.current) clearInterval(timerRef.current);
     setScore(0);
@@ -460,6 +475,7 @@ export default function TrashketballGame() {
       setRotation((value) => value + delta * .42);
 
       if (nextY > 96 || now - launched > 2400) {
+        stopSound('fire');
         setStreak(0);
         setMessage('Missed it—shoot again!');
         sound('miss');
@@ -535,7 +551,7 @@ export default function TrashketballGame() {
 
         <div className={styles.gameFooter}>
           <p role="status" aria-live="polite">{message}</p>
-          <div className={styles.gameMeta}><span>{streak > 1 ? `${streak} shot streak · ` : ''}{item.name}: {item.points} pts</span><button type="button" onClick={() => { const next = !soundOnRef.current; soundOnRef.current = next; if (next) audioContext(); setSoundOn(next); }} aria-pressed={soundOn}>{soundOn ? 'Sound on 🔊' : 'Sound off 🔇'}</button></div>
+          <div className={styles.gameMeta}><span>{streak > 1 ? `${streak} shot streak · ` : ''}{item.name}: {item.points} pts</span><button type="button" onClick={() => { const next = !soundOnRef.current; soundOnRef.current = next; if (next) audioContext(); else stopAllSounds(); setSoundOn(next); }} aria-pressed={soundOn}>{soundOn ? 'Sound on 🔊' : 'Sound off 🔇'}</button></div>
         </div>
 
         <aside className={styles.leaderboard} aria-label="Trashketball leaderboard">
