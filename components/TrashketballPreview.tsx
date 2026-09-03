@@ -14,7 +14,7 @@ export default function TrashketballPreview() {
             <div><small>PLAY A ROUND</small><strong>$25 OFF</strong><span>Any load size</span></div>
             <div><small>SCORE 500+</small><strong>$50 OFF</strong><span>Any load size</span></div>
           </div>
-          <p style={{maxWidth:'620px',margin:'16px 0 20px',fontSize:'.72rem',lineHeight:1.55,letterSpacing:'.03em',color:'#aaa196'}}>One-time offer. Redeem either $25 off or $50 off. Discounts cannot be stacked, combined, transferred or used with any other offer. Limit one Trashketball discount per customer.</p>
+          <p className={styles.promoTerms}>One reward per customer. One-time use only. Cannot be combined with other offers.</p>
           <Link className="btn" href="/trashketball">Play Trashketball →</Link>
         </div>
         <Link className={styles.preview} href="/trashketball" aria-label="Play Trashketball and unlock a junk removal discount">

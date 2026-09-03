@@ -66,6 +66,11 @@
   font-size: 0.58rem;
   color: #ddd4c7;
 }
+.promoTerms {
+  margin: -12px 0 25px !important;
+  color: #8f887e !important;
+  font-size: 0.72rem !important;
+}
 .preview {
   display: block;
   border: 1px solid rgba(209, 174, 71, 0.52);
