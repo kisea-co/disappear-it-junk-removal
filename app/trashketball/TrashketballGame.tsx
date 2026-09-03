@@ -92,6 +92,7 @@ export default function TrashketballGame() {
   const [goalX, setGoalX] = useState(50);
   const [reward, setReward] = useState<0 | 25 | 50>(0);
   const [rewardClaimed, setRewardClaimed] = useState(false);
+  const [showRewardCelebration, setShowRewardCelebration] = useState(false);
   const [playerName, setPlayerName] = useState("");
   const [editingName, setEditingName] = useState(true);
   const [recentScores, setRecentScores] = useState<ScoreEntry[]>([]);
@@ -271,8 +272,10 @@ export default function TrashketballGame() {
     const savedReward = Number(
       window.localStorage.getItem("trashketball-reward"),
     );
-    if (!claimed && (savedReward === 25 || savedReward === 50))
+    if (!claimed && (savedReward === 25 || savedReward === 50)) {
       setReward(savedReward);
+      window.localStorage.setItem("trashketball-reward-announced", "true");
+    }
     (Object.entries(SOUND_FILES) as [SoundName, string][]).forEach(
       ([name, src]) => {
         const audio = new Audio(src);
@@ -367,12 +370,21 @@ export default function TrashketballGame() {
     if (frameRef.current) cancelAnimationFrame(frameRef.current);
     if (goalFrameRef.current) cancelAnimationFrame(goalFrameRef.current);
     timerRef.current = null;
+    if (
+      !rewardClaimed &&
+      window.localStorage.getItem("trashketball-reward-announced") !== "true"
+    ) {
+      setShowRewardCelebration(true);
+      window.localStorage.setItem("trashketball-reward-announced", "true");
+    } else {
+      setShowRewardCelebration(false);
+    }
     if (playerNameRef.current.trim().length >= 2) void submitScore();
     else if (scoreRef.current < 250)
       setScoreStatus(
         `Score ${250 - scoreRef.current} more points to join the leaderboard.`,
       );
-  }, [submitScore]);
+  }, [rewardClaimed, submitScore]);
 
   useEffect(() => {
     if (time === 0 && playing) endRound();
@@ -412,6 +424,7 @@ export default function TrashketballGame() {
     scoreRef.current = 0;
     madeShotsRef.current = 0;
     setScoreStatus("");
+    setShowRewardCelebration(false);
     sessionIdRef.current = "";
     void fetch("/api/scores", {
       method: "POST",
@@ -748,15 +761,19 @@ export default function TrashketballGame() {
                   <p className={styles.finalScore}>
                     You scored <strong>{score}</strong> points.
                   </p>
-                  {!rewardClaimed ? (
+                  {!rewardClaimed && showRewardCelebration ? (
                     <div className={styles.rewardUnlocked}>
                       <small>ONE-TIME REWARD SAVED</small>
                       <strong>${reward || 25} OFF</strong>
                       <span>ANY LOAD SIZE</span>
                     </div>
-                  ) : (
+                  ) : rewardClaimed ? (
                     <p className={styles.scoreStatus} role="status">
                       Your one-time Trashketball discount has already been claimed. Keep playing for the leaderboard!
+                    </p>
+                  ) : (
+                    <p className={styles.scoreStatus} role="status">
+                      This replay only updates your score. Your one-time reward is already saved—additional rounds do not create additional discounts.
                     </p>
                   )}
                   {editingName ? (
@@ -821,7 +838,7 @@ export default function TrashketballGame() {
                   className={styles.claimLink}
                   href={`/contact?trashketball=${reward || 25}`}
                 >
-                  Claim ${reward || 25} off your load →
+                  Use your saved ${reward || 25} discount →
                 </Link>
               )}
             </div>
