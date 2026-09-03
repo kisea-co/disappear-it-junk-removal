@@ -20,15 +20,17 @@ export default function TrashketballPreview() {
         <Link className={styles.preview} href="/trashketball" aria-label="Play Trashketball and unlock a junk removal discount">
           <div className={styles.scoreboard}><span>TRASHKETBALL</span><div><b><small>SCORE</small>025</b><b><small>TIME</small>24</b></div></div>
           <div className={styles.court}>
-            <div className={styles.shot} aria-hidden="true">📦</div>
-            <div className={`${gameStyles.backboard} ${styles.previewBackboard}`} aria-hidden="true"><span>DISAPPEAR IT</span></div>
-            <div className={`${gameStyles.hoop} ${styles.previewHoop}`} aria-hidden="true">
-              <div className={gameStyles.rim}/>
-              <div className={gameStyles.net}><img className={gameStyles.chainNet} src="/images/game/chain-net-realistic.png" alt="" /></div>
-            </div>
-            <div className={`${gameStyles.dumpster} ${styles.previewDumpster}`} aria-hidden="true">
-              <div className={gameStyles.dumpsterLid}/>
-              <div className={gameStyles.dumpsterBody}><span>YOU&apos;LL NEVER<br/>SEE IT AGAIN</span></div>
+            <div className={styles.movingPlay} aria-hidden="true">
+              <div className={styles.shot}>📦</div>
+              <div className={`${gameStyles.backboard} ${styles.previewBackboard}`}><span>DISAPPEAR IT</span></div>
+              <div className={`${gameStyles.hoop} ${styles.previewHoop}`}>
+                <div className={gameStyles.rim}/>
+                <div className={gameStyles.net}><img className={gameStyles.chainNet} src="/images/game/chain-net-realistic.png" alt="" /></div>
+              </div>
+              <div className={`${gameStyles.dumpster} ${styles.previewDumpster}`}>
+                <div className={gameStyles.dumpsterLid}/>
+                <div className={gameStyles.dumpsterBody}><span>YOU&apos;LL NEVER<br/>SEE IT AGAIN</span></div>
+              </div>
             </div>
             <div className={styles.tap}>TAP TO PLAY <span>→</span></div>
           </div>
