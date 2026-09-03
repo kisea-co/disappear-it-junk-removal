@@ -253,6 +253,19 @@ export default function TrashketballGame() {
     }
   }, []);
 
+  const savePlayerAndScore = () => {
+    const cleanName = playerName.trim().replace(/\s+/g, ' ');
+    if (cleanName.length < 2) {
+      setScoreStatus('Enter at least two characters to save your player.');
+      return;
+    }
+    setPlayerName(cleanName);
+    playerNameRef.current = cleanName;
+    window.localStorage.setItem('trashketball-player-name', cleanName);
+    setEditingName(false);
+    void submitScore();
+  };
+
   const endRound = useCallback(() => {
     setPlaying(false);
     setDragging(false);
@@ -263,7 +276,8 @@ export default function TrashketballGame() {
     if (frameRef.current) cancelAnimationFrame(frameRef.current);
     if (goalFrameRef.current) cancelAnimationFrame(goalFrameRef.current);
     timerRef.current = null;
-    void submitScore();
+    if (playerNameRef.current.trim().length >= 2) void submitScore();
+    else if (scoreRef.current < 250) setScoreStatus(`Score ${250 - scoreRef.current} more points to join the leaderboard.`);
   }, [submitScore]);
 
   useEffect(() => {
@@ -292,11 +306,7 @@ export default function TrashketballGame() {
 
   const startGame = () => {
     const cleanName = playerName.trim().replace(/\s+/g, ' ');
-    if (cleanName.length < 2) return;
-    setPlayerName(cleanName);
-    playerNameRef.current = cleanName;
-    window.localStorage.setItem('trashketball-player-name', cleanName);
-    setEditingName(false);
+    if (cleanName.length >= 2 && !editingName) playerNameRef.current = cleanName;
     void unlockMobileAudio();
     sound('start');
     if (timerRef.current) clearInterval(timerRef.current);
@@ -519,8 +529,8 @@ export default function TrashketballGame() {
             <div className={styles.overlay}>
               <span className={styles.spark}>✦</span>
               <h2>{time === 0 ? 'NICE SHOT.' : 'READY TO SHOOT?'}</h2>
-              {time === 0 ? <><p className={styles.finalScore}>You scored <strong>{score}</strong> points.</p><div className={styles.rewardUnlocked}><small>REWARD UNLOCKED</small><strong>${reward || 25} OFF</strong><span>ANY LOAD SIZE</span></div>{scoreStatus && <p className={styles.scoreStatus} role="status">{scoreStatus}</p>}</> : <><p className={styles.offerPrompt}>Play this round to unlock <strong>$25 off</strong>. Score 500+ to unlock <strong>$50 off</strong>.</p>{editingName ? <div className={styles.playerEntry}><label htmlFor="trashketball-player">PLAYER NAME</label><input id="trashketball-player" value={playerName} onChange={(event) => { setPlayerName(event.target.value); playerNameRef.current = event.target.value; }} maxLength={20} placeholder="Nickname or first name" autoComplete="nickname" autoFocus/></div> : <div className={styles.rememberedPlayer}><span>Playing as <strong>{playerName}</strong></span><button type="button" onClick={() => setEditingName(true)}>Change</button></div>}</>}
-              <button className="btn" type="button" onClick={startGame} disabled={time !== 0 && playerName.trim().length < 2}>{time === 0 ? 'Play Again' : 'Start Game'} →</button>
+              {time === 0 ? <><p className={styles.finalScore}>You scored <strong>{score}</strong> points.</p><div className={styles.rewardUnlocked}><small>REWARD UNLOCKED</small><strong>${reward || 25} OFF</strong><span>ANY LOAD SIZE</span></div>{editingName ? <div className={styles.optionalPlayer}><div className={styles.playerEntry}><label htmlFor="trashketball-player">SAVE YOUR PLAYER <span>OPTIONAL</span></label><input id="trashketball-player" value={playerName} onChange={(event) => { setPlayerName(event.target.value); playerNameRef.current = event.target.value; }} maxLength={20} placeholder="Nickname or first name" autoComplete="nickname"/></div><button className={styles.saveScoreButton} type="button" onClick={savePlayerAndScore}>Save name &amp; score</button></div> : <div className={styles.rememberedPlayer}><span>Playing as <strong>{playerName}</strong></span><button type="button" onClick={() => setEditingName(true)}>Change</button></div>}{scoreStatus && <p className={styles.scoreStatus} role="status">{scoreStatus}</p>}</> : <p className={styles.offerPrompt}>Play this round to unlock <strong>$25 off</strong>. Score 500+ to unlock <strong>$50 off</strong>. No sign-up required.</p>}
+              <button className="btn" type="button" onClick={startGame}>{time === 0 ? 'Play Again' : 'Start Game'} →</button>
               {time === 0 && <Link className={styles.claimLink} href={`/contact?trashketball=${reward || 25}`}>Claim ${reward || 25} off your load →</Link>}
             </div>
           )}
