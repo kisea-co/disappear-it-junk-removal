@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import FooterHighlights from './FooterHighlights';
 
 export default function Footer() {
@@ -6,7 +5,7 @@ export default function Footer() {
     <footer className="site-footer" style={{padding:0}}>
       <FooterHighlights />
       <div style={{padding:'50px 0 24px'}}>
-        <div className="container footer-grid">
+        <div className="container footer-grid" style={{gridTemplateColumns:'1fr 1fr'}}>
           <div>
             <div className="brand-mark footer-brand">
               <span className="brand-name">DISAPPEAR IT</span>
@@ -15,12 +14,9 @@ export default function Footer() {
             <p className="footer-tagline">You&apos;ll never see it again.</p>
           </div>
           <div className="footer-contact">
-            <a href="tel:+14048579200">Call Us</a>
-            <a href="mailto:junkdisappears@gmail.com">Email Us</a>
+            <a href="tel:+14048579200">(404) 857-9200</a>
+            <a href="mailto:junkdisappears@gmail.com">junkdisappears@gmail.com</a>
             <span>Atlanta, GA + surrounding metro areas</span>
-          </div>
-          <div className="footer-action">
-            <Link href="/contact" className="btn btn-small">Get a Quote</Link>
           </div>
         </div>
         <div className="container footer-bottom">© 2026 Disappear It Junk &amp; Trash Removal LLC</div>
