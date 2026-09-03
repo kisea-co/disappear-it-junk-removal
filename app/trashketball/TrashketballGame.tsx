@@ -73,6 +73,7 @@ export default function TrashketballGame() {
   const [goalX, setGoalX] = useState(50);
   const [reward, setReward] = useState<0|25|50>(0);
   const [playerName, setPlayerName] = useState('');
+  const [editingName, setEditingName] = useState(true);
   const [recentScores, setRecentScores] = useState<ScoreEntry[]>([]);
   const [highScore, setHighScore] = useState<ScoreEntry|null>(null);
   const [scoreStatus, setScoreStatus] = useState('');
@@ -194,6 +195,12 @@ export default function TrashketballGame() {
   useEffect(() => {
     const saved = Number(window.localStorage.getItem('trashketball-best') || 0);
     setBest(saved);
+    const savedName = window.localStorage.getItem('trashketball-player-name')?.trim() || '';
+    if (savedName.length >= 2) {
+      setPlayerName(savedName);
+      playerNameRef.current = savedName;
+      setEditingName(false);
+    }
     const savedReward = Number(window.localStorage.getItem('trashketball-reward'));
     if (savedReward === 25 || savedReward === 50) setReward(savedReward);
     (Object.entries(SOUND_FILES) as [Exclude<SoundName,'fire'>,string][]).forEach(([name,src]) => {
@@ -286,7 +293,10 @@ export default function TrashketballGame() {
   const startGame = () => {
     const cleanName = playerName.trim().replace(/\s+/g, ' ');
     if (cleanName.length < 2) return;
+    setPlayerName(cleanName);
     playerNameRef.current = cleanName;
+    window.localStorage.setItem('trashketball-player-name', cleanName);
+    setEditingName(false);
     void unlockMobileAudio();
     sound('start');
     if (timerRef.current) clearInterval(timerRef.current);
@@ -509,7 +519,7 @@ export default function TrashketballGame() {
             <div className={styles.overlay}>
               <span className={styles.spark}>✦</span>
               <h2>{time === 0 ? 'NICE SHOT.' : 'READY TO SHOOT?'}</h2>
-              {time === 0 ? <><p className={styles.finalScore}>You scored <strong>{score}</strong> points.</p><div className={styles.rewardUnlocked}><small>REWARD UNLOCKED</small><strong>${reward || 25} OFF</strong><span>ANY LOAD SIZE</span></div>{scoreStatus && <p className={styles.scoreStatus} role="status">{scoreStatus}</p>}</> : <><p className={styles.offerPrompt}>Play this round to unlock <strong>$25 off</strong>. Score 500+ to unlock <strong>$50 off</strong>.</p><div className={styles.playerEntry}><label htmlFor="trashketball-player">PLAYER NAME</label><input id="trashketball-player" value={playerName} onChange={(event) => { setPlayerName(event.target.value); playerNameRef.current = event.target.value; }} maxLength={20} placeholder="Nickname or first name" autoComplete="nickname"/></div></>}
+              {time === 0 ? <><p className={styles.finalScore}>You scored <strong>{score}</strong> points.</p><div className={styles.rewardUnlocked}><small>REWARD UNLOCKED</small><strong>${reward || 25} OFF</strong><span>ANY LOAD SIZE</span></div>{scoreStatus && <p className={styles.scoreStatus} role="status">{scoreStatus}</p>}</> : <><p className={styles.offerPrompt}>Play this round to unlock <strong>$25 off</strong>. Score 500+ to unlock <strong>$50 off</strong>.</p>{editingName ? <div className={styles.playerEntry}><label htmlFor="trashketball-player">PLAYER NAME</label><input id="trashketball-player" value={playerName} onChange={(event) => { setPlayerName(event.target.value); playerNameRef.current = event.target.value; }} maxLength={20} placeholder="Nickname or first name" autoComplete="nickname" autoFocus/></div> : <div className={styles.rememberedPlayer}><span>Playing as <strong>{playerName}</strong></span><button type="button" onClick={() => setEditingName(true)}>Change</button></div>}</>}
               <button className="btn" type="button" onClick={startGame} disabled={time !== 0 && playerName.trim().length < 2}>{time === 0 ? 'Play Again' : 'Start Game'} →</button>
               {time === 0 && <Link className={styles.claimLink} href={`/contact?trashketball=${reward || 25}`}>Claim ${reward || 25} off your load →</Link>}
             </div>
