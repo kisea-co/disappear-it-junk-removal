@@ -1593,22 +1593,3 @@
   background: #f1c04f;
   color: #090909;
 }
-.dumpsterBody .dumpsterLogo {
-  position: relative;
-  z-index: 2;
-  width: 54px;
-  height: 38px;
-  flex: 0 0 auto;
-  object-fit: cover;
-  border: 2px solid rgba(8, 8, 8, 0.78);
-  background: #050505;
-}
-.dumpsterBody .dumpsterLogo + span {
-  position: relative;
-  z-index: 2;
-  font-size: 0.78rem;
-}
-@media (max-width: 720px) {
-  .dumpsterBody .dumpsterLogo { width: 46px; height: 34px; }
-  .dumpsterBody .dumpsterLogo + span { font-size: 0.68rem; }
-}

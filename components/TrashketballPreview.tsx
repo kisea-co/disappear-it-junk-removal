@@ -27,7 +27,7 @@ export default function TrashketballPreview() {
             </div>
             <div className={`${gameStyles.dumpster} ${styles.previewDumpster}`} aria-hidden="true">
               <div className={gameStyles.dumpsterLid}/>
-              <div className={gameStyles.dumpsterBody}><img className={gameStyles.dumpsterLogo} src="/images/disappear-it-logo-black.png" alt=""/><span>YOU&apos;LL NEVER<br/>SEE IT AGAIN</span></div>
+              <div className={gameStyles.dumpsterBody}><span>YOU&apos;LL NEVER<br/>SEE IT AGAIN</span></div>
             </div>
             <div className={styles.tap}>TAP TO PLAY <span>→</span></div>
           </div>
