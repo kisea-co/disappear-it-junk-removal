@@ -1,0 +1,29 @@
+.form{padding:clamp(22px,3vw,38px);border:1px solid #d8cfbf;background:#faf8f3;box-shadow:0 22px 55px rgba(42,31,12,.08)}
+.form label,.dateField>label{font-size:.72rem;font-weight:700;letter-spacing:.055em;color:#27231e}
+.form input,.form textarea,.form select{border:1px solid #d7cdbd;background:#fffdf9;transition:border-color .18s ease,box-shadow .18s ease,background .18s ease}
+.form input::placeholder,.form textarea::placeholder{color:#aaa093}
+.form input:focus,.form textarea:focus,.form select:focus{outline:none;border-color:#a77e0c;background:#fff;box-shadow:0 0 0 3px rgba(191,144,0,.12)}
+.dateField{position:relative}
+.dateField>label{display:block;margin-bottom:8px}
+.dateTrigger{width:100%;min-height:62px;padding:10px 15px;border:1px solid #d7cdbd;background:#fffdf9;color:#181511;display:flex;align-items:center;justify-content:space-between;text-align:left;cursor:pointer;transition:.18s ease}
+.dateTrigger:hover,.dateTrigger[aria-expanded=true]{border-color:#a77e0c;box-shadow:0 0 0 3px rgba(191,144,0,.1)}
+.dateTrigger span{display:flex;flex-direction:column;gap:2px}
+.dateTrigger small{font-size:.5rem;letter-spacing:.18em;color:#8c7240}
+.dateTrigger b{font-size:1rem;color:#8b6812}
+.calendar{position:absolute;z-index:20;left:0;top:92px;width:min(100%,390px);padding:18px;background:#0b0b0b;color:#f5efe5;border:1px solid rgba(209,174,71,.75);box-shadow:0 25px 65px rgba(0,0,0,.38)}
+.calendarHeading{display:grid;grid-template-columns:38px 1fr 38px;align-items:center;gap:8px;margin-bottom:13px}
+.calendarHeading strong{text-align:center;font-size:.82rem;letter-spacing:.08em;text-transform:uppercase}
+.calendarHeading button{width:38px;height:36px;border:1px solid rgba(209,174,71,.35);background:#151515;color:#e8c569;cursor:pointer}
+.calendarHeading button:hover{border-color:#e8c569;background:#242017}
+.weekdays,.days{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.weekdays span{padding:5px 0;text-align:center;color:#918a80;font-size:.55rem;letter-spacing:.08em}
+.days>span,.days button{aspect-ratio:1;min-width:0;border:1px solid transparent}
+.days button{background:#171717;color:#eee7dc;font-size:.73rem;cursor:pointer}
+.days button:hover:not(:disabled){border-color:#d1ae47;color:#f3cb5e}
+.days button.selected{background:#d1ae47;color:#090909;font-weight:800;box-shadow:0 0 16px rgba(209,174,71,.42)}
+.days button:disabled{color:#514d47;cursor:not-allowed}
+.calendarFoot{display:flex;justify-content:space-between;gap:16px;align-items:center;margin-top:13px;padding-top:12px;border-top:1px solid rgba(255,255,255,.1)}
+.calendarFoot span{font-size:.58rem;color:#8f887e}
+.calendarFoot button{border:0;background:none;color:#d1ae47;font-size:.62rem;text-decoration:underline;cursor:pointer;white-space:nowrap}
+.form>div:last-child{margin-top:5px;padding-top:22px;border-top:1px solid #ddd3c4}
+@media(max-width:720px){.form{padding:20px 16px;gap:18px}.calendar{position:relative;top:auto;width:100%;margin-top:8px;padding:14px}.days button{font-size:.8rem}.dateTrigger{min-height:58px}}
