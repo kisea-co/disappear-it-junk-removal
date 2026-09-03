@@ -28,15 +28,16 @@ type Point = { x: number; y: number; time: number };
 type ScoreEntry = { id: string; name: string; score: number; createdAt: string };
 type SoundName = 'start'|'pickup'|'launch'|'board'|'rim'|'swish'|'fire'|'miss'|'countdown'|'buzzer'|'crush';
 
-const SOUND_FILES: Record<Exclude<SoundName,'fire'>,string> = {
+const SOUND_FILES: Record<SoundName,string> = {
   start:'/sounds/start-whistle.mp3',
   pickup:'/sounds/pickup-dribble.mp3',
   launch:'/sounds/shot-launch.mp3',
   board:'/sounds/backboard-hit.mp3',
   rim:'/sounds/rim-clang.mp3',
   swish:'/sounds/basketball-net-swish.mp3',
+  fire:'/sounds/fire-sound.mp3',
   miss:'/sounds/miss-thud.mp3',
-  countdown:'/sounds/countdown-beep.mp3',
+  countdown:'/sounds/shot-clock.mp3',
   buzzer:'/sounds/final-buzzer.mp3',
   crush:'/sounds/compactor-crush.mp3',
 };
@@ -52,7 +53,7 @@ export default function TrashketballGame() {
   const goalXRef = useRef(50);
   const audioRef = useRef<AudioContext | null>(null);
   const soundOnRef = useRef(true);
-  const mediaRef = useRef<Partial<Record<Exclude<SoundName,'fire'>,HTMLAudioElement>>>({});
+  const mediaRef = useRef<Partial<Record<SoundName,HTMLAudioElement>>>({});
   const madeShotsRef = useRef(0);
   const sessionIdRef = useRef('');
   const playerNameRef = useRef('');
@@ -164,7 +165,7 @@ export default function TrashketballGame() {
     if (name === 'crush') { tone(105,.22,'sawtooth',.06,.08); tone(72,.28,'square',.045,.16); }
   };
 
-  const playFile = (name:Exclude<SoundName,'fire'>) => {
+  const playFile = (name:SoundName) => {
     if (!soundOnRef.current) return;
     let audio = mediaRef.current[name];
     if (!audio) {
@@ -179,11 +180,6 @@ export default function TrashketballGame() {
 
   const sound = (name:SoundName) => {
     if (!soundOnRef.current) return;
-    if (name === 'fire') {
-      playFile('swish');
-      announceFire();
-      return;
-    }
     playFile(name);
   };
 
@@ -203,7 +199,7 @@ export default function TrashketballGame() {
     }
     const savedReward = Number(window.localStorage.getItem('trashketball-reward'));
     if (savedReward === 25 || savedReward === 50) setReward(savedReward);
-    (Object.entries(SOUND_FILES) as [Exclude<SoundName,'fire'>,string][]).forEach(([name,src]) => {
+    (Object.entries(SOUND_FILES) as [SoundName,string][]).forEach(([name,src]) => {
       const audio = new Audio(src);
       audio.preload = 'auto';
       audio.load();
@@ -425,10 +421,11 @@ export default function TrashketballGame() {
         setMadeShot(true);
         setStreak((oldStreak) => {
           const nextStreak = oldStreak + 1;
-          setMessage(nextStreak >= 3 ? `ON FIRE! ${nextStreak} IN A ROW · +${earned}` : `SWISH! +${earned}`);
-          sound(nextStreak >= 3 ? 'fire' : 'swish');
+          setMessage(nextStreak >= 6 ? `ON FIRE! ${nextStreak} IN A ROW · +${earned}` : `SWISH! +${earned}`);
+          sound('swish');
+          if (nextStreak === 6) sound('fire');
           sound('crush');
-          if (navigator.vibrate) navigator.vibrate(nextStreak >= 3 ? [35,25,55] : 35);
+          if (navigator.vibrate) navigator.vibrate(nextStreak >= 6 ? [35,25,55] : 35);
           return nextStreak;
         });
         setScore((oldScore) => {
@@ -493,10 +490,10 @@ export default function TrashketballGame() {
           <div className={styles.skyline} aria-hidden="true" />
           <div className={styles.backboard} style={{left:`${goalX}%`}} aria-hidden="true"><span>DISAPPEAR IT</span></div>
           <div className={`${styles.hoop} ${streak >= 6 ? styles.goalOnFire : ''} ${madeShot ? styles.netHit : ''}`} style={{left:`${goalX}%`}} aria-label={`Moving Trashketball hoop${streak >= 6 ? ', on fire' : ''}`}>
-            {streak >= 6 && <div className={styles.goalFire} aria-hidden="true">{Array.from({length:9},(_,i)=><span key={i}>🔥</span>)}</div>}
             <div className={styles.rim}/>
             <div className={styles.net}>
               <img className={styles.chainNet} src="/images/game/chain-net-realistic.png" alt="" aria-hidden="true" />
+              {streak >= 6 && <div className={styles.netFire} aria-hidden="true">{Array.from({length:12},(_,i)=><span key={i}>🔥</span>)}</div>}
             </div>
           </div>
           <div className={`${styles.dumpster} ${madeShot ? styles.compacting : ''}`} style={{left:`${goalX}%`}} aria-label="Moving dumpster compactor beneath the hoop">
@@ -530,7 +527,6 @@ export default function TrashketballGame() {
               <span className={styles.spark}>✦</span>
               <h2>{time === 0 ? 'NICE SHOT.' : 'READY TO SHOOT?'}</h2>
               {time === 0 ? <><p className={styles.finalScore}>You scored <strong>{score}</strong> points.</p><div className={styles.rewardUnlocked}><small>REWARD UNLOCKED</small><strong>${reward || 25} OFF</strong><span>ANY LOAD SIZE</span></div>{editingName ? <div className={styles.optionalPlayer}><div className={styles.playerEntry}><label htmlFor="trashketball-player">SAVE YOUR PLAYER <span>OPTIONAL</span></label><input id="trashketball-player" value={playerName} onChange={(event) => { setPlayerName(event.target.value); playerNameRef.current = event.target.value; }} maxLength={20} placeholder="Nickname or first name" autoComplete="nickname"/></div><button className={styles.saveScoreButton} type="button" onClick={savePlayerAndScore}>Save name &amp; score</button></div> : <div className={styles.rememberedPlayer}><span>Playing as <strong>{playerName}</strong></span><button type="button" onClick={() => setEditingName(true)}>Change</button></div>}{scoreStatus && <p className={styles.scoreStatus} role="status">{scoreStatus}</p>}</> : <p className={styles.offerPrompt}>Play this round to unlock <strong>$25 off any load size</strong>. Score 500+ to unlock <strong>$50 off any load size</strong>. No sign-up required.</p>}
-              <p style={{maxWidth:'620px',margin:'14px auto 18px',fontSize:'.68rem',lineHeight:1.5,letterSpacing:'.03em',color:'#b9b1a6'}}>One-time offer. Redeem either $25 off or $50 off. Discounts cannot be stacked, combined, transferred or used with any other offer. Limit one Trashketball discount per customer.</p>
               <button className="btn" type="button" onClick={startGame}>{time === 0 ? 'Play Again' : 'Start Game'} →</button>
               {time === 0 && <Link className={styles.claimLink} href={`/contact?trashketball=${reward || 25}`}>Claim ${reward || 25} off your load →</Link>}
             </div>
