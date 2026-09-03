@@ -37,7 +37,14 @@ function prettyDate(value: string) {
   }).format(new Date(year, month - 1, day));
 }
 
-export default function QuoteForm({ reward }: { reward: 0 | 25 | 50 }) {
+export default function QuoteForm({
+  reward,
+  quoteType = "residential",
+}: {
+  reward: 0 | 25 | 50;
+  quoteType?: "residential" | "commercial";
+}) {
+  const isCommercial = quoteType === "commercial";
   const [activeReward, setActiveReward] = useState<0 | 25 | 50>(reward);
   const [submittedReward, setSubmittedReward] = useState<0 | 25 | 50>(0);
   const [status, setStatus] = useState<
@@ -152,12 +159,13 @@ export default function QuoteForm({ reward }: { reward: 0 | 25 | 50 }) {
 
   return (
     <form className={`quote-form ${styles.form}`} onSubmit={submit}>
+      <input type="hidden" name="quoteType" value={quoteType} />
       <label
         style={{ position: "absolute", left: "-10000px" }}
         aria-hidden="true"
       >
-        Company
-        <input name="company" tabIndex={-1} autoComplete="off" />
+        Website
+        <input name="website" tabIndex={-1} autoComplete="off" />
       </label>
       {activeReward > 0 && (
         <label className="full">
@@ -166,7 +174,7 @@ export default function QuoteForm({ reward }: { reward: 0 | 25 | 50 }) {
         </label>
       )}
       <label>
-        Name
+        {isCommercial ? "Contact name" : "Name"}
         <input
           name="name"
           autoComplete="name"
@@ -175,6 +183,41 @@ export default function QuoteForm({ reward }: { reward: 0 | 25 | 50 }) {
           placeholder="Your name"
         />
       </label>
+      {isCommercial && (
+        <>
+          <label>
+            Company / property name
+            <input
+              name="businessName"
+              autoComplete="organization"
+              required
+              maxLength={160}
+              placeholder="Business or property name"
+            />
+          </label>
+          <label>
+            Project type
+            <select name="projectType" required defaultValue="">
+              <option value="" disabled>Select a project type</option>
+              <option>Apartment community / multifamily</option>
+              <option>Property or unit cleanout</option>
+              <option>Office or retail cleanout</option>
+              <option>Real estate turnover</option>
+              <option>Construction or light demolition debris</option>
+              <option>Other commercial removal</option>
+            </select>
+          </label>
+          <label>
+            Service frequency
+            <select name="frequency" required defaultValue="">
+              <option value="" disabled>Select frequency</option>
+              <option>One-time project</option>
+              <option>Recurring service</option>
+              <option>Not sure yet</option>
+            </select>
+          </label>
+        </>
+      )}
       <label>
         Phone
         <input
@@ -198,7 +241,7 @@ export default function QuoteForm({ reward }: { reward: 0 | 25 | 50 }) {
         />
       </label>
       <label>
-        Location / ZIP
+        {isCommercial ? "Service address / ZIP" : "Location / ZIP"}
         <input
           name="location"
           autoComplete="postal-code"
@@ -208,14 +251,26 @@ export default function QuoteForm({ reward }: { reward: 0 | 25 | 50 }) {
         />
       </label>
       <label className="full">
-        What needs to be removed?
+        {isCommercial ? "Tell us about the project" : "What needs to be removed?"}
         <textarea
           name="junk"
           required
           maxLength={2500}
-          placeholder="Tell us what needs to go, where it is located, and roughly how much there is."
+          placeholder={isCommercial
+            ? "Describe the property or space, what needs to go, approximate volume, access conditions, stairs/elevators, and any deadline."
+            : "Tell us what needs to go, where it is located, and roughly how much there is."}
         />
       </label>
+      {isCommercial && (
+        <label className="full">
+          Site access or scheduling notes (optional)
+          <textarea
+            name="accessNotes"
+            maxLength={1500}
+            placeholder="Gate access, loading area, occupied units, COI requirements, preferred service windows, etc."
+          />
+        </label>
+      )}
       <div className={`full ${styles.dateField}`}>
         <label id="pickup-date-label">Preferred pickup date</label>
         <input type="hidden" name="date" value={selectedDate} />
@@ -338,7 +393,11 @@ export default function QuoteForm({ reward }: { reward: 0 | 25 | 50 }) {
           type="submit"
           disabled={status === "sending"}
         >
-          {status === "sending" ? "Sending Request…" : "Submit Quote Request →"}
+          {status === "sending"
+            ? "Sending Request…"
+            : isCommercial
+              ? "Submit Commercial Request →"
+              : "Submit Quote Request →"}
         </button>
         <p className="muted" style={{ marginBottom: 0 }}>
           Your request will be sent directly to Disappear It. We&apos;ll contact
