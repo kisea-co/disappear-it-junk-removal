@@ -354,6 +354,12 @@
 .previewDumpster {
   animation: exactGoalMove 4s ease-in-out infinite alternate;
 }
+.previewHoop > div:nth-child(2) {
+  height: 72px;
+}
+.previewDumpster {
+  top: 44% !important;
+}
 @keyframes exactGoalMove {
   from { left: 33%; }
   to { left: 67%; }
