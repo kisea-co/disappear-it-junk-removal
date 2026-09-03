@@ -14,7 +14,7 @@ export default function TrashketballPage() {
         <div className="eyebrow">The Disappear It Challenge</div>
         <h1>TRASH<span>KETBALL.</span></h1>
         <p>Think you&apos;ve got aim? Swipe up to send as much junk as you can through the hoop before the clock hits zero.</p>
-        <div className={styles.rules}><span>Play: $25 off any load</span><span>Score 500+: $50 off any load</span><span>30 seconds</span></div>
+        <div className={styles.rules}><span>Play: $25 off any load size</span><span>Score 500+: $50 off any load size</span><span>30 seconds</span></div>
       </div>
     </section>
     <TrashketballGame />
