@@ -1,9 +1,6 @@
-import FooterHighlights from './FooterHighlights';
-
 export default function Footer() {
   return (
     <footer className="site-footer" style={{padding:0}}>
-      <FooterHighlights />
       <div style={{padding:'50px 0 24px'}}>
         <div className="container footer-grid" style={{gridTemplateColumns:'1fr 1fr'}}>
           <div>
