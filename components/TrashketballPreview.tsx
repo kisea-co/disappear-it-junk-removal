@@ -22,8 +22,8 @@ export default function TrashketballPreview() {
             <div className={styles.goal} aria-hidden="true">
               <i className={styles.board}><span>DISAPPEAR IT</span></i>
               <i className={styles.rim}/>
-              <i className={styles.net}/>
-              <i className={styles.dumpster}><span>YOU&apos;LL NEVER<br/>SEE IT AGAIN</span></i>
+              <i className={styles.net}><img src="/images/game/chain-net-realistic.png" alt="" /></i>
+              <i className={styles.dumpster}><span className={styles.dumpsterLid}/><span className={styles.dumpsterBody}><img src="/images/disappear-it-logo-black.png" alt=""/><b>YOU&apos;LL NEVER<br/>SEE IT AGAIN</b></span></i>
             </div>
             <div className={styles.tap}>TAP TO PLAY <span>→</span></div>
           </div>

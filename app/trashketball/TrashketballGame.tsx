@@ -502,7 +502,7 @@ export default function TrashketballGame() {
           <div className={`${styles.dumpster} ${madeShot ? styles.compacting : ''}`} style={{left:`${goalX}%`}} aria-label="Moving dumpster compactor beneath the hoop">
             <div className={styles.dumpsterLid} />
             <div className={styles.compactorPlate} aria-hidden="true"><i/><i/><i/><i/><i/></div>
-            <div className={styles.dumpsterBody}><span>YOU&apos;LL NEVER<br/>SEE IT AGAIN</span><b aria-hidden="true">CRUSH!</b></div>
+            <div className={styles.dumpsterBody}><img className={styles.dumpsterLogo} src="/images/disappear-it-logo-black.png" alt="" aria-hidden="true"/><span>YOU&apos;LL NEVER<br/>SEE IT AGAIN</span><b aria-hidden="true">CRUSH!</b></div>
             <div className={styles.crushSparks} aria-hidden="true">{Array.from({length:8},(_,i)=><i key={i}/>)}</div>
           </div>
           <div className={styles.targetGlow} style={{left:`${goalX}%`}} aria-hidden="true" />
