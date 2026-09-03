@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import TrashketballPreview from '../components/TrashketballPreview';
+import FooterHighlights from '../components/FooterHighlights';
 
 const services = [
   ['Junk Removal','Single items, bulk junk and full-load removal.'],
@@ -26,4 +27,5 @@ export default function HomePage(){return <>
 <section className="commercial-section" style={{paddingTop:'58px',paddingBottom:'58px'}}><div className="container commercial-grid"><div><div className="eyebrow dark">Commercial</div><h2>BUILT FOR BIGGER JOBS.</h2></div><div><p>Reliable junk removal and clean-out support for apartment communities, property managers and businesses.</p><Link className="btn btn-dark" href="/commercial">Commercial Services →</Link></div></div></section>
 <section className="section area-section" style={{paddingTop:'64px',paddingBottom:'64px',position:'relative',overflow:'hidden'}}><span aria-hidden="true" style={{position:'absolute',right:'5%',bottom:'-28px',fontSize:'145px',lineHeight:1,color:'var(--gold-soft)',opacity:.045}}>✦</span><div className="container editorial-split" style={{position:'relative',zIndex:1}}><div><div className="eyebrow">Service Area</div><h2>METRO ATLANTA<br/>+ SURROUNDING AREAS.</h2><p className="section-lead">These are communities we serve frequently, but service is not limited to this list. Send your location and we&apos;ll confirm availability.</p></div><div className="area-list">{serviceAreas.map(area=><span key={area}>{area}</span>)}</div></div></section>
 <section className="final-cta" style={{paddingTop:'50px',paddingBottom:'50px',position:'relative',overflow:'hidden'}}><span aria-hidden="true" style={{position:'absolute',left:'4%',top:'50%',transform:'translateY(-50%)',fontSize:'120px',lineHeight:1,color:'#090909',opacity:.07}}>✦</span><div className="container cta-grid" style={{position:'relative',zIndex:1}}><div><h2>READY TO CLEAR IT OUT?</h2><p>Fast. Reliable. Professional. Licensed + Insured.</p></div><div className="cta-actions"><Link className="btn btn-dark" href="/contact">Get a Free Quote →</Link></div></div></section>
+<FooterHighlights />
 </>}
