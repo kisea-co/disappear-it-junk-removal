@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import styles from './TrashketballPreview.module.css';
+import gameStyles from '../app/trashketball/trashketball.module.css';
 
 export default function TrashketballPreview() {
   return (
@@ -19,11 +20,14 @@ export default function TrashketballPreview() {
           <div className={styles.scoreboard}><span>TRASHKETBALL</span><div><b><small>SCORE</small>025</b><b><small>TIME</small>24</b></div></div>
           <div className={styles.court}>
             <div className={styles.shot} aria-hidden="true">📦</div>
-            <div className={styles.goal} aria-hidden="true">
-              <i className={styles.board}><span>DISAPPEAR IT</span></i>
-              <i className={styles.rim}/>
-              <i className={styles.net}><img src="/images/game/chain-net-realistic.png" alt="" /></i>
-              <i className={styles.dumpster}><span className={styles.dumpsterLid}/><span className={styles.dumpsterBody}><img src="/images/disappear-it-logo-black.png" alt=""/><b>YOU&apos;LL NEVER<br/>SEE IT AGAIN</b></span></i>
+            <div className={`${gameStyles.backboard} ${styles.previewBackboard}`} aria-hidden="true"><span>DISAPPEAR IT</span></div>
+            <div className={`${gameStyles.hoop} ${styles.previewHoop}`} aria-hidden="true">
+              <div className={gameStyles.rim}/>
+              <div className={gameStyles.net}><img className={gameStyles.chainNet} src="/images/game/chain-net-realistic.png" alt="" /></div>
+            </div>
+            <div className={`${gameStyles.dumpster} ${styles.previewDumpster}`} aria-hidden="true">
+              <div className={gameStyles.dumpsterLid}/>
+              <div className={gameStyles.dumpsterBody}><img className={gameStyles.dumpsterLogo} src="/images/disappear-it-logo-black.png" alt=""/><span>YOU&apos;LL NEVER<br/>SEE IT AGAIN</span></div>
             </div>
             <div className={styles.tap}>TAP TO PLAY <span>→</span></div>
           </div>

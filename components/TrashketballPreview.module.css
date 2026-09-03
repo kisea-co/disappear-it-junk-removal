@@ -349,3 +349,20 @@
     opacity: 1;
   }
 }
+.previewBackboard,
+.previewHoop,
+.previewDumpster {
+  animation: exactGoalMove 4s ease-in-out infinite alternate;
+}
+@keyframes exactGoalMove {
+  from { left: 33%; }
+  to { left: 67%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .previewBackboard,
+  .previewHoop,
+  .previewDumpster {
+    left: 50%;
+    animation: none;
+  }
+}
