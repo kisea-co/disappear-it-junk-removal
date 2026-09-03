@@ -54,6 +54,9 @@ export default function TrashketballGame() {
   const soundOnRef = useRef(true);
   const mediaRef = useRef<Partial<Record<Exclude<SoundName,'fire'>,HTMLAudioElement>>>({});
   const madeShotsRef = useRef(0);
+  const sessionIdRef = useRef('');
+  const playerNameRef = useRef('');
+  const scoreRef = useRef(0);
   const [playing, setPlaying] = useState(false);
   const [time, setTime] = useState(ROUND_SECONDS);
   const [score, setScore] = useState(0);
@@ -69,13 +72,10 @@ export default function TrashketballGame() {
   const [soundOn, setSoundOn] = useState(true);
   const [goalX, setGoalX] = useState(50);
   const [reward, setReward] = useState<0|25|50>(0);
-  const [sessionId, setSessionId] = useState('');
   const [playerName, setPlayerName] = useState('');
   const [recentScores, setRecentScores] = useState<ScoreEntry[]>([]);
   const [highScore, setHighScore] = useState<ScoreEntry|null>(null);
   const [scoreStatus, setScoreStatus] = useState('');
-  const [savingScore, setSavingScore] = useState(false);
-  const [scoreSaved, setScoreSaved] = useState(false);
 
   const audioContext = () => {
     if (!audioRef.current) audioRef.current = new AudioContext();
@@ -219,6 +219,33 @@ export default function TrashketballGame() {
       .catch(() => undefined);
   }, []);
 
+  const submitScore = useCallback(async () => {
+    const finalScore = scoreRef.current;
+    if (finalScore < 250) {
+      setScoreStatus(`Score ${250 - finalScore} more points to join the leaderboard.`);
+      return;
+    }
+    if (!sessionIdRef.current) {
+      setScoreStatus('Leaderboard connection unavailable—your discount is still unlocked.');
+      return;
+    }
+    setScoreStatus('Posting your score…');
+    try {
+      const response = await fetch('/api/scores', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sessionId: sessionIdRef.current, name: playerNameRef.current, score: finalScore, shots: madeShotsRef.current }),
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || 'Your score could not be saved.');
+      setHighScore(data.highScore || null);
+      setRecentScores(Array.isArray(data.recent) ? data.recent : []);
+      setScoreStatus(data.personalBest ? 'Leaderboard unlocked—new personal best!' : 'Leaderboard unlocked—score posted!');
+    } catch (error) {
+      setScoreStatus(error instanceof Error ? error.message : 'Your score could not be saved.');
+    }
+  }, []);
+
   const endRound = useCallback(() => {
     setPlaying(false);
     setDragging(false);
@@ -229,7 +256,8 @@ export default function TrashketballGame() {
     if (frameRef.current) cancelAnimationFrame(frameRef.current);
     if (goalFrameRef.current) cancelAnimationFrame(goalFrameRef.current);
     timerRef.current = null;
-  }, []);
+    void submitScore();
+  }, [submitScore]);
 
   useEffect(() => {
     if (time === 0 && playing) endRound();
@@ -256,20 +284,23 @@ export default function TrashketballGame() {
   }, [playing]);
 
   const startGame = () => {
+    const cleanName = playerName.trim().replace(/\s+/g, ' ');
+    if (cleanName.length < 2) return;
+    playerNameRef.current = cleanName;
     void unlockMobileAudio();
     sound('start');
     if (timerRef.current) clearInterval(timerRef.current);
     setScore(0);
+    scoreRef.current = 0;
     madeShotsRef.current = 0;
-    setScoreSaved(false);
     setScoreStatus('');
-    setSessionId('');
+    sessionIdRef.current = '';
     void fetch('/api/scores', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ action: 'start' }),
     }).then((response) => response.ok ? response.json() : Promise.reject())
-      .then((data) => setSessionId(data.sessionId || ''))
+      .then((data) => { sessionIdRef.current = data.sessionId || ''; })
       .catch(() => setScoreStatus('Leaderboard connection unavailable—your game still counts for the discount.'));
     setReward((current) => {
       const next = current || 25;
@@ -382,6 +413,7 @@ export default function TrashketballGame() {
         });
         setScore((oldScore) => {
           const nextScore = oldScore + earned;
+          scoreRef.current = nextScore;
           if (nextScore >= 500) {
             setReward(50);
             window.localStorage.setItem('trashketball-reward','50');
@@ -423,29 +455,6 @@ export default function TrashketballGame() {
   };
 
   const item = ITEMS[itemIndex];
-
-  const submitScore = async () => {
-    if (!sessionId || savingScore || scoreSaved) return;
-    setSavingScore(true);
-    setScoreStatus('');
-    try {
-      const response = await fetch('/api/scores', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ sessionId, name: playerName, score, shots: madeShotsRef.current }),
-      });
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.error || 'Your score could not be saved.');
-      setHighScore(data.highScore || null);
-      setRecentScores(Array.isArray(data.recent) ? data.recent : []);
-      setScoreSaved(true);
-      setScoreStatus('Score posted!');
-    } catch (error) {
-      setScoreStatus(error instanceof Error ? error.message : 'Your score could not be saved.');
-    } finally {
-      setSavingScore(false);
-    }
-  };
 
   return (
     <section className={styles.gameSection}>
@@ -500,8 +509,8 @@ export default function TrashketballGame() {
             <div className={styles.overlay}>
               <span className={styles.spark}>✦</span>
               <h2>{time === 0 ? 'NICE SHOT.' : 'READY TO SHOOT?'}</h2>
-              {time === 0 ? <><p className={styles.finalScore}>You scored <strong>{score}</strong> points.</p><div className={styles.rewardUnlocked}><small>REWARD UNLOCKED</small><strong>${reward || 25} OFF</strong><span>ANY LOAD SIZE</span></div><div className={styles.scoreSubmit}><input value={playerName} onChange={(event) => setPlayerName(event.target.value)} maxLength={20} placeholder="Nickname or first name" aria-label="Leaderboard display name" disabled={scoreSaved}/><button type="button" onClick={submitScore} disabled={!sessionId || playerName.trim().length < 2 || savingScore || scoreSaved}>{scoreSaved ? 'Posted ✓' : savingScore ? 'Posting…' : 'Post Score'}</button></div>{scoreStatus && <p className={styles.scoreStatus} role="status">{scoreStatus}</p>}</> : <p className={styles.offerPrompt}>Play this round to unlock <strong>$25 off</strong>. Score 500+ to unlock <strong>$50 off</strong>.</p>}
-              <button className="btn" type="button" onClick={startGame}>{time === 0 ? 'Play Again' : 'Start Game'} →</button>
+              {time === 0 ? <><p className={styles.finalScore}>You scored <strong>{score}</strong> points.</p><div className={styles.rewardUnlocked}><small>REWARD UNLOCKED</small><strong>${reward || 25} OFF</strong><span>ANY LOAD SIZE</span></div>{scoreStatus && <p className={styles.scoreStatus} role="status">{scoreStatus}</p>}</> : <><p className={styles.offerPrompt}>Play this round to unlock <strong>$25 off</strong>. Score 500+ to unlock <strong>$50 off</strong>.</p><div className={styles.playerEntry}><label htmlFor="trashketball-player">PLAYER NAME</label><input id="trashketball-player" value={playerName} onChange={(event) => { setPlayerName(event.target.value); playerNameRef.current = event.target.value; }} maxLength={20} placeholder="Nickname or first name" autoComplete="nickname"/></div></>}
+              <button className="btn" type="button" onClick={startGame} disabled={time !== 0 && playerName.trim().length < 2}>{time === 0 ? 'Play Again' : 'Start Game'} →</button>
               {time === 0 && <Link className={styles.claimLink} href={`/contact?trashketball=${reward || 25}`}>Claim ${reward || 25} off your load →</Link>}
             </div>
           )}
@@ -514,7 +523,7 @@ export default function TrashketballGame() {
 
         <aside className={styles.leaderboard} aria-label="Trashketball leaderboard">
           <div className={styles.highScore}><small>ALL-TIME HIGH SCORE</small>{highScore ? <><strong>{highScore.score}</strong><span>{highScore.name}</span></> : <><strong>---</strong><span>Be the first to post a score</span></>}</div>
-          <div className={styles.recentPlayers}><div><small>RECENT PLAYERS</small><span>SCORE</span></div>{recentScores.length ? recentScores.map((entry) => <div key={entry.id}><span>{entry.name}</span><strong>{entry.score}</strong></div>) : <p>No posted scores yet. The court is yours.</p>}</div>
+          <div className={styles.recentPlayers}><div><small>RECENT HIGH SCORES · 250+</small><span>SCORE</span></div>{recentScores.length ? recentScores.map((entry) => <div key={entry.id}><span>{entry.name}</span><strong>{entry.score}</strong></div>) : <p>No qualifying scores yet. The court is yours.</p>}</div>
         </aside>
 
         {!playing && time === 0 && (

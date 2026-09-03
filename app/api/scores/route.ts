@@ -11,6 +11,8 @@ type ScoreEntry = {
 const LEADERS_KEY = 'trashketball:leaders';
 const RECENT_KEY = 'trashketball:recent';
 const SESSION_PREFIX = 'trashketball:session:';
+const PLAYER_PREFIX = 'trashketball:player:';
+const LEADERBOARD_MINIMUM = 250;
 
 function getRedis() {
   const url = process.env.UPSTASH_REDIS_REST_KV_REST_API_URL || process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
@@ -20,11 +22,12 @@ function getRedis() {
 }
 
 async function leaderboard(redis: Redis) {
-  const [leaders, recent] = await Promise.all([
-    redis.zrange<ScoreEntry[]>(LEADERS_KEY, 0, 0, { rev: true }),
+  const [leaderNames, recent] = await Promise.all([
+    redis.zrange<string[]>(LEADERS_KEY, 0, 0, { rev: true }),
     redis.lrange<ScoreEntry[]>(RECENT_KEY, 0, 7),
   ]);
-  return { highScore: leaders[0] || null, recent };
+  const highScore = leaderNames[0] ? await redis.get<ScoreEntry>(`${PLAYER_PREFIX}${leaderNames[0]}`) : null;
+  return { highScore: highScore || null, recent };
 }
 
 export async function GET() {
@@ -63,14 +66,23 @@ export async function POST(request: NextRequest) {
     }
     await redis.del(`${SESSION_PREFIX}${sessionId}`);
 
+    if (score < LEADERBOARD_MINIMUM) {
+      return NextResponse.json({ saved: false, qualified: false, ...(await leaderboard(redis)) });
+    }
+
     const entry: ScoreEntry = { id: crypto.randomUUID(), name, score, createdAt: new Date().toISOString() };
-    await Promise.all([
-      redis.zadd(LEADERS_KEY, { score, member: entry }),
-      redis.lpush(RECENT_KEY, entry),
-    ]);
+    const playerKey = name.toLowerCase();
+    const previousBest = await redis.get<ScoreEntry>(`${PLAYER_PREFIX}${playerKey}`);
+    if (!previousBest || score > previousBest.score) {
+      await Promise.all([
+        redis.set(`${PLAYER_PREFIX}${playerKey}`, entry),
+        redis.zadd(LEADERS_KEY, { score, member: playerKey }),
+      ]);
+    }
+    await redis.lpush(RECENT_KEY, entry);
     await redis.ltrim(RECENT_KEY, 0, 7);
 
-    return NextResponse.json({ saved: true, ...(await leaderboard(redis)) });
+    return NextResponse.json({ saved: true, qualified: true, personalBest: !previousBest || score > previousBest.score, ...(await leaderboard(redis)) });
   } catch {
     return NextResponse.json({ error: 'The leaderboard is temporarily unavailable.' }, { status: 503 });
   }
