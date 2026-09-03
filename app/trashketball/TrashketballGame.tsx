@@ -141,16 +141,6 @@ export default function TrashketballGame() {
     tone(2637,.3,'triangle',.032,.19);
   };
 
-  const announceFire = () => {
-    if (!soundOnRef.current || !('speechSynthesis' in window)) return;
-    window.speechSynthesis.cancel();
-    const callout = new SpeechSynthesisUtterance("You're on fire!");
-    callout.rate = 1.05;
-    callout.pitch = .82;
-    callout.volume = .9;
-    window.speechSynthesis.speak(callout);
-  };
-
   const syntheticSound = (name:SoundName) => {
     if (name === 'start') { tone(1180,.28,'sine',.045); tone(1480,.34,'sine',.035,.06); }
     if (name === 'pickup') { tone(128,.07,'sine',.055); tone(82,.11,'sine',.045,.05); }
@@ -158,7 +148,7 @@ export default function TrashketballGame() {
     if (name === 'board') { tone(155,.12,'square',.055); tone(105,.16,'triangle',.05,.04); }
     if (name === 'rim') { tone(230,.08,'square',.05); tone(165,.13,'square',.04,.07); }
     if (name === 'swish') { noise(.22,.035,2400); chaChing(); }
-    if (name === 'fire') { noise(.45,.045,1100); chaChing(); tone(880,.12,'triangle',.04,.25); tone(1100,.22,'triangle',.04,.34); announceFire(); }
+    if (name === 'fire') { noise(.45,.045,1100); chaChing(); tone(880,.12,'triangle',.04,.25); tone(1100,.22,'triangle',.04,.34); }
     if (name === 'miss') tone(92,.2,'triangle',.045);
     if (name === 'countdown') tone(880,.09,'square',.045);
     if (name === 'buzzer') { tone(165,.72,'sawtooth',.065); tone(138,.72,'square',.035,.04); noise(.8,.025,450); }
@@ -189,7 +179,6 @@ export default function TrashketballGame() {
       audio.pause();
       audio.currentTime = 0;
     }
-    if (name === 'fire' && 'speechSynthesis' in window) window.speechSynthesis.cancel();
   };
 
   const stopAllSounds = () => {
