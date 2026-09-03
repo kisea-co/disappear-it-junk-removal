@@ -251,10 +251,11 @@
 }
 .shot {
   position: absolute;
-  z-index: 3;
-  left: 24%;
-  top: 68%;
+  z-index: 8;
+  left: 18%;
+  top: 78%;
   font-size: 2.7rem;
+  line-height: 1;
   filter: drop-shadow(0 6px 5px rgba(0, 0, 0, 0.55));
   animation: shotArc 2.15s cubic-bezier(0.38, 0.02, 0.66, 1) infinite;
 }
@@ -281,31 +282,43 @@
 }
 @keyframes shotArc {
   0% {
-    left: 22%;
-    top: 74%;
-    transform: rotate(0) scale(1);
+    left: 18%;
+    top: 78%;
+    transform: translate(-50%, -50%) rotate(0) scale(1);
     opacity: 0;
   }
   10% {
     opacity: 1;
   }
-  50% {
-    left: 54%;
-    top: 19%;
-    transform: rotate(170deg) scale(0.9);
+  46% {
+    left: 58%;
+    top: 10%;
+    transform: translate(-50%, -50%) rotate(165deg) scale(0.9);
     opacity: 1;
   }
-  76% {
-    left: 68%;
+  64% {
+    left: 58%;
+    top: 22%;
+    transform: translate(-50%, -50%) rotate(245deg) scale(0.76);
+    opacity: 1;
+  }
+  78% {
+    left: 58%;
     top: 34%;
-    transform: rotate(290deg) scale(0.72);
+    transform: translate(-50%, -50%) rotate(305deg) scale(0.6);
     opacity: 1;
   }
-  88%,
+  89% {
+    left: 58%;
+    top: 44%;
+    transform: translate(-50%, -50%) rotate(350deg) scale(0.35);
+    opacity: 1;
+  }
+  96%,
   100% {
-    left: 68%;
-    top: 49%;
-    transform: rotate(360deg) scale(0.35);
+    left: 58%;
+    top: 47%;
+    transform: translate(-50%, -50%) rotate(380deg) scale(0.24);
     opacity: 0;
   }
 }
@@ -357,7 +370,8 @@
 .previewBackboard,
 .previewHoop,
 .previewDumpster {
-  animation: exactGoalMove 4s ease-in-out infinite alternate;
+  left: 58%;
+  animation: none;
 }
 .previewHoop > div:nth-child(2) {
   height: 72px;
@@ -365,15 +379,11 @@
 .previewDumpster {
   top: 44% !important;
 }
-@keyframes exactGoalMove {
-  from { left: 33%; }
-  to { left: 67%; }
-}
 @media (prefers-reduced-motion: reduce) {
   .previewBackboard,
   .previewHoop,
   .previewDumpster {
-    left: 50%;
+    left: 58%;
     animation: none;
   }
 }
