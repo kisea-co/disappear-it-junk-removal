@@ -19,7 +19,12 @@ export default function TrashketballPreview() {
           <div className={styles.scoreboard}><span>TRASHKETBALL</span><div><b><small>SCORE</small>025</b><b><small>TIME</small>24</b></div></div>
           <div className={styles.court}>
             <div className={styles.shot} aria-hidden="true">📦</div>
-            <div className={styles.goal} aria-hidden="true"><i className={styles.board}/><i className={styles.rim}/><i className={styles.net}/><i className={styles.dumpster}/></div>
+            <div className={styles.goal} aria-hidden="true">
+              <i className={styles.board}><span>DISAPPEAR IT</span></i>
+              <i className={styles.rim}/>
+              <i className={styles.net}/>
+              <i className={styles.dumpster}><span>YOU&apos;LL NEVER<br/>SEE IT AGAIN</span></i>
+            </div>
             <div className={styles.tap}>TAP TO PLAY <span>→</span></div>
           </div>
         </Link>
