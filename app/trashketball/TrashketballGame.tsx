@@ -34,7 +34,7 @@ const SOUND_FILES: Record<Exclude<SoundName,'fire'>,string> = {
   launch:'/sounds/shot-launch.mp3',
   board:'/sounds/backboard-hit.mp3',
   rim:'/sounds/rim-clang.mp3',
-  swish:'/sounds/cha-ching.mp3',
+  swish:'/sounds/basketball-net-swish.mp3',
   miss:'/sounds/miss-thud.mp3',
   countdown:'/sounds/countdown-beep.mp3',
   buzzer:'/sounds/final-buzzer.mp3',
