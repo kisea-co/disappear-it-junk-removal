@@ -39,6 +39,7 @@ type SoundName =
   | "rim"
   | "swish"
   | "fire"
+  | "onFire"
   | "miss"
   | "countdown"
   | "buzzer"
@@ -52,6 +53,7 @@ const SOUND_FILES: Record<SoundName, string> = {
   rim: "/sounds/rim-clang.mp3",
   swish: "/sounds/basketball-net-swish.mp3",
   fire: "/sounds/fire-sound.mp3",
+  onFire: "/sounds/disappear-it-on-fire.mp3",
   miss: "/sounds/miss-thud.mp3",
   countdown: "/sounds/shot-clock.mp3",
   buzzer: "/sounds/final-buzzer.mp3",
@@ -230,7 +232,7 @@ export default function TrashketballGame() {
       mediaRef.current[name] = audio;
     }
     audio.currentTime = 0;
-    audio.volume = name === "buzzer" ? 0.9 : 0.72;
+    audio.volume = name === "buzzer" || name === "onFire" ? 0.9 : 0.72;
     void audio.play().catch(() => syntheticSound(name));
   };
 
@@ -361,6 +363,7 @@ export default function TrashketballGame() {
 
   const endRound = useCallback(() => {
     stopSound("fire");
+    stopSound("onFire");
     setPlaying(false);
     setDragging(false);
     setShotInFlight(false);
@@ -418,6 +421,7 @@ export default function TrashketballGame() {
       playerNameRef.current = cleanName;
     void unlockMobileAudio();
     stopSound("fire");
+    stopSound("onFire");
     sound("start");
     if (timerRef.current) clearInterval(timerRef.current);
     setScore(0);
@@ -576,7 +580,10 @@ export default function TrashketballGame() {
               : `SWISH! +${earned}`,
           );
           sound("swish");
-          if (nextStreak === 6) sound("fire");
+          if (nextStreak === 6) {
+            sound("fire");
+            sound("onFire");
+          }
           sound("crush");
           if (navigator.vibrate)
             navigator.vibrate(nextStreak >= 6 ? [35, 25, 55] : 35);
@@ -636,6 +643,7 @@ export default function TrashketballGame() {
 
       if (nextY > 96 || now - launched > 2400) {
         stopSound("fire");
+        stopSound("onFire");
         setStreak(0);
         setMessage("Missed it—shoot again!");
         sound("miss");
