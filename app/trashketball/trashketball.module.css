@@ -510,7 +510,26 @@
   cursor: default;
   pointer-events: none;
   transition: none;
+  width: 64px;
+  height: 64px;
   filter: drop-shadow(0 13px 9px rgba(0, 0, 0, 0.5));
+}
+.junk.flying > span {
+  font-size: 2.05rem;
+}
+.junk.flying small {
+  width: 27px;
+  height: 27px;
+  font-size: 0.5rem;
+}
+@media (max-width: 720px) {
+  .junk.flying {
+    width: 56px;
+    height: 56px;
+  }
+  .junk.flying > span {
+    font-size: 1.8rem;
+  }
 }
 .backboard span {
   position: relative;

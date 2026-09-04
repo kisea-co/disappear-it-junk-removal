@@ -565,6 +565,7 @@ export default function TrashketballGame() {
         nextX < targetX + 7;
       if (throughHoop) {
         const earned = ITEMS[itemIndex].points;
+        const swishStartY = nextY;
         madeShotsRef.current += 1;
         setMadeShot(true);
         setStreak((oldStreak) => {
@@ -595,8 +596,24 @@ export default function TrashketballGame() {
           });
           return nextScore;
         });
-        moveJunk({ x: targetX, y: 33 });
-        resetJunk(430);
+        moveJunk({ x: targetX, y: swishStartY });
+        const swishStarted = now;
+        const sinkThroughNet = (frameTime: number) => {
+          const progress = Math.min(1, (frameTime - swishStarted) / 520);
+          const eased = 1 - Math.pow(1 - progress, 2);
+          moveJunk({
+            x: goalXRef.current,
+            y: swishStartY + (42 - swishStartY) * eased,
+          });
+          setRotation((value) => value + 7);
+          if (progress < 1) {
+            frameRef.current = requestAnimationFrame(sinkThroughNet);
+          } else {
+            frameRef.current = null;
+            resetJunk(80);
+          }
+        };
+        frameRef.current = requestAnimationFrame(sinkThroughNet);
         return;
       }
 
