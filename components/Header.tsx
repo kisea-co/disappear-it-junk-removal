@@ -23,7 +23,7 @@ export default function Header() {
         <nav id="primary-navigation" className={`main-nav${menuOpen ? ' mobile-open' : ''}`} aria-label="Primary navigation">
           <Link href="/" onClick={closeMenu} style={navLinkStyle}>Home</Link>
           <Link href="/services" onClick={closeMenu} style={navLinkStyle}>Services</Link>
-          <Link href="/our-work" onClick={closeMenu} style={navLinkStyle}>Our Work</Link>
+          <Link href="/portfolio" onClick={closeMenu} style={navLinkStyle}>Portfolio</Link>
           <Link href="/commercial" onClick={closeMenu} style={navLinkStyle}>Commercial</Link>
           <Link href="/trashketball" onClick={closeMenu} style={navLinkStyle}>Trashketball</Link>
           <span className="desktop-quote-wrap"><Link href="/contact" className="btn btn-small" onClick={closeMenu}>Get a Quote</Link></span>
