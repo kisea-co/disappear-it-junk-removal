@@ -1,11 +1,32 @@
 import { Redis } from '@upstash/redis';
 import { NextRequest, NextResponse } from 'next/server';
 
+type ReplayFrame = {
+  x: number;
+  y: number;
+  goalX: number;
+  t: number;
+};
+
+type ReplayShot = {
+  itemIndex: number;
+  startedAt: number;
+  made: boolean;
+  points: number;
+  frames: ReplayFrame[];
+};
+
+type ReplayData = {
+  duration: number;
+  shots: ReplayShot[];
+};
+
 type ScoreEntry = {
   id: string;
   name: string;
   score: number;
   createdAt: string;
+  replay?: ReplayData;
 };
 
 const LEADERS_KEY = 'trashketball:leaders';
@@ -13,12 +34,54 @@ const RECENT_KEY = 'trashketball:recent';
 const SESSION_PREFIX = 'trashketball:session:';
 const PLAYER_PREFIX = 'trashketball:player:';
 const LEADERBOARD_MINIMUM = 250;
+const MAX_REPLAY_SHOTS = 50;
+const MAX_FRAMES_PER_SHOT = 80;
+const MAX_REPLAY_DURATION = 35000;
 
 function getRedis() {
   const url = process.env.UPSTASH_REDIS_REST_KV_REST_API_URL || process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
   const token = process.env.UPSTASH_REDIS_REST_KV_REST_API_TOKEN || process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
   if (!url || !token) throw new Error('Leaderboard database is not configured.');
   return new Redis({ url, token });
+}
+
+function finite(value: unknown, min: number, max: number) {
+  const number = Number(value);
+  return Number.isFinite(number) && number >= min && number <= max ? number : null;
+}
+
+function sanitizeReplay(value: unknown): ReplayData | undefined {
+  if (!value || typeof value !== 'object') return undefined;
+  const raw = value as { duration?: unknown; shots?: unknown };
+  const duration = finite(raw.duration, 1000, MAX_REPLAY_DURATION);
+  if (duration === null || !Array.isArray(raw.shots) || raw.shots.length > MAX_REPLAY_SHOTS) return undefined;
+
+  const shots: ReplayShot[] = [];
+  for (const rawShot of raw.shots) {
+    if (!rawShot || typeof rawShot !== 'object') return undefined;
+    const shot = rawShot as Record<string, unknown>;
+    const itemIndex = finite(shot.itemIndex, 0, 15);
+    const startedAt = finite(shot.startedAt, 0, duration);
+    const points = finite(shot.points, 0, 50);
+    if (itemIndex === null || startedAt === null || points === null || typeof shot.made !== 'boolean' || !Array.isArray(shot.frames) || shot.frames.length < 2 || shot.frames.length > MAX_FRAMES_PER_SHOT) return undefined;
+
+    const frames: ReplayFrame[] = [];
+    let previousT = -1;
+    for (const rawFrame of shot.frames) {
+      if (!rawFrame || typeof rawFrame !== 'object') return undefined;
+      const frame = rawFrame as Record<string, unknown>;
+      const x = finite(frame.x, 0, 100);
+      const y = finite(frame.y, 0, 110);
+      const goalX = finite(frame.goalX, 20, 80);
+      const t = finite(frame.t, 0, 3000);
+      if (x === null || y === null || goalX === null || t === null || t < previousT) return undefined;
+      previousT = t;
+      frames.push({ x, y, goalX, t });
+    }
+    shots.push({ itemIndex, startedAt, made: shot.made, points, frames });
+  }
+
+  return shots.length ? { duration, shots } : undefined;
 }
 
 async function leaderboard(redis: Redis) {
@@ -53,6 +116,7 @@ export async function POST(request: NextRequest) {
     const name = typeof body.name === 'string' ? body.name.trim().replace(/\s+/g, ' ').slice(0, 20) : '';
     const score = Number(body.score);
     const shots = Number(body.shots);
+    const replay = sanitizeReplay(body.replay);
     if (!sessionId || !/^[a-zA-Z0-9 .'-]{2,20}$/.test(name)) {
       return NextResponse.json({ error: 'Enter a nickname using 2–20 letters or numbers.' }, { status: 400 });
     }
@@ -70,7 +134,13 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ saved: false, qualified: false, ...(await leaderboard(redis)) });
     }
 
-    const entry: ScoreEntry = { id: crypto.randomUUID(), name, score, createdAt: new Date().toISOString() };
+    const entry: ScoreEntry = {
+      id: crypto.randomUUID(),
+      name,
+      score,
+      createdAt: new Date().toISOString(),
+      ...(replay ? { replay } : {}),
+    };
     const playerKey = name.toLowerCase();
     const previousBest = await redis.get<ScoreEntry>(`${PLAYER_PREFIX}${playerKey}`);
     if (!previousBest || score > previousBest.score) {
