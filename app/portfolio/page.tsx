@@ -260,7 +260,7 @@ export default function PortfolioPage() {
 
       <style>{`
         .portfolio-hero{position:relative;min-height:680px;display:flex;align-items:flex-end;overflow:hidden;background:#080808;border-bottom:1px solid var(--line)}
-        .portfolio-hero-image{position:absolute;inset:0;background:url('/images/dunwoody-crossing.PNG') center/cover no-repeat;filter:saturate(.75) contrast(1.05)}
+        .portfolio-hero-image{position:absolute;inset:0;background:url('/images/wood-junk-removal-before.png') center/cover no-repeat;filter:saturate(.75) contrast(1.05)}
         .portfolio-hero-shade{position:absolute;inset:0;background:linear-gradient(90deg,rgba(5,5,5,.92) 0%,rgba(5,5,5,.76) 42%,rgba(5,5,5,.28) 76%),linear-gradient(0deg,rgba(5,5,5,.9) 0%,transparent 58%)}
         .portfolio-hero-inner{position:relative;z-index:1;padding-top:42px;padding-bottom:72px}
         .portfolio-logo{position:absolute;top:42px;left:0;width:190px;height:auto;filter:drop-shadow(0 4px 15px rgba(0,0,0,.45))}
