@@ -25,11 +25,21 @@ const ITEMS = [
 ];
 
 type Point = { x: number; y: number; time: number };
+type ReplayFrame = { x: number; y: number; goalX: number; t: number };
+type ReplayShot = {
+  itemIndex: number;
+  startedAt: number;
+  made: boolean;
+  points: number;
+  frames: ReplayFrame[];
+};
+type ReplayData = { duration: number; shots: ReplayShot[] };
 type ScoreEntry = {
   id: string;
   name: string;
   score: number;
   createdAt: string;
+  replay?: ReplayData;
 };
 type SoundName =
   | "start"
@@ -67,6 +77,7 @@ export default function TrashketballGame() {
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const frameRef = useRef<number | null>(null);
   const goalFrameRef = useRef<number | null>(null);
+  const replayFrameRef = useRef<number | null>(null);
   const positionRef = useRef({ x: 50, y: 78 });
   const goalXRef = useRef(50);
   const audioRef = useRef<AudioContext | null>(null);
@@ -76,7 +87,10 @@ export default function TrashketballGame() {
   const sessionIdRef = useRef("");
   const playerNameRef = useRef("");
   const scoreRef = useRef(0);
+  const replayShotsRef = useRef<ReplayShot[]>([]);
+  const roundStartedAtRef = useRef(0);
   const [playing, setPlaying] = useState(false);
+  const [replaying, setReplaying] = useState(false);
   const [time, setTime] = useState(ROUND_SECONDS);
   const [score, setScore] = useState(0);
   const [best, setBest] = useState(0);
@@ -290,6 +304,7 @@ export default function TrashketballGame() {
       if (timerRef.current) clearInterval(timerRef.current);
       if (frameRef.current) cancelAnimationFrame(frameRef.current);
       if (goalFrameRef.current) cancelAnimationFrame(goalFrameRef.current);
+      if (replayFrameRef.current) cancelAnimationFrame(replayFrameRef.current);
     };
   }, []);
 
@@ -327,6 +342,10 @@ export default function TrashketballGame() {
           name: playerNameRef.current,
           score: finalScore,
           shots: madeShotsRef.current,
+          replay: {
+            duration: ROUND_SECONDS * 1000,
+            shots: replayShotsRef.current,
+          },
         }),
       });
       const data = await response.json();
@@ -336,8 +355,8 @@ export default function TrashketballGame() {
       setRecentScores(Array.isArray(data.recent) ? data.recent : []);
       setScoreStatus(
         data.personalBest
-          ? "Leaderboard unlocked—new personal best!"
-          : "Leaderboard unlocked—score posted!",
+          ? "Leaderboard unlocked—new personal best! Replay saved."
+          : "Leaderboard unlocked—score posted with replay!",
       );
     } catch (error) {
       setScoreStatus(
@@ -399,8 +418,10 @@ export default function TrashketballGame() {
 
   useEffect(() => {
     if (!playing) {
-      goalXRef.current = 50;
-      setGoalX(50);
+      if (!replaying) {
+        goalXRef.current = 50;
+        setGoalX(50);
+      }
       return;
     }
     const moveGoal = (now: number) => {
@@ -413,7 +434,85 @@ export default function TrashketballGame() {
     return () => {
       if (goalFrameRef.current) cancelAnimationFrame(goalFrameRef.current);
     };
-  }, [playing]);
+  }, [playing, replaying]);
+
+  const playReplay = (entry: ScoreEntry) => {
+    const replay = entry.replay;
+    if (!replay?.shots?.length || replaying || playing) return;
+    stopAllSounds();
+    if (replayFrameRef.current) cancelAnimationFrame(replayFrameRef.current);
+    setReplaying(true);
+    setDragging(false);
+    setMadeShot(false);
+    setShotInFlight(false);
+    setRotation(0);
+    setScore(entry.score);
+    setTime(Math.ceil(replay.duration / 1000));
+    setMessage(`Replay · ${entry.name} · ${entry.score} points`);
+    const started = performance.now();
+    let lastShotIndex = -1;
+    let lastMadeState = false;
+
+    const tick = (now: number) => {
+      const elapsed = now - started;
+      setTime(Math.max(0, Math.ceil((replay.duration - elapsed) / 1000)));
+      let activeIndex = -1;
+      for (let i = replay.shots.length - 1; i >= 0; i -= 1) {
+        const shot = replay.shots[i];
+        const end = shot.startedAt + (shot.frames.at(-1)?.t || 0) + 300;
+        if (elapsed >= shot.startedAt && elapsed <= end) {
+          activeIndex = i;
+          break;
+        }
+      }
+
+      if (activeIndex >= 0) {
+        const shot = replay.shots[activeIndex];
+        const relative = Math.max(0, elapsed - shot.startedAt);
+        let frame = shot.frames[0];
+        for (const candidate of shot.frames) {
+          if (candidate.t <= relative) frame = candidate;
+          else break;
+        }
+        if (activeIndex !== lastShotIndex) {
+          setItemIndex(shot.itemIndex);
+          setRotation(0);
+          lastShotIndex = activeIndex;
+          lastMadeState = false;
+        }
+        goalXRef.current = frame.goalX;
+        setGoalX(frame.goalX);
+        moveJunk({ x: frame.x, y: frame.y });
+        setShotInFlight(true);
+        setRotation((value) => value + 4);
+        const shotEnded = relative >= (shot.frames.at(-1)?.t || 0);
+        if (shotEnded && shot.made && !lastMadeState) {
+          setMadeShot(true);
+          lastMadeState = true;
+        } else if (!shotEnded) {
+          setMadeShot(false);
+        }
+      } else {
+        setShotInFlight(false);
+        setMadeShot(false);
+      }
+
+      if (elapsed < replay.duration) {
+        replayFrameRef.current = requestAnimationFrame(tick);
+      } else {
+        replayFrameRef.current = null;
+        setReplaying(false);
+        setShotInFlight(false);
+        setMadeShot(false);
+        setGoalX(50);
+        goalXRef.current = 50;
+        moveJunk({ x: 50, y: 78 });
+        setTime(0);
+        setMessage(`Replay complete · ${entry.name} scored ${entry.score}`);
+      }
+    };
+    replayFrameRef.current = requestAnimationFrame(tick);
+  };
 
   const startGame = () => {
     const cleanName = playerName.trim().replace(/\s+/g, " ");
@@ -424,9 +523,13 @@ export default function TrashketballGame() {
     stopSound("onFire");
     sound("start");
     if (timerRef.current) clearInterval(timerRef.current);
+    if (replayFrameRef.current) cancelAnimationFrame(replayFrameRef.current);
+    setReplaying(false);
     setScore(0);
     scoreRef.current = 0;
     madeShotsRef.current = 0;
+    replayShotsRef.current = [];
+    roundStartedAtRef.current = performance.now();
     setScoreStatus("");
     setShowRewardCelebration(false);
     sessionIdRef.current = "";
@@ -534,6 +637,35 @@ export default function TrashketballGame() {
     let previous = performance.now();
     const launched = previous;
     let rimBounce = false;
+    let lastReplayFrame = launched;
+    let replaySaved = false;
+    const replayShot: ReplayShot = {
+      itemIndex,
+      startedAt: Math.max(0, launched - roundStartedAtRef.current),
+      made: false,
+      points: 0,
+      frames: [
+        { x: current.x, y: current.y, goalX: goalXRef.current, t: 0 },
+      ],
+    };
+    const recordReplayFrame = (now: number, x: number, y: number, force = false) => {
+      if (!force && now - lastReplayFrame < 40) return;
+      lastReplayFrame = now;
+      replayShot.frames.push({
+        x: Math.round(x * 100) / 100,
+        y: Math.round(y * 100) / 100,
+        goalX: Math.round(goalXRef.current * 100) / 100,
+        t: Math.round(now - launched),
+      });
+    };
+    const saveReplayShot = () => {
+      if (replaySaved) return;
+      replaySaved = true;
+      if (replayShot.frames.length === 1) {
+        recordReplayFrame(performance.now(), positionRef.current.x, positionRef.current.y, true);
+      }
+      replayShotsRef.current = [...replayShotsRef.current, replayShot];
+    };
 
     const fly = (now: number) => {
       const delta = Math.min(28, now - previous);
@@ -570,6 +702,10 @@ export default function TrashketballGame() {
       if (throughHoop) {
         const earned = ITEMS[itemIndex].points;
         const swishStartY = nextY;
+        replayShot.made = true;
+        replayShot.points = earned;
+        recordReplayFrame(now, targetX, nextY, true);
+        saveReplayShot();
         madeShotsRef.current += 1;
         setMadeShot(true);
         setStreak((oldStreak) => {
@@ -639,9 +775,12 @@ export default function TrashketballGame() {
       }
 
       moveJunk({ x: nextX, y: nextY });
+      recordReplayFrame(now, nextX, nextY);
       setRotation((value) => value + delta * 0.42);
 
       if (nextY > 96 || now - launched > 2400) {
+        recordReplayFrame(now, nextX, nextY, true);
+        saveReplayShot();
         stopSound("fire");
         stopSound("onFire");
         setStreak(0);
@@ -661,7 +800,7 @@ export default function TrashketballGame() {
     <section className={styles.gameSection}>
       <div className={styles.gameShell}>
         <div
-          className={`${styles.arenaBoard} ${playing ? styles.boardLive : ""}`}
+          className={`${styles.arenaBoard} ${playing || replaying ? styles.boardLive : ""}`}
         >
           <div className={styles.boardLights} aria-hidden="true">
             {Array.from({ length: 22 }, (_, i) => (
@@ -675,9 +814,9 @@ export default function TrashketballGame() {
               <strong>{String(score).padStart(3, "0")}</strong>
             </div>
             <div
-              className={`${styles.timer} ${time <= 10 && playing ? styles.clockWarning : ""}`}
+              className={`${styles.timer} ${time <= 10 && (playing || replaying) ? styles.clockWarning : ""}`}
             >
-              <span>Time</span>
+              <span>{replaying ? "Replay" : "Time"}</span>
               <strong>{String(time).padStart(2, "0")}</strong>
             </div>
             <div>
@@ -756,7 +895,7 @@ export default function TrashketballGame() {
           />
           <div className={styles.courtLine} aria-hidden="true" />
 
-          {playing && (
+          {(playing || replaying) && (
             <button
               ref={junkRef}
               type="button"
@@ -765,6 +904,7 @@ export default function TrashketballGame() {
                 left: `${position.x}%`,
                 top: `${position.y}%`,
                 rotate: `${rotation}deg`,
+                pointerEvents: replaying ? "none" : undefined,
               }}
               onPointerDown={onPointerDown}
               onPointerMove={onPointerMove}
@@ -777,7 +917,7 @@ export default function TrashketballGame() {
             </button>
           )}
 
-          {!playing && (
+          {!playing && !replaying && (
             <div className={styles.overlay}>
               <span className={styles.spark}>✦</span>
               <h2>{time === 0 ? "NICE SHOT." : "READY TO SHOOT?"}</h2>
@@ -905,6 +1045,23 @@ export default function TrashketballGame() {
               <>
                 <strong>{highScore.score}</strong>
                 <span>{highScore.name}</span>
+                {highScore.replay?.shots?.length ? (
+                  <button
+                    type="button"
+                    onClick={() => playReplay(highScore)}
+                    disabled={playing || replaying}
+                    style={{
+                      marginTop: 8,
+                      border: "1px solid rgba(200,154,58,.5)",
+                      background: "transparent",
+                      color: "inherit",
+                      padding: "6px 10px",
+                      cursor: "pointer",
+                    }}
+                  >
+                    ▶ Replay
+                  </button>
+                ) : null}
               </>
             ) : (
               <>
@@ -923,6 +1080,24 @@ export default function TrashketballGame() {
                 <div key={entry.id}>
                   <span>{entry.name}</span>
                   <strong>{entry.score}</strong>
+                  {entry.replay?.shots?.length ? (
+                    <button
+                      type="button"
+                      onClick={() => playReplay(entry)}
+                      disabled={playing || replaying}
+                      aria-label={`Replay ${entry.name}'s ${entry.score}-point game`}
+                      style={{
+                        border: "1px solid rgba(200,154,58,.45)",
+                        background: "transparent",
+                        color: "inherit",
+                        padding: "4px 7px",
+                        cursor: "pointer",
+                        fontSize: ".65rem",
+                      }}
+                    >
+                      ▶
+                    </button>
+                  ) : null}
                 </div>
               ))
             ) : (
@@ -931,7 +1106,7 @@ export default function TrashketballGame() {
           </div>
         </aside>
 
-        {!playing && time === 0 && !rewardClaimed && (
+        {!playing && !replaying && time === 0 && !rewardClaimed && (
           <div className={styles.realJunk}>
             <div>
               <span>YOU UNLOCKED ${reward || 25} OFF ANY LOAD SIZE.</span>
