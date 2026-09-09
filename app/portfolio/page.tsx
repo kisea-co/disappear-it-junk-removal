@@ -253,7 +253,7 @@ export default function PortfolioPage() {
           </div>
           <div className="portfolio-cta-actions">
             <Link className="btn btn-dark" href="/contact">Get a Free Quote →</Link>
-            <a href="tel:+14048579200">404-857-9200</a>
+            <a href="tel:+14708701067">470-870-1067</a>
           </div>
         </div>
       </section>
