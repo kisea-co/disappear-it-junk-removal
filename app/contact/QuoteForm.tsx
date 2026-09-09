@@ -416,10 +416,10 @@ export default function QuoteForm({
           >
             {error} You can also call{" "}
             <a
-              href="tel:+14048579200"
+              href="tel:+14708701067"
               style={{ textDecoration: "underline", fontWeight: 600 }}
             >
-              (404) 857-9200
+              (470) 870-1067
             </a>
             .
           </p>
