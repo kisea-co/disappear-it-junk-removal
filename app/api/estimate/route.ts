@@ -34,7 +34,7 @@ function getRedis() {
 
 export async function POST(request: Request) {
   try {
-    if (Number(request.headers.get("content-length") || 0) > 25000)
+    if (Number(request.headers.get("content-length") || 0) > 3_500_000)
       return NextResponse.json(
         { error: "Request is too large." },
         { status: 413 },
@@ -42,8 +42,8 @@ export async function POST(request: Request) {
     const body = await request.json();
     if (clean(body.website)) return NextResponse.json({ ok: true });
 
-    const quoteType = body.quoteType === "commercial" ? "commercial" : "residential";
-    const isCommercial = quoteType === "commercial";
+    const estimateType = body.estimateType === "commercial" ? "commercial" : "residential";
+    const isCommercial = estimateType === "commercial";
     const name = clean(body.name, 100);
     const phone = clean(body.phone, 40);
     const email = clean(body.email, 160).toLowerCase();
@@ -54,6 +54,31 @@ export async function POST(request: Request) {
     const frequency = clean(body.frequency, 100);
     const accessNotes = clean(body.accessNotes, 1500) || "Not provided";
     const date = clean(body.date, 40) || "Not specified";
+    const photoAttachments = Array.isArray(body.photoAttachments)
+      ? body.photoAttachments
+          .slice(0, 8)
+          .map((photo: unknown, index: number) => {
+            const entry = photo as { filename?: unknown; content?: unknown };
+            return {
+              filename: clean(entry?.filename, 100) || `estimate-photo-${index + 1}.jpg`,
+              content: clean(entry?.content, 450_000),
+            };
+          })
+          .filter(
+            (photo: { filename: string; content: string }) =>
+              /^[a-zA-Z0-9+/]+={0,2}$/.test(photo.content) &&
+              photo.content.length <= 450_000,
+          )
+      : [];
+    const attachmentCharacters = photoAttachments.reduce(
+      (total: number, photo: { content: string }) => total + photo.content.length,
+      0,
+    );
+    if (attachmentCharacters > 3_100_000)
+      return NextResponse.json(
+        { error: "The selected photos are too large together. Please remove one and try again." },
+        { status: 413 },
+      );
     const rewardAmount: 0 | 25 | 50 =
       body.reward === "50" ? 50 : body.reward === "25" ? 25 : 0;
     const reward = rewardAmount
@@ -81,7 +106,7 @@ export async function POST(request: Request) {
       return NextResponse.json(
         {
           error:
-            "The quote service is being connected. Please call us for now.",
+            "The estimate service is being connected. Please call us for now.",
         },
         { status: 503 },
       );
@@ -103,7 +128,7 @@ export async function POST(request: Request) {
           return NextResponse.json(
             {
               error:
-                "This one-time Trashketball reward has already been claimed. Please submit a regular quote request instead.",
+                "This one-time Trashketball reward has already been claimed. Please submit a regular estimate request instead.",
               code: "REWARD_ALREADY_CLAIMED",
             },
             { status: 409 },
@@ -149,7 +174,7 @@ export async function POST(request: Request) {
     }
 
     const rows = [
-      ["Quote type", isCommercial ? "COMMERCIAL" : "Residential"],
+      ["Estimate type", isCommercial ? "COMMERCIAL" : "Residential"],
       ["Name", name],
       ...(isCommercial
         ? [
@@ -164,9 +189,10 @@ export async function POST(request: Request) {
       ["Preferred pickup date", date],
       ["Trashketball reward", reward],
       ["What needs to be removed?", junk],
+      ["Uploaded photos", photoAttachments.length ? `${photoAttachments.length} attached` : "None"],
       ...(isCommercial ? [["Site access / scheduling notes", accessNotes]] : []),
     ];
-    const requestLabel = isCommercial ? "Commercial Quote Request" : "Residential Quote Request";
+    const requestLabel = isCommercial ? "Commercial Estimate Request" : "Residential Estimate Request";
     const html = `<div style="font-family:Arial,sans-serif;color:#111;max-width:640px"><div style="background:#0b0b0b;color:#fff;padding:24px"><div style="color:#d1ae47;font-size:12px;letter-spacing:2px">DISAPPEAR IT JUNK &amp; TRASH REMOVAL LLC</div><h1 style="margin:8px 0 0;font-size:28px">New ${requestLabel}</h1></div><div style="border:1px solid #ddd;border-top:0;padding:24px">${rows.map(([label, value]) => `<div style="padding:12px 0;border-bottom:1px solid #eee"><strong style="display:block;font-size:12px;text-transform:uppercase;letter-spacing:1px;color:#70571d">${label}</strong><div style="margin-top:4px;white-space:pre-wrap">${escapeHtml(value)}</div></div>`).join("")}</div></div>`;
     const text = rows
       .map(([label, value]) => `${label}:\n${value}`)
@@ -179,12 +205,13 @@ export async function POST(request: Request) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        from: "Disappear It Quotes <quotes@disappearitjunkremoval.com>",
+        from: "Disappear It Estimates <estimates@disappearitjunkremoval.com>",
         to: ["junkdisappears@gmail.com"],
         reply_to: email,
         subject: `[${isCommercial ? "COMMERCIAL" : "RESIDENTIAL"}] ${isCommercial ? businessName : name} — ${location}`,
         html,
         text,
+        attachments: photoAttachments,
       }),
     });
 
@@ -192,7 +219,7 @@ export async function POST(request: Request) {
       if (redis && claimKeys.length)
         await Promise.all(claimKeys.map((key) => redis!.del(key)));
       console.error(
-        "Resend quote error",
+        "Resend estimate error",
         response.status,
         await response.text(),
       );
@@ -210,7 +237,7 @@ export async function POST(request: Request) {
       rewardClaimed: Boolean(rewardAmount),
     });
   } catch (error) {
-    console.error("Quote submission error", error);
+    console.error("Estimate submission error", error);
     return NextResponse.json(
       { error: "Something went wrong. Please try again." },
       { status: 500 },

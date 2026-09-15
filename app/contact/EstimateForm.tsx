@@ -1,7 +1,90 @@
 "use client";
 
-import { FormEvent, useMemo, useState } from "react";
-import styles from "./QuoteForm.module.css";
+import {
+  ChangeEvent,
+  FormEvent,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+import styles from "./EstimateForm.module.css";
+
+const MAX_PHOTOS = 8;
+const MAX_PHOTO_BYTES = 10 * 1024 * 1024;
+const TARGET_PHOTO_BYTES = 280 * 1024;
+const ALLOWED_PHOTO_TYPES = new Set([
+  "image/jpeg",
+  "image/png",
+  "image/webp",
+  "image/heic",
+  "image/heif",
+]);
+
+function isAllowedPhoto(file: File) {
+  return (
+    ALLOWED_PHOTO_TYPES.has(file.type) ||
+    /\.(jpe?g|png|webp|heic|heif)$/i.test(file.name)
+  );
+}
+
+function loadPhoto(file: File) {
+  return new Promise<HTMLImageElement>((resolve, reject) => {
+    const preview = URL.createObjectURL(file);
+    const image = new Image();
+    image.onload = () => {
+      URL.revokeObjectURL(preview);
+      resolve(image);
+    };
+    image.onerror = () => {
+      URL.revokeObjectURL(preview);
+      reject(new Error(`${file.name} could not be prepared. Please choose a different image.`));
+    };
+    image.src = preview;
+  });
+}
+
+function canvasBlob(canvas: HTMLCanvasElement, quality: number) {
+  return new Promise<Blob>((resolve, reject) =>
+    canvas.toBlob(
+      (blob) => blob ? resolve(blob) : reject(new Error("Photo compression failed.")),
+      "image/jpeg",
+      quality,
+    ),
+  );
+}
+
+function blobBase64(blob: Blob) {
+  return new Promise<string>((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result).split(",")[1] || "");
+    reader.onerror = () => reject(new Error("Photo encoding failed."));
+    reader.readAsDataURL(blob);
+  });
+}
+
+async function preparePhoto(file: File, index: number) {
+  const image = await loadPhoto(file);
+  const scale = Math.min(1, 1280 / Math.max(image.naturalWidth, image.naturalHeight));
+  const canvas = document.createElement("canvas");
+  canvas.width = Math.max(1, Math.round(image.naturalWidth * scale));
+  canvas.height = Math.max(1, Math.round(image.naturalHeight * scale));
+  const context = canvas.getContext("2d");
+  if (!context) throw new Error("Photo compression is unavailable in this browser.");
+  context.drawImage(image, 0, 0, canvas.width, canvas.height);
+
+  let quality = 0.78;
+  let compressed = await canvasBlob(canvas, quality);
+  while (compressed.size > TARGET_PHOTO_BYTES && quality > 0.38) {
+    quality -= 0.08;
+    compressed = await canvasBlob(canvas, quality);
+  }
+
+  return {
+    filename: `estimate-photo-${index + 1}.jpg`,
+    content: await blobBase64(compressed),
+  };
+}
 
 const MONTHS = [
   "January",
@@ -37,20 +120,23 @@ function prettyDate(value: string) {
   }).format(new Date(year, month - 1, day));
 }
 
-export default function QuoteForm({
+export default function EstimateForm({
   reward,
-  quoteType = "residential",
+  estimateType = "residential",
 }: {
   reward: 0 | 25 | 50;
-  quoteType?: "residential" | "commercial";
+  estimateType?: "residential" | "commercial";
 }) {
-  const isCommercial = quoteType === "commercial";
+  const isCommercial = estimateType === "commercial";
   const [activeReward, setActiveReward] = useState<0 | 25 | 50>(reward);
   const [submittedReward, setSubmittedReward] = useState<0 | 25 | 50>(0);
   const [status, setStatus] = useState<
     "idle" | "sending" | "success" | "error"
   >("idle");
   const [error, setError] = useState("");
+  const [photos, setPhotos] = useState<File[]>([]);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const photoInput = useRef<HTMLInputElement>(null);
   const [selectedDate, setSelectedDate] = useState("");
   const [calendarOpen, setCalendarOpen] = useState(false);
   const [viewMonth, setViewMonth] = useState(() => {
@@ -70,19 +156,65 @@ export default function QuoteForm({
       ...Array.from({ length: totalDays }, (_, index) => index + 1),
     ];
   }, [viewMonth]);
+  const photoPreviews = useMemo(
+    () => photos.map((photo) => URL.createObjectURL(photo)),
+    [photos],
+  );
+
+  useEffect(
+    () => () => photoPreviews.forEach((preview) => URL.revokeObjectURL(preview)),
+    [photoPreviews],
+  );
+
+  function selectPhotos(event: ChangeEvent<HTMLInputElement>) {
+    const incoming = Array.from(event.target.files || []);
+    const combined = [...photos, ...incoming];
+    if (combined.length > MAX_PHOTOS) {
+      setError(`You can upload up to ${MAX_PHOTOS} photos.`);
+      event.target.value = "";
+      return;
+    }
+    const invalid = incoming.find(
+      (file) => !isAllowedPhoto(file) || file.size > MAX_PHOTO_BYTES,
+    );
+    if (invalid) {
+      setError(
+        `${invalid.name} must be a JPG, PNG, WebP, or HEIC image no larger than 10 MB.`,
+      );
+      event.target.value = "";
+      return;
+    }
+    setError("");
+    setPhotos(combined);
+    event.target.value = "";
+  }
+
+  function removePhoto(index: number) {
+    setPhotos((current) => current.filter((_, photoIndex) => photoIndex !== index));
+  }
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setStatus("sending");
     setError("");
+    setUploadProgress(0);
     const form = event.currentTarget;
     const data = Object.fromEntries(new FormData(form).entries());
     try {
-      const response = await fetch("/api/quote", {
+      const photoAttachments: Array<{ filename: string; content: string }> = [];
+      for (let index = 0; index < photos.length; index += 1) {
+        const photo = photos[index];
+        setUploadProgress(index + 1);
+        photoAttachments.push(await preparePhoto(photo, index));
+      }
+      setUploadProgress(photos.length + 1);
+
+      const response = await fetch("/api/estimate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...data,
+          photoAttachments,
           reward: activeReward ? String(activeReward) : "",
         }),
       });
@@ -103,6 +235,8 @@ export default function QuoteForm({
         setActiveReward(0);
       }
       form.reset();
+      setPhotos([]);
+      setUploadProgress(0);
       setSelectedDate("");
       setStatus("success");
     } catch (reason) {
@@ -132,7 +266,7 @@ export default function QuoteForm({
             margin: "10px 0 16px",
           }}
         >
-          YOUR QUOTE REQUEST
+          YOUR ESTIMATE REQUEST
           <br />
           IS IN.
         </h2>
@@ -158,8 +292,8 @@ export default function QuoteForm({
     );
 
   return (
-    <form className={`quote-form ${styles.form}`} onSubmit={submit}>
-      <input type="hidden" name="quoteType" value={quoteType} />
+    <form className={`estimate-form ${styles.form}`} onSubmit={submit}>
+      <input type="hidden" name="estimateType" value={estimateType} />
       <label
         style={{ position: "absolute", left: "-10000px" }}
         aria-hidden="true"
@@ -271,6 +405,59 @@ export default function QuoteForm({
           />
         </label>
       )}
+      <div className={`full ${styles.uploadField}`}>
+        <div className={styles.uploadHeading}>
+          <div>
+            <strong>Show us what needs to disappear</strong>
+            <span>
+              Upload clear photos of the items, the full area, and any stairs or
+              tight entryways. Photos help us provide a faster, more accurate
+              estimate.
+            </span>
+          </div>
+          <small>{photos.length}/{MAX_PHOTOS}</small>
+        </div>
+        <input
+          ref={photoInput}
+          className={styles.fileInput}
+          id="estimate-photos"
+          type="file"
+          accept="image/jpeg,image/png,image/webp,image/heic,image/heif"
+          multiple
+          onChange={selectPhotos}
+        />
+        <button
+          className={styles.uploadButton}
+          type="button"
+          onClick={() => photoInput.current?.click()}
+          disabled={photos.length >= MAX_PHOTOS || status === "sending"}
+        >
+          {photos.length ? "Add More Photos" : "Choose Photos"}
+        </button>
+        <span className={styles.uploadNote}>
+          Optional · Up to 8 photos · 10 MB each · JPG, PNG, WebP, or HEIC
+        </span>
+        {photos.length > 0 && (
+          <div className={styles.photoGrid} aria-label="Selected photos">
+            {photos.map((photo, index) => (
+              <div
+                className={styles.photoPreview}
+                key={`${photo.name}-${photo.lastModified}-${index}`}
+              >
+                <img src={photoPreviews[index]} alt={`Selected upload ${index + 1}`} />
+                <button
+                  type="button"
+                  onClick={() => removePhoto(index)}
+                  aria-label={`Remove ${photo.name}`}
+                  disabled={status === "sending"}
+                >
+                  ×
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
       <div className={`full ${styles.dateField}`}>
         <label id="pickup-date-label">Preferred pickup date</label>
         <input type="hidden" name="date" value={selectedDate} />
@@ -394,10 +581,12 @@ export default function QuoteForm({
           disabled={status === "sending"}
         >
           {status === "sending"
-            ? "Sending Request…"
+            ? photos.length && uploadProgress <= photos.length
+              ? `Uploading Photo ${uploadProgress} of ${photos.length}…`
+              : "Sending Request…"
             : isCommercial
-              ? "Submit Commercial Request →"
-              : "Submit Quote Request →"}
+              ? "Submit Commercial Estimate →"
+              : "Submit Estimate Request →"}
         </button>
         <p className="muted" style={{ marginBottom: 0 }}>
           Your request will be sent directly to Disappear It. We&apos;ll contact

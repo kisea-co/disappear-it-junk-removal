@@ -26,14 +26,14 @@ export default function Header() {
           <Link href="/portfolio" onClick={closeMenu} style={navLinkStyle}>Portfolio</Link>
           <Link href="/commercial" onClick={closeMenu} style={navLinkStyle}>Commercial</Link>
           <Link href="/trashketball" onClick={closeMenu} style={navLinkStyle}>Trashketball</Link>
-          <span className="desktop-quote-wrap"><Link href="/contact" className="btn btn-small" onClick={closeMenu}>Get a Quote</Link></span>
+          <span className="desktop-estimate-wrap"><Link href="/contact" className="btn btn-small" onClick={closeMenu}>Get an Estimate</Link></span>
         </nav>
       </div>
 
       <style jsx>{`
         .mobile-menu-toggle{display:none;width:42px;height:42px;padding:8px;border:0;background:transparent;color:inherit;cursor:pointer;flex:0 0 auto}
         .mobile-menu-toggle span{display:block;width:100%;height:2px;margin:6px 0;background:#f4f0e8;transition:transform .2s ease,opacity .2s ease}
-        .desktop-quote-wrap{display:inline-flex}
+        .desktop-estimate-wrap{display:inline-flex}
         @media(max-width:720px){
           .nav-wrap{position:relative;min-height:92px;padding-top:10px;padding-bottom:10px}
           .brand-name{font-size:.8rem;letter-spacing:.14em}.brand-sub{font-size:.44rem;letter-spacing:.19em}
@@ -42,7 +42,7 @@ export default function Header() {
           .main-nav.mobile-open{display:flex;flex-direction:column;align-items:stretch;gap:8px}
           .main-nav.mobile-open>a:not(.btn){display:block!important;padding:18px 4px;border-bottom:1px solid rgba(255,255,255,.1);color:#f4f0e8;font-size:.78rem;letter-spacing:.12em;text-transform:uppercase}
           .main-nav.mobile-open>a:not(.btn):nth-of-type(5){border-bottom:0}
-          .desktop-quote-wrap{display:none!important}
+          .desktop-estimate-wrap{display:none!important}
         }
       `}</style>
     </header>

@@ -3,6 +3,21 @@
 .form input,.form textarea,.form select{border:1px solid #d7cdbd;background:#fffdf9;transition:border-color .18s ease,box-shadow .18s ease,background .18s ease}
 .form input::placeholder,.form textarea::placeholder{color:#aaa093}
 .form input:focus,.form textarea:focus,.form select:focus{outline:none;border-color:#a77e0c;background:#fff;box-shadow:0 0 0 3px rgba(191,144,0,.12)}
+.uploadField{padding:20px;border:1px solid #d7cdbd;background:#fffdf9}
+.uploadHeading{display:flex;justify-content:space-between;gap:18px;align-items:flex-start}
+.uploadHeading div{display:flex;flex-direction:column;gap:5px}
+.uploadHeading strong{font-size:.78rem;letter-spacing:.04em;color:#27231e}
+.uploadHeading span{max-width:620px;color:#6c655b;font-size:.75rem;font-weight:400;line-height:1.55}
+.uploadHeading small{flex:0 0 auto;color:#8b6812;font-size:.68rem;font-weight:700}
+.fileInput{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
+.uploadButton{display:inline-flex;align-items:center;justify-content:center;margin-top:15px;padding:11px 15px;border:1px solid #a77e0c;background:#fff;color:#6f540e;font-size:.66rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer}
+.uploadButton:hover:not(:disabled){background:#f4ead0}
+.uploadButton:disabled{opacity:.5;cursor:not-allowed}
+.uploadNote{display:inline-block;margin-left:12px;color:#81786c;font-size:.62rem}
+.photoGrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:16px}
+.photoPreview{position:relative;aspect-ratio:1;background:#eee7dc;overflow:hidden}
+.photoPreview img{width:100%;height:100%;object-fit:cover}
+.photoPreview button{position:absolute;top:6px;right:6px;width:28px;height:28px;padding:0;border:1px solid rgba(255,255,255,.65);border-radius:50%;background:rgba(9,9,9,.82);color:#fff;font-size:1.15rem;line-height:1;cursor:pointer}
 .dateField{position:relative}
 .dateField>label{display:block;margin-bottom:8px}
 .dateTrigger{width:100%;min-height:62px;padding:10px 15px;border:1px solid #d7cdbd;background:#fffdf9;color:#181511;display:flex;align-items:center;justify-content:space-between;text-align:left;cursor:pointer;transition:.18s ease}
@@ -26,4 +41,4 @@
 .calendarFoot span{font-size:.58rem;color:#8f887e}
 .calendarFoot button{border:0;background:none;color:#d1ae47;font-size:.62rem;text-decoration:underline;cursor:pointer;white-space:nowrap}
 .form>div:last-child{margin-top:5px;padding-top:22px;border-top:1px solid #ddd3c4}
-@media(max-width:720px){.form{padding:20px 16px;gap:18px}.calendar{position:relative;top:auto;width:100%;margin-top:8px;padding:14px}.days button{font-size:.8rem}.dateTrigger{min-height:58px}}
+@media(max-width:720px){.form{padding:20px 16px;gap:18px}.calendar{position:relative;top:auto;width:100%;margin-top:8px;padding:14px}.days button{font-size:.8rem}.dateTrigger{min-height:58px}.uploadField{padding:16px}.uploadHeading{gap:10px}.uploadButton{width:100%}.uploadNote{display:block;margin:8px 0 0}.photoGrid{grid-template-columns:repeat(2,minmax(0,1fr))}}

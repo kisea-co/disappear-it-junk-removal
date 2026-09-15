@@ -3,7 +3,7 @@ import type { Metadata } from 'next';
 export const metadata: Metadata = {
   title: 'Junk Removal Services in Metro Atlanta | Disappear It',
   description:
-    'Junk removal, clean-outs, furniture and appliance removal, construction debris hauling, trash removal and more across Metro Atlanta. Get a free quote from Disappear It Junk & Trash Removal LLC.',
+    'Junk removal, clean-outs, furniture and appliance removal, construction debris hauling, trash removal and more across Metro Atlanta. Get a free estimate from Disappear It Junk & Trash Removal LLC.',
   alternates: {
     canonical: '/services',
   },

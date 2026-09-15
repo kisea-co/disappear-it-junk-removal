@@ -175,7 +175,7 @@ export default function PortfolioPage() {
             <p>Real before-and-after transformations from property-management, commercial, residential, and debris-removal jobs.</p>
             <div className="portfolio-hero-actions">
               <a className="btn" href="#property-management">View Our Work ↓</a>
-              <Link className="portfolio-text-link" href="/contact">Request a Quote →</Link>
+              <Link className="portfolio-text-link" href="/contact">Request an Estimate →</Link>
             </div>
           </div>
         </div>
@@ -249,10 +249,10 @@ export default function PortfolioPage() {
           <div>
             <div className="eyebrow dark">Your project can be next</div>
             <h2>READY TO MAKE IT DISAPPEAR?</h2>
-            <p>Send the location, photos or videos, and your preferred service date to start your free quote.</p>
+            <p>Send the location, photos or videos, and your preferred service date to start your free estimate.</p>
           </div>
           <div className="portfolio-cta-actions">
-            <Link className="btn btn-dark" href="/contact">Get a Free Quote →</Link>
+            <Link className="btn btn-dark" href="/contact">Get a Free Estimate →</Link>
             <a href="tel:+14708701067">470-870-1067</a>
           </div>
         </div>
