@@ -54,22 +54,33 @@ export async function POST(request: Request) {
     const frequency = clean(body.frequency, 100);
     const accessNotes = clean(body.accessNotes, 1500) || "Not provided";
     const date = clean(body.date, 40) || "Not specified";
-    const photoAttachments = Array.isArray(body.photoAttachments)
+    const rawPhotoAttachments = Array.isArray(body.photoAttachments)
       ? body.photoAttachments
-          .slice(0, 8)
+      : [];
+    if (rawPhotoAttachments.length > 8)
+      return NextResponse.json(
+        { error: "You can upload up to 8 photos." },
+        { status: 400 },
+      );
+    const photoAttachments = rawPhotoAttachments
           .map((photo: unknown, index: number) => {
             const entry = photo as { filename?: unknown; content?: unknown };
             return {
               filename: clean(entry?.filename, 100) || `estimate-photo-${index + 1}.jpg`,
-              content: clean(entry?.content, 450_000),
+              content: typeof entry?.content === "string" ? entry.content : "",
             };
-          })
-          .filter(
-            (photo: { filename: string; content: string }) =>
-              /^[a-zA-Z0-9+/]+={0,2}$/.test(photo.content) &&
-              photo.content.length <= 450_000,
-          )
-      : [];
+          });
+    if (
+      photoAttachments.some(
+        (photo: { filename: string; content: string }) =>
+          !/^[a-zA-Z0-9+/]+={0,2}$/.test(photo.content) ||
+          photo.content.length > 400_000,
+      )
+    )
+      return NextResponse.json(
+        { error: "One or more selected photos could not be processed." },
+        { status: 400 },
+      );
     const attachmentCharacters = photoAttachments.reduce(
       (total: number, photo: { content: string }) => total + photo.content.length,
       0,

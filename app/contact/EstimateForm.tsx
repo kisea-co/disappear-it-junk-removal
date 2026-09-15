@@ -66,7 +66,7 @@ function blobBase64(blob: Blob) {
 async function preparePhoto(file: File, index: number) {
   const image = await loadPhoto(file);
   const scale = Math.min(1, 1280 / Math.max(image.naturalWidth, image.naturalHeight));
-  const canvas = document.createElement("canvas");
+  let canvas = document.createElement("canvas");
   canvas.width = Math.max(1, Math.round(image.naturalWidth * scale));
   canvas.height = Math.max(1, Math.round(image.naturalHeight * scale));
   const context = canvas.getContext("2d");
@@ -79,6 +79,21 @@ async function preparePhoto(file: File, index: number) {
     quality -= 0.08;
     compressed = await canvasBlob(canvas, quality);
   }
+  while (
+    compressed.size > TARGET_PHOTO_BYTES &&
+    Math.max(canvas.width, canvas.height) > 700
+  ) {
+    const smaller = document.createElement("canvas");
+    smaller.width = Math.max(1, Math.round(canvas.width * 0.82));
+    smaller.height = Math.max(1, Math.round(canvas.height * 0.82));
+    const smallerContext = smaller.getContext("2d");
+    if (!smallerContext) throw new Error("Photo compression is unavailable in this browser.");
+    smallerContext.drawImage(canvas, 0, 0, smaller.width, smaller.height);
+    canvas = smaller;
+    compressed = await canvasBlob(canvas, 0.5);
+  }
+  if (compressed.size > TARGET_PHOTO_BYTES)
+    throw new Error(`${file.name} could not be compressed enough to send. Please choose a different photo.`);
 
   return {
     filename: `estimate-photo-${index + 1}.jpg`,
