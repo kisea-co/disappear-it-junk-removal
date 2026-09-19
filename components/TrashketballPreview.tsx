@@ -12,9 +12,9 @@ export default function TrashketballPreview() {
           <p>Take one 30-second shot at Trashketball and you&apos;ve already earned money off your junk removal.</p>
           <div className={styles.rewards}>
             <div><small>PLAY A ROUND</small><strong>$25 OFF</strong><span>Any load size</span></div>
-            <div><small>SCORE 500+</small><strong>$50 OFF</strong><span>Any load size</span></div>
+            <div><small>SCORE 500+</small><strong>$50 OFF</strong><span>½ load or larger</span></div>
           </div>
-          <p className={styles.promoTerms}>One reward per customer. One-time use only. Cannot be combined with other offers.</p>
+          <p className={styles.promoTerms}>One reward per customer. One-time use only. $50 reward requires a minimum half-load service. Cannot be combined with other offers.</p>
           <Link className="btn" href="/trashketball">Play Trashketball →</Link>
         </div>
         <Link className={styles.preview} href="/trashketball" aria-label="Play Trashketball and unlock a junk removal discount">
