@@ -930,7 +930,7 @@ export default function TrashketballGame() {
                     <div className={styles.rewardUnlocked}>
                       <small>ONE-TIME REWARD SAVED</small>
                       <strong>${reward || 25} OFF</strong>
-                      <span>ANY LOAD SIZE</span>
+                      <span>{(reward || 25) === 50 ? "½ LOAD OR LARGER" : "ANY LOAD SIZE"}</span>
                     </div>
                   ) : rewardClaimed ? (
                     <p className={styles.scoreStatus} role="status">
@@ -991,7 +991,7 @@ export default function TrashketballGame() {
                   {rewardClaimed ? (
                     <>Your one-time discount has already been claimed. Keep playing to beat your high score.</>
                   ) : (
-                    <>Play this round to unlock <strong>$25 off any load size</strong>. Score 500+ to unlock <strong>$50 off any load size</strong>. One-time offer; no sign-up required.</>
+                    <>Play this round to unlock <strong>$25 off any load size</strong>. Score 500+ to unlock <strong>$50 off a half load or larger</strong>. One-time offer; no sign-up required.</>
                   )}
                 </p>
               )}
@@ -1109,7 +1109,7 @@ export default function TrashketballGame() {
         {!playing && !replaying && time === 0 && !rewardClaimed && (
           <div className={styles.realJunk}>
             <div>
-              <span>YOU UNLOCKED ${reward || 25} OFF ANY LOAD SIZE.</span>
+              <span>YOU UNLOCKED ${reward || 25} OFF {(reward || 25) === 50 ? "A HALF LOAD OR LARGER." : "ANY LOAD SIZE."}</span>
               <h2>
                 LET US HANDLE
                 <br />
