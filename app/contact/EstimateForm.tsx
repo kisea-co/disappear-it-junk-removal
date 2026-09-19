@@ -319,7 +319,7 @@ export default function EstimateForm({
       {activeReward > 0 && (
         <label className="full">
           One-time Trashketball reward
-          <input value={`$${activeReward} off any load size`} readOnly />
+          <input value={activeReward === 50 ? "$50 off a half load or larger" : "$25 off any load size"} readOnly />
         </label>
       )}
       <label>
