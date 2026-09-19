@@ -93,7 +93,9 @@ export async function POST(request: Request) {
     const rewardAmount: 0 | 25 | 50 =
       body.reward === "50" ? 50 : body.reward === "25" ? 25 : 0;
     const reward = rewardAmount
-      ? `$${rewardAmount} off any load size — one-time offer`
+      ? rewardAmount === 50
+        ? "$50 off a half load or larger — one-time offer"
+        : "$25 off any load size — one-time offer"
       : "None";
 
     if (
